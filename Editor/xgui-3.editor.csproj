@@ -51,6 +51,7 @@
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Filesystem.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Game.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Reflection.dll" />
+		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Mounting.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Tools.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Compiling.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Microsoft.CodeAnalysis.dll" />

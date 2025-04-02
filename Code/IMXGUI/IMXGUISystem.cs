@@ -6,17 +6,12 @@ public class ImXGUISystem : GameObjectSystem
 {
 	public ImXGUISystem( Scene scene ) : base( scene )
 	{
-		Listen( Stage.StartUpdate, 10, StartImXGUIFrame, "StartImXGUIFrame" );
-		Listen( Stage.FinishUpdate, 10, FinishImXGUIFrame, "FinishImXGUIFrame" );
-	}
+		var currentScene = scene;
 
-	void StartImXGUIFrame()
-	{
-		ImXGUI.NewFrame();
-	}
+		Listen( Stage.StartUpdate, 10, () => { ImXGUI.NewFrame( "OnUpdate", currentScene ); }, "StartImXGUIFrame" );
+		Listen( Stage.FinishUpdate, 10, () => { ImXGUI.EndFrame( "OnUpdate" ); }, "FinishImXGUIFrame" );
 
-	void FinishImXGUIFrame()
-	{
-		ImXGUI.EndFrame();
+		Listen( Stage.StartFixedUpdate, 10, () => { ImXGUI.NewFrame( "OnFixedUpdate", currentScene ); }, "StartImXGUIFrame_FixedUpdate" );
+		Listen( Stage.FinishFixedUpdate, 10, () => { ImXGUI.EndFrame( "OnFixedUpdate" ); }, "FinishImXGUIFrame_FixedUpdate" );
 	}
 }
