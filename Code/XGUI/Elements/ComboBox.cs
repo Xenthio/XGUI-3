@@ -9,8 +9,8 @@ namespace XGUI;
 /// <summary>
 /// A UI control which provides multiple options via a dropdown box.
 /// </summary>
-[Library( "selector" )]
-public class Selector : Button
+[Library( "combobox" ), Alias( "selector" )]
+public class ComboBox : Button
 {
 
 	Pane Pane;
@@ -95,13 +95,13 @@ public class Selector : Button
 		}
 	}
 
-	public Selector()
+	public ComboBox()
 	{
 		AddClass( "selector" );
 		DropdownIndicator = Add.Icon( "u", "selector_indicator" );
 	}
 
-	public Selector( Panel parent ) : this()
+	public ComboBox( Panel parent ) : this()
 	{
 		Parent = parent;
 	}

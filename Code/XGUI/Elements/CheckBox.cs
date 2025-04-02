@@ -1,10 +1,11 @@
 ﻿using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
+using System;
 namespace XGUI;
 
-[Library( "check" )]
-public class Check : Panel
+[Library( "checkbox" ), Alias( "check" )]
+public class CheckBox : Panel
 {
 	/// <summary>
 	/// The checkmark icon. Although no guarentees it's an icon!
@@ -54,7 +55,7 @@ public class Check : Panel
 		}
 	}
 
-	public Check()
+	public CheckBox()
 	{
 		AddClass( "checkbox" );
 		CheckMark = Add.Panel( "checkpanel" );
@@ -82,10 +83,13 @@ public class Check : Panel
 		LabelText = value?.Trim() ?? "";
 	}
 
+	public Action<bool> ValueChanged { get; set; }
+
 	public virtual void OnValueChanged()
 	{
 		UpdateState();
 		CreateEvent( "onchange", Checked );
+		ValueChanged?.Invoke( Checked );
 
 		if ( Checked )
 		{

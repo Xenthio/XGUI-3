@@ -1,10 +1,10 @@
 ﻿using Sandbox.UI;
 namespace XGUI;
-public class XGUIRootPanel : Panel
+public class XGUIRootPanelOld : Panel
 {
-	public static XGUIRootPanel Current = null;
+	public static XGUIRootPanelOld Current = null;
 
-	public XGUIRootPanel()
+	public XGUIRootPanelOld()
 	{
 		Current = this;
 		Style.Width = Length.Percent( 100 );

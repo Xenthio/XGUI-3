@@ -240,7 +240,7 @@ public partial class Pane : Panel
 		base.Tick();
 		if ( !(HasFocus || PopupSource.HasFocus) )
 		{
-			if ( PopupSource is Selector dp )
+			if ( PopupSource is ComboBox dp )
 			{
 				dp.Close();
 			}
