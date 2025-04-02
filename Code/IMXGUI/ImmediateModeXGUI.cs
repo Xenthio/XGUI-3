@@ -303,6 +303,7 @@ public class IMXGUI
 		if ( !state.Values.ContainsKey( "value" ) )
 			state.Values["value"] = value;
 
+		// Store current value for comparison, we can't use ref variables in lambdas
 		var currentValue = value;
 
 		var container = GetElement<Panel>( label, p =>
