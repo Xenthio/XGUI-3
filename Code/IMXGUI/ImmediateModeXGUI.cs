@@ -393,7 +393,7 @@ public class ImXGUI
 				{
 					var labelElement = new Label();
 					labelElement.Text = label;
-					labelElement.Style.Width = Length.Pixels( 128 );
+					labelElement.Style.MinWidth = Length.Pixels( 80 );
 					p.AddChild( labelElement );
 				}
 
@@ -492,6 +492,30 @@ public class ImXGUI
 			( input ) => input.Text,
 			null,
 			input => input.Style.FlexGrow = 1
+		);
+	}
+
+	// Color picker control
+	public static bool ColorPicker( string label, ref Color color )
+	{
+		// You might need to adjust the container and control sizes to fit your UI.
+		return HandleValueControl<Color, ColourPickerControl>(
+			label,
+			ref color,
+			( picker, val ) => picker.CurrentColor = val,
+			( picker ) => picker.CurrentColor,
+			setupContainer: p =>
+			{
+				p.Style.FlexDirection = FlexDirection.Row;
+				p.Style.AlignItems = Align.Center;
+				p.Style.MarginBottom = 5;
+			},
+			additionalSetup: picker =>
+			{
+				picker.Style.Width = 150;  // Adjust as needed.
+				picker.Style.Height = 24;   // Adjust as needed.
+				picker.Style.MarginLeft = 10;
+			}
 		);
 	}
 

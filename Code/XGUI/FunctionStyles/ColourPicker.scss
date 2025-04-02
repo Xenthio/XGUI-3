@@ -1,0 +1,25 @@
+.colourpicker {
+	> .colourwidget {
+		min-width: 48px;
+		border: 1px solid #111111;
+		margin-left: 4px;
+	}
+
+	> .floatinput {
+		min-width: 32px;
+		margin-right: 2px;
+	}
+}
+.colour-popup-panel {
+	position: absolute;
+	min-width: 200px;
+	min-height: 200px;
+	pointer-events:all;
+
+	> .swatch-grid {
+		> .swatch {
+			min-width: 32px;
+			min-height: 32px;
+		}
+	}
+}
