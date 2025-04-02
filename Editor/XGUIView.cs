@@ -4,64 +4,44 @@ using Sandbox.UI;
 
 namespace XGUI;
 
-public class XGUIView : NativeRenderingWidget
+public class XGUIView : SceneRenderingWidget
 {
-	RootPanel rootpanel;
 	XGUIRootPanel panel;
-	SceneModel model;
-
-	SceneWorld world;
+	ScreenPanel _screenPanel;
 
 	public Window Window;
+	public Panel WindowContent;
 
 	public XGUIView()
 	{
 		MinimumSize = 300;
+		Scene = new Scene();
 
-		world = new SceneWorld();
-		model = new SceneModel( world, "models/dev/gordon_at_desk.vmdl", Transform.Zero );
-		Camera = new SceneCamera( "XGUIRenderView" );
-		Camera.World = world;
-		Camera.BackgroundColor = Color.Black;
+		var cam = Scene.CreateObject();
 
-		rootpanel = new RootPanel();
-		rootpanel.Scene = Scene;
+		Camera = cam.AddComponent<CameraComponent>();
+		_screenPanel = cam.AddComponent<ScreenPanel>();
+		_screenPanel.AutoScreenScale = false;
+		_screenPanel.Scale = 1.0f;
+
 		panel = new XGUIRootPanel();
-		rootpanel.AddChild( panel );
-
+		_screenPanel.GetPanel().AddChild( panel );
 		Window = new Window();
 		Window.StyleSheet.Load( "/XGUI/DefaultStyles/OliveGreen.scss" );
+		Window.TitleLabel.Text = "My New Window";
+		Window.MinSize = new Vector2( 200, 200 );
 		panel.AddChild( Window );
 
-
-		new SceneLight( world, new Vector3( 100, 100, 100 ), 500, Color.Orange * 3 );
-		new SceneLight( world, new Vector3( -100, -100, 100 ), 500, Color.Cyan * 3 );
-
-		Window.Size = new Vector2( 800, 600 );
+		WindowContent = new Panel();
+		WindowContent.Style.MinHeight = 200;
+		WindowContent.Style.MinWidth = 200;
+		Window.AddChild( WindowContent );
 
 	}
-	Vector2 lastPos;
-	float spinVelocity;
-	float hoverTime;
-	public override void PreFrame()
-	{
-		var dir = new Vector3( 0.5f, 0.5f, 0.5f ).Normal;
-
-		var distance = MathX.SphereCameraDistance( model.Bounds.Size.Length * 0.5f, Camera.FieldOfView );
-		var aspect = Size.x / Size.y;
-		if ( aspect > 1 ) distance *= aspect;
-
-		Camera.World.AmbientLightColor = Color.Gray;
-		Camera.Position = model.Bounds.Center + dir * distance * 0.9f;
-		Camera.Rotation = Rotation.LookAt( dir * -1.0f, Vector3.Up );
-		Camera.ZFar = 10000;
-		Camera.FieldOfView = 50;
-		Camera.AntiAliasing = false;
-	}
-
 	public void CleanUp()
 	{
 		base.OnDestroyed();
-		rootpanel.Delete();
+		_screenPanel.Destroy();
+		panel.Delete();
 	}
 }
