@@ -141,6 +141,9 @@ public class IMXGUI
 			_windowElements[title] = new List<Panel>();
 			_elementState[title] = new Dictionary<string, IMXGUIState>();
 			_elementCounters[title] = 0; // Initialize counter here
+
+
+			_currentWindow.FocusWindow();
 		}
 		else
 		{
@@ -163,7 +166,6 @@ public class IMXGUI
 			_elementCounters[title] = 0; // Initialize counter here
 		}
 
-		_currentWindow.FocusWindow();
 		_idStack = title;
 
 		return true;
