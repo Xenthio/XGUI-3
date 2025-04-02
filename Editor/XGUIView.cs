@@ -6,8 +6,8 @@ namespace XGUI;
 
 public class XGUIView : SceneRenderingWidget
 {
-	XGUIRootPanel panel;
-	ScreenPanel _screenPanel;
+	XGUIRootPanel Panel;
+	XGUIRootComponent _rootComponent;
 
 	public Window Window;
 	public Panel WindowContent;
@@ -20,29 +20,28 @@ public class XGUIView : SceneRenderingWidget
 		var cam = Scene.CreateObject();
 
 		Camera = cam.AddComponent<CameraComponent>();
-		_screenPanel = cam.AddComponent<ScreenPanel>();
-		_screenPanel.AutoScreenScale = false;
-		_screenPanel.Scale = 1.0f;
+		_rootComponent = cam.AddComponent<XGUIRootComponent>();
+		Panel = _rootComponent.XGUIPanel;
+	}
 
-		panel = new XGUIRootPanel();
-		_screenPanel.GetPanel().AddChild( panel );
+	public void CreateBlankWindow()
+	{
 		Window = new Window();
 		Window.StyleSheet.Load( "/XGUI/DefaultStyles/OliveGreen.scss" );
 		Window.TitleLabel.Text = "My New Window";
 		Window.MinSize = new Vector2( 200, 200 );
-		panel.AddChild( Window );
+		Panel.AddChild( Window );
 
 		WindowContent = new Panel();
 		WindowContent.Style.MinHeight = 200;
 		WindowContent.Style.MinWidth = 200;
 		Window.AddChild( WindowContent );
-
 	}
+
 	public void CleanUp()
 	{
 		base.OnDestroyed();
-		_screenPanel.Destroy();
-		panel.Delete();
+		Panel.Delete();
 	}
 	public override void PreFrame()
 	{
