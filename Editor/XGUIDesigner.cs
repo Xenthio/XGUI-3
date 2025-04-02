@@ -1,4 +1,5 @@
 using Editor;
+using Editor.Inspectors;
 using Editor.PanelInspector;
 using System.Collections.Generic;
 namespace XGUI;
@@ -24,7 +25,8 @@ public class XGUIDesigner : DockWindow
 	private readonly List<string> _recentFiles = new();
 
 	XGUIView _view;
-	PanelInspectorWidget _inspector;
+	PanelInspectorWidget _heirarchy;
+	Widget _inspector;
 	Widget _widget;
 	public XGUIDesigner()
 	{
@@ -56,10 +58,12 @@ public class XGUIDesigner : DockWindow
 
 		_view = new XGUIView();
 		_view.SetSizeMode( SizeMode.Expand, SizeMode.Expand );
-		var b = new Widget();
-		_inspector = new PanelInspectorWidget( b );
+		_heirarchy = new PanelInspectorWidget( null );
 		this.DockManager.AddDock( null, _view );
-		this.DockManager.AddDock( null, b, split: 0.21f );
+		this.DockManager.AddDock( null, _heirarchy, split: 0.21f );
+
+		_inspector = new StyleEditor( null, _view.Window );
+		this.DockManager.AddDock( null, _inspector, dockArea: DockArea.Right, split: 0.21f );
 
 	}
 	public void BuildMenuBar()

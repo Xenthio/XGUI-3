@@ -44,4 +44,8 @@ public class XGUIView : SceneRenderingWidget
 		_screenPanel.Destroy();
 		panel.Delete();
 	}
+	public override void PreFrame()
+	{
+		base.PreFrame();
+	}
 }
