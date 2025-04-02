@@ -50,7 +50,11 @@ public class IMXGUI
 	// Track active windows and elements
 	private static Dictionary<string, Window> _windows = new();
 	private static HashSet<string> _activeWindows = new();
+
+	// Store actual UI elements created for each window
 	private static Dictionary<string, List<Panel>> _windowElements = new();
+
+	// Element state, now keyed by window ID and element ID.
 	private static Dictionary<string, Dictionary<string, IMXGUIState>> _elementState = new();
 
 	// Current state
@@ -61,10 +65,8 @@ public class IMXGUI
 	private static bool _initialized = false;
 	private static Panel _rootPanel;
 
-	// Element order tracking
+	// Element order tracking - use a simple counter to ensure order.
 	private static Dictionary<string, int> _elementCounters = new();
-	private static Dictionary<string, List<string>> _elementOrder = new();
-	private static int _currentLayoutIndex = 0;
 
 	// Initialize the system
 	public static bool IsInitialized() => _initialized && _rootPanel.IsValid;
@@ -80,7 +82,6 @@ public class IMXGUI
 		_windowElements.Clear();
 		_elementState.Clear();
 		_elementCounters.Clear();
-		_elementOrder.Clear();
 		_initialized = true;
 	}
 
@@ -90,6 +91,12 @@ public class IMXGUI
 		if ( !IsInitialized() ) Initialize();
 		_activeWindows.Clear();
 		_idStack = "";
+
+		// Reset element counters for each window at the start of the frame
+		foreach ( var windowId in _windows.Keys )
+		{
+			_elementCounters[windowId] = 0;
+		}
 	}
 
 	// Begin a window
@@ -100,13 +107,7 @@ public class IMXGUI
 
 		_currentWindowId = title;
 		_activeWindows.Add( title );
-		_currentLayoutIndex = 0;
 
-		// Initialize element order tracking for this window if needed
-		if ( !_elementOrder.ContainsKey( title ) )
-		{
-			_elementOrder[title] = new List<string>();
-		}
 
 		// Check if window exists and is valid
 		if ( _windows.TryGetValue( title, out _currentWindow ) )
@@ -139,6 +140,7 @@ public class IMXGUI
 			// Initialize tracking collections for this window
 			_windowElements[title] = new List<Panel>();
 			_elementState[title] = new Dictionary<string, IMXGUIState>();
+			_elementCounters[title] = 0; // Initialize counter here
 		}
 		else
 		{
@@ -153,11 +155,12 @@ public class IMXGUI
 			if ( !_elementState.ContainsKey( title ) )
 				_elementState[title] = new Dictionary<string, IMXGUIState>();
 
-			// Hide all existing elements - we'll show them again as needed
+			// Hide all existing elements. We'll re-add/show them as needed during this frame.
 			foreach ( var element in _windowElements[title] )
 			{
 				element.Style.Display = DisplayMode.None;
 			}
+			_elementCounters[title] = 0; // Initialize counter here
 		}
 
 		_currentWindow.FocusWindow();
@@ -188,23 +191,21 @@ public class IMXGUI
 	// End a window
 	public static void End()
 	{
-		// Remove any elements that weren't used in this frame
-		for ( int i = _currentLayoutIndex; i < _elementOrder[_currentWindowId].Count; i++ )
+		// After rendering all the elements this frame, go through the existing elements
+		// and delete those that weren't re-created.
+		List<Panel> elementsToRemove = new List<Panel>();
+		foreach ( var element in _windowElements[_currentWindowId] )
 		{
-			string id = _elementOrder[_currentWindowId][i];
-			int elementIndex = _windowElements[_currentWindowId].FindIndex( e => e.ElementName == id );
-			if ( elementIndex >= 0 )
+			if ( element.Style.Display == DisplayMode.None )
 			{
-				_windowElements[_currentWindowId][elementIndex].Delete();
-				_windowElements[_currentWindowId].RemoveAt( elementIndex );
+				elementsToRemove.Add( element );
 			}
 		}
 
-		// Truncate the element order list
-		if ( _currentLayoutIndex < _elementOrder[_currentWindowId].Count )
+		foreach ( var element in elementsToRemove )
 		{
-			_elementOrder[_currentWindowId].RemoveRange( _currentLayoutIndex,
-				_elementOrder[_currentWindowId].Count - _currentLayoutIndex );
+			element.Delete();
+			_windowElements[_currentWindowId].Remove( element );
 		}
 
 		_currentWindow = null;
@@ -235,17 +236,17 @@ public class IMXGUI
 		string typeKey = typeof( T ).Name;
 		string baseId = string.IsNullOrEmpty( _idStack ) ? typeKey : $"{_idStack}/{typeKey}";
 
-		// Get the counter for this type of element
-		if ( !_elementCounters.TryGetValue( baseId, out int counter ) )
+		// Get the element counter for the current window
+		if ( !_elementCounters.ContainsKey( _currentWindowId ) )
 		{
-			counter = 0;
+			_elementCounters[_currentWindowId] = 0;
 		}
 
-		// Generate the unique ID
-		string uniqueId = $"{baseId}_{counter}";
+		// Generate the unique ID, combining with the current window ID
+		string uniqueId = $"{_currentWindowId}/{baseId}_{_elementCounters[_currentWindowId]}";
 
-		// Increment the counter for next time
-		_elementCounters[baseId] = counter + 1;
+		// Increment the element counter for the current window
+		_elementCounters[_currentWindowId]++;
 
 		return uniqueId;
 	}
@@ -253,6 +254,12 @@ public class IMXGUI
 	// Get or create state for an element
 	private static IMXGUIState GetState( string id )
 	{
+		// Ensure that the window has a state dict
+		if ( !_elementState.ContainsKey( _currentWindowId ) )
+		{
+			_elementState[_currentWindowId] = new Dictionary<string, IMXGUIState>();
+		}
+
 		if ( !_elementState[_currentWindowId].TryGetValue( id, out var state ) )
 		{
 			state = new IMXGUIState();
@@ -267,55 +274,37 @@ public class IMXGUI
 	{
 		if ( _currentPanel == null ) return null;
 
-		// Generate a unique ID for this element based on its position in the layout
-		string id;
+		// Generate a unique ID for this element.
+		string id = GenerateId<T>( label );
 
-		// Check if we're reusing an existing element
-		if ( _currentLayoutIndex < _elementOrder[_currentWindowId].Count )
+		// Try to find an existing element with this ID within the current window.
+		T element = _windowElements[_currentWindowId].OfType<T>().FirstOrDefault( e => e.ElementName == id );
+
+		// If an element with the same ID *and* type exists, reuse it.
+		if ( element != null )
 		{
-			// Reuse existing element ID
-			id = _elementOrder[_currentWindowId][_currentLayoutIndex];
-			_currentLayoutIndex++;
-
-			// Find element with this ID
-			Panel existingElement = _windowElements[_currentWindowId].FirstOrDefault( e => e.ElementName == id );
-
-			// If found and type matches, reuse it
-			if ( existingElement != null && existingElement is T typedElement )
-			{
-				existingElement.Style.Display = DisplayMode.Flex;
-				setupAction?.Invoke( typedElement );
-				return typedElement;
-			}
-
-			// If found but wrong type, delete and recreate
-			if ( existingElement != null )
-			{
-				int index = _windowElements[_currentWindowId].IndexOf( existingElement );
-				existingElement.Delete();
-				_windowElements[_currentWindowId].RemoveAt( index );
-			}
-		}
-		else
-		{
-			// Create a new ID for this element
-			id = GenerateId<T>( label );
-			_elementOrder[_currentWindowId].Add( id );
-			_currentLayoutIndex++;
+			element.Style.Display = DisplayMode.Flex;
+			setupAction?.Invoke( element ); // Re-apply setup.
+			return element;
 		}
 
-		// Create a new element
-		T element = new T();
+		// If no existing element was found (or it was of a different type), create a new one.
+		element = new T();
 		element.ElementName = id;
 
-		// Setup the element
 		setupAction?.Invoke( element );
-
-		// Add to panel and tracking
 		_currentPanel.AddChild( element );
+		EnsureWindowElementsListExists( _currentWindowId ); // Avoid NullReferenceException
 		_windowElements[_currentWindowId].Add( element );
 
 		return element;
+	}
+	private static void EnsureWindowElementsListExists( string windowId )
+	{
+		if ( !_windowElements.ContainsKey( windowId ) )
+		{
+			_windowElements[windowId] = new List<Panel>();
+		}
 	}
 
 	// Button control
@@ -326,9 +315,13 @@ public class IMXGUI
 		{
 			b.Text = label;
 
+			// Get the unique ID for this button.
+			string id = b.ElementName;
+
 			// Check for click state
 			if ( b.HasActive &&
-				(!_elementState[_currentWindowId].TryGetValue( b.ElementName, out var state ) ||
+				(!_elementState.TryGetValue( _currentWindowId, out var windowState ) ||
+				 !windowState.TryGetValue( id, out var state ) ||
 				 !state.Values.TryGetValue( "wasActive", out var wasActive ) ||
 				 !(bool)wasActive) )
 			{
@@ -336,7 +329,7 @@ public class IMXGUI
 			}
 
 			// Update state
-			var btnState = GetState( b.ElementName );
+			var btnState = GetState( id ); // Use GetState here for proper state retrieval.
 			btnState.Values["wasActive"] = b.HasActive;
 		} );
 
@@ -500,9 +493,6 @@ public class IMXGUI
 	{
 		if ( !IsInitialized() ) return;
 
-		// Reset element counters for next frame
-		_elementCounters.Clear();
-
 		// Clean up unused windows
 		var windowsToRemove = new List<string>();
 		foreach ( var entry in _windows )
@@ -519,7 +509,7 @@ public class IMXGUI
 			_windows.Remove( key );
 			_windowElements.Remove( key );
 			_elementState.Remove( key );
-			_elementOrder.Remove( key );
 		}
 	}
 }
+
