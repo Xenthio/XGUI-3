@@ -9,6 +9,7 @@ namespace XGUI
 	/// </summary>
 	public class SliderScale : Panel
 	{
+		public bool HasScales = true;
 		public Panel SliderArea { get; protected set; }
 		public Panel SliderControl { get; protected set; }
 		public Panel Track { get; protected set; }
@@ -55,20 +56,24 @@ namespace XGUI
 
 			Thumb = SliderControl.Add.Panel( "thumb" );
 
-			ScaleSteps = SliderControl.Add.Panel( "scalesteps" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
-			ScaleSteps.Add.Panel( "step" );
+			if ( HasScales )
+			{
+				AddClass( "hasscales" );
+				ScaleSteps = SliderControl.Add.Panel( "scalesteps" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
+				ScaleSteps.Add.Panel( "step" );
 
-			ScaleStepsMin = SliderControl.Add.Label( "", "scalestepmin" );
-			ScaleStepsMax = SliderControl.Add.Label( "", "scalestepmax" );
+				ScaleStepsMin = SliderControl.Add.Label( "", "scalestepmin" );
+				ScaleStepsMax = SliderControl.Add.Label( "", "scalestepmax" );
+			}
 		}
 		public override void Tick()
 		{

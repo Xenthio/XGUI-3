@@ -453,8 +453,7 @@ $gamemenu-logo-hover: url("XGUI/Resources/game_menu_mouseover.png");
 // Checkbox
 .checkbox {
     min-width: 24px;
-    height: 16px;
-    margin-bottom: 6px;
+    height: 16px; 
     cursor: pointer;
 
     .checkpanel, iconpanel {

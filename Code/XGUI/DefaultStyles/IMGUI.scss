@@ -54,7 +54,8 @@ $window-title-icon: url("XGUI/Resources/icon_down.png");
         background-position: center; 
     }
 }
-button {
+
+.button {
     color: white;
     align-items: center;
     justify-content: center;
@@ -192,4 +193,10 @@ button {
             display:none;
         }
     }
+}
+
+// textentry
+
+.textentry {
+    background-color: $frame-background-colour;
 }

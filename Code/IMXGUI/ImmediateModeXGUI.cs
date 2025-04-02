@@ -43,7 +43,7 @@ public class IMXGUIState
 /// <summary>
 /// ImGui Clone for s&box using Razor UI components.
 /// </summary>
-public class IMXGUI
+public class ImXGUI
 {
 	public static string CurrentStyle = "/XGUI/DefaultStyles/OliveGreen.scss";
 
@@ -374,7 +374,7 @@ public class IMXGUI
 			// Default container setup
 			p.Style.FlexDirection = FlexDirection.Row;
 			p.Style.AlignItems = Align.Center;
-			p.Style.MarginBottom = 5;
+			p.Style.Margin = Length.Pixels( 2 );
 
 			// Allow custom container setup
 			setupContainer?.Invoke( p );
@@ -389,11 +389,11 @@ public class IMXGUI
 			if ( p.ChildrenCount == 0 )
 			{
 				// Create label for controls that need it
-				if ( typeof( TControl ) != typeof( CheckBox ) )
+				if ( typeof( TControl ) != typeof( XGUI.CheckBox ) )
 				{
 					var labelElement = new Label();
 					labelElement.Text = label;
-					labelElement.Style.Width = 100;
+					labelElement.Style.Width = Length.Pixels( 128 );
 					p.AddChild( labelElement );
 				}
 
@@ -454,7 +454,7 @@ public class IMXGUI
 	// Checkbox control
 	public static bool Checkbox( string label, ref bool value )
 	{
-		return HandleValueControl<bool, CheckBox>(
+		return HandleValueControl<bool, XGUI.CheckBox>(
 			label,
 			ref value,
 			( cb, val ) => cb.Checked = val,

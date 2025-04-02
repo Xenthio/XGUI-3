@@ -2,21 +2,21 @@
 
 namespace XGUI.ImmediateMode;
 
-public class IMXGUISystem : GameObjectSystem
+public class ImXGUISystem : GameObjectSystem
 {
-	public IMXGUISystem( Scene scene ) : base( scene )
+	public ImXGUISystem( Scene scene ) : base( scene )
 	{
-		Listen( Stage.StartUpdate, 10, StartIMXGUIFrame, "StartIMXGUIFrame" );
-		Listen( Stage.FinishUpdate, 10, FinishIMXGUIFrame, "FinishIMXGUIFrame" );
+		Listen( Stage.StartUpdate, 10, StartImXGUIFrame, "StartImXGUIFrame" );
+		Listen( Stage.FinishUpdate, 10, FinishImXGUIFrame, "FinishImXGUIFrame" );
 	}
 
-	void StartIMXGUIFrame()
+	void StartImXGUIFrame()
 	{
-		IMXGUI.NewFrame();
+		ImXGUI.NewFrame();
 	}
 
-	void FinishIMXGUIFrame()
+	void FinishImXGUIFrame()
 	{
-		IMXGUI.EndFrame();
+		ImXGUI.EndFrame();
 	}
 }
