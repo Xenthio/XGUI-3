@@ -358,8 +358,10 @@ public class IMXGUI
 		Action<Panel> setupContainer = null, Action<TControl> additionalSetup = null )
 		where TControl : Panel, new()
 	{
-		// Get state for this control
+		// Get the unique ID for this control
 		string id = GenerateId<TControl>( label );
+
+		// Get the state for this control
 		var state = GetState( id );
 
 		bool changed = false;
@@ -407,38 +409,41 @@ public class IMXGUI
 			else
 			{
 				// Get the control
-				TControl control;
-				if ( typeof( TControl ) == typeof( CheckBox ) )
-					control = p as TControl;
-				else
-					control = p.Children.ElementAt( 1 ) as TControl;
+				TControl control = p.Children.OfType<TControl>().FirstOrDefault();
 
 				if ( control != null )
 				{
-					// Check if external value changed
-					if ( !object.Equals( state.Values["value"], currentValue ) )
-					{
-						state.Values["value"] = currentValue;
-						setControlValue( control, currentValue );
-					}
-
-					// Check if control value changed
+					// Get the current value from the control
 					T controlValue = getControlValue( control );
+
+					// Check if the control value has changed from our stored state
 					if ( !object.Equals( controlValue, state.Values["value"] ) )
 					{
+						// Update the state with the new control value
 						state.Values["value"] = controlValue;
-						state.Changed = true;
+						state.Changed = true; // Mark that the value has changed
+
+					}  // Check if external value changed - Update state value regardless of control change.
+					else if ( !object.Equals( state.Values["value"], currentValue ) )
+					{
+						state.Values["value"] = currentValue; // update state
+						setControlValue( control, currentValue ); // update control with value to prevent external setting from not updating the UI
 					}
+
 				}
+
+
 			}
 
 		} );
+
 		// Update ref parameter if state changed
 		if ( state != null && state.Changed )
 		{
 			value = (T)state.Values["value"];
 			changed = true;
-			state.Changed = false;
+			state.Changed = false; // Reset the flag after processing
+
 		}
 
 		return changed;
@@ -512,4 +517,3 @@ public class IMXGUI
 		}
 	}
 }
-
