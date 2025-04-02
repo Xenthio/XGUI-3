@@ -50,10 +50,7 @@ public class IMXGUI
 	// Track active windows and elements
 	private static Dictionary<string, Window> _windows = new();
 	private static HashSet<string> _activeWindows = new();
-	private static Dictionary<string, Dictionary<string, Panel>> _elements = new();
-	private static HashSet<string> _activeElements = new();
-
-	// Keep state for each element
+	private static Dictionary<string, List<Panel>> _windowElements = new();
 	private static Dictionary<string, Dictionary<string, IMXGUIState>> _elementState = new();
 
 	// Current state
@@ -63,6 +60,11 @@ public class IMXGUI
 	private static string _idStack;
 	private static bool _initialized = false;
 	private static Panel _rootPanel;
+
+	// Element order tracking
+	private static Dictionary<string, int> _elementCounters = new();
+	private static Dictionary<string, List<string>> _elementOrder = new();
+	private static int _currentLayoutIndex = 0;
 
 	// Initialize the system
 	public static bool IsInitialized() => _initialized && _rootPanel.IsValid;
@@ -75,8 +77,10 @@ public class IMXGUI
 
 		_rootPanel = XGUIRootPanel.Current;
 		_windows.Clear();
-		_elements.Clear();
+		_windowElements.Clear();
 		_elementState.Clear();
+		_elementCounters.Clear();
+		_elementOrder.Clear();
 		_initialized = true;
 	}
 
@@ -85,7 +89,6 @@ public class IMXGUI
 	{
 		if ( !IsInitialized() ) Initialize();
 		_activeWindows.Clear();
-		_activeElements.Clear();
 		_idStack = "";
 	}
 
@@ -97,6 +100,13 @@ public class IMXGUI
 
 		_currentWindowId = title;
 		_activeWindows.Add( title );
+		_currentLayoutIndex = 0;
+
+		// Initialize element order tracking for this window if needed
+		if ( !_elementOrder.ContainsKey( title ) )
+		{
+			_elementOrder[title] = new List<string>();
+		}
 
 		// Check if window exists and is valid
 		if ( _windows.TryGetValue( title, out _currentWindow ) )
@@ -126,8 +136,8 @@ public class IMXGUI
 			_currentPanel.Style.FlexGrow = 1;
 			_currentWindow.AddChild( _currentPanel );
 
-			// Initialize element dictionaries for this window
-			_elements[title] = new Dictionary<string, Panel>();
+			// Initialize tracking collections for this window
+			_windowElements[title] = new List<Panel>();
 			_elementState[title] = new Dictionary<string, IMXGUIState>();
 		}
 		else
@@ -136,12 +146,18 @@ public class IMXGUI
 			_currentPanel = _currentWindow.Children.FirstOrDefault( x =>
 				!(x is Label || x is Button || x.HasClass( "titlebar" )) ) as Panel;
 
-			// Create dictionaries if they don't exist
-			if ( !_elements.ContainsKey( title ) )
-				_elements[title] = new Dictionary<string, Panel>();
+			// Create collections if they don't exist
+			if ( !_windowElements.ContainsKey( title ) )
+				_windowElements[title] = new List<Panel>();
 
 			if ( !_elementState.ContainsKey( title ) )
 				_elementState[title] = new Dictionary<string, IMXGUIState>();
+
+			// Hide all existing elements - we'll show them again as needed
+			foreach ( var element in _windowElements[title] )
+			{
+				element.Style.Display = DisplayMode.None;
+			}
 		}
 
 		_currentWindow.FocusWindow();
@@ -172,6 +188,25 @@ public class IMXGUI
 	// End a window
 	public static void End()
 	{
+		// Remove any elements that weren't used in this frame
+		for ( int i = _currentLayoutIndex; i < _elementOrder[_currentWindowId].Count; i++ )
+		{
+			string id = _elementOrder[_currentWindowId][i];
+			int elementIndex = _windowElements[_currentWindowId].FindIndex( e => e.ElementName == id );
+			if ( elementIndex >= 0 )
+			{
+				_windowElements[_currentWindowId][elementIndex].Delete();
+				_windowElements[_currentWindowId].RemoveAt( elementIndex );
+			}
+		}
+
+		// Truncate the element order list
+		if ( _currentLayoutIndex < _elementOrder[_currentWindowId].Count )
+		{
+			_elementOrder[_currentWindowId].RemoveRange( _currentLayoutIndex,
+				_elementOrder[_currentWindowId].Count - _currentLayoutIndex );
+		}
+
 		_currentWindow = null;
 		_currentPanel = null;
 		_idStack = "";
@@ -193,10 +228,26 @@ public class IMXGUI
 			_idStack = "";
 	}
 
-	// Generate a unique ID for a control based on its label and ID stack
-	private static string GetId( string label )
+	// Generate a unique ID for a control based on its type and layout order
+	private static string GenerateId<T>( string label = null ) where T : Panel
 	{
-		return string.IsNullOrEmpty( _idStack ) ? label : $"{_idStack}/{label}";
+		// Create a base ID from the stack and control type
+		string typeKey = typeof( T ).Name;
+		string baseId = string.IsNullOrEmpty( _idStack ) ? typeKey : $"{_idStack}/{typeKey}";
+
+		// Get the counter for this type of element
+		if ( !_elementCounters.TryGetValue( baseId, out int counter ) )
+		{
+			counter = 0;
+		}
+
+		// Generate the unique ID
+		string uniqueId = $"{baseId}_{counter}";
+
+		// Increment the counter for next time
+		_elementCounters[baseId] = counter + 1;
+
+		return uniqueId;
 	}
 
 	// Get or create state for an element
@@ -211,64 +262,82 @@ public class IMXGUI
 		return state;
 	}
 
-	// Generic element getter/creator
-	private static T GetElement<T>( string label, Action<T> initAction = null ) where T : Panel, new()
+	// Get or create an element with proper ordering
+	private static T GetOrCreateElement<T>( string label, Action<T> setupAction ) where T : Panel, new()
 	{
 		if ( _currentPanel == null ) return null;
 
-		string id = GetId( label );
-		_activeElements.Add( id );
+		// Generate a unique ID for this element based on its position in the layout
+		string id;
 
-		// Check if element exists
-		if ( _elements[_currentWindowId].TryGetValue( id, out var element ) && element is T typedElement )
+		// Check if we're reusing an existing element
+		if ( _currentLayoutIndex < _elementOrder[_currentWindowId].Count )
 		{
-			initAction?.Invoke( typedElement );
-			return typedElement;
+			// Reuse existing element ID
+			id = _elementOrder[_currentWindowId][_currentLayoutIndex];
+			_currentLayoutIndex++;
+
+			// Find element with this ID
+			Panel existingElement = _windowElements[_currentWindowId].FirstOrDefault( e => e.ElementName == id );
+
+			// If found and type matches, reuse it
+			if ( existingElement != null && existingElement is T typedElement )
+			{
+				existingElement.Style.Display = DisplayMode.Flex;
+				setupAction?.Invoke( typedElement );
+				return typedElement;
+			}
+
+			// If found but wrong type, delete and recreate
+			if ( existingElement != null )
+			{
+				int index = _windowElements[_currentWindowId].IndexOf( existingElement );
+				existingElement.Delete();
+				_windowElements[_currentWindowId].RemoveAt( index );
+			}
+		}
+		else
+		{
+			// Create a new ID for this element
+			id = GenerateId<T>( label );
+			_elementOrder[_currentWindowId].Add( id );
+			_currentLayoutIndex++;
 		}
 
-		// Create new element
-		var newElement = new T();
-		newElement.ElementName = id;
+		// Create a new element
+		T element = new T();
+		element.ElementName = id;
 
-		// Initialize with provided action
-		initAction?.Invoke( newElement );
+		// Setup the element
+		setupAction?.Invoke( element );
 
 		// Add to panel and tracking
-		_currentPanel.AddChild( newElement );
-		_elements[_currentWindowId][id] = newElement;
+		_currentPanel.AddChild( element );
+		_windowElements[_currentWindowId].Add( element );
 
-		return newElement;
+		return element;
 	}
 
 	// Button control
 	public static bool Button( string label )
 	{
-		string id = GetId( label );
-		var state = GetState( id );
-
-		// Initialize state values if needed
-		if ( !state.Values.ContainsKey( "wasActive" ) )
-			state.Values["wasActive"] = false;
-
-		// Reset changed state at the start of frame
 		bool clicked = false;
-
-		var button = GetElement<Button>( label, b =>
+		var button = GetOrCreateElement<Button>( label, b =>
 		{
 			b.Text = label;
 
-			// Track state change from inactive to active (initial click)
-			bool wasActive = (bool)state.Values["wasActive"];
-			bool isActive = b.HasActive;
-
-			// Only register click on transition from not active to active
-			if ( isActive && !wasActive )
+			// Check for click state
+			if ( b.HasActive &&
+				(!_elementState[_currentWindowId].TryGetValue( b.ElementName, out var state ) ||
+				 !state.Values.TryGetValue( "wasActive", out var wasActive ) ||
+				 !(bool)wasActive) )
 			{
 				clicked = true;
 			}
 
-			// Update the stored state for next frame
-			state.Values["wasActive"] = isActive;
+			// Update state
+			var btnState = GetState( b.ElementName );
+			btnState.Values["wasActive"] = b.HasActive;
 		} );
 
 		return clicked;
@@ -277,36 +346,33 @@ public class IMXGUI
 	// Text display
 	public static void Text( string text )
 	{
-		GetElement<Label>( text, l => l.Text = text );
+		GetOrCreateElement<Label>( text, l => l.Text = text );
 	}
 
 	// Separator
 	public static void Separator()
 	{
-		GetElement<Panel>( $"sep_{_idStack}", p =>
+		GetOrCreateElement<Panel>( "separator", p =>
 		{
 			p.Style.Height = 1;
 			p.Style.BackgroundColor = Color.Parse( "#333333" );
 		} );
 	}
-	/// <summary>
-	/// Generic value control handler that manages state updates between UI controls and ref values
-	/// </summary>
-	private static bool HandleValueControl<T, TControl>( string label, ref T value, Action<TControl, T> setControlValue,
-		Func<TControl, T> getControlValue, Action<Panel> setupContainer = null,
-		Action<TControl> additionalSetup = null ) where TControl : Panel, new()
+
+	// Generic value control handler
+	private static bool HandleValueControl<T, TControl>( string label, ref T value,
+		Action<TControl, T> setControlValue, Func<TControl, T> getControlValue,
+		Action<Panel> setupContainer = null, Action<TControl> additionalSetup = null )
+		where TControl : Panel, new()
 	{
-		string id = GetId( label );
+		// Get state for this control
+		string id = GenerateId<TControl>( label );
 		var state = GetState( id );
 
-		// First time initialization
-		if ( !state.Values.ContainsKey( "value" ) )
-			state.Values["value"] = value;
-
-		// Store current value for comparison, we can't use ref variables in lambdas
+		bool changed = false;
 		var currentValue = value;
 
-		var container = GetElement<Panel>( label, p =>
+		var container = GetOrCreateElement<Panel>( label, p =>
 		{
 			// Default container setup
 			p.Style.FlexDirection = FlexDirection.Row;
@@ -316,6 +382,13 @@ public class IMXGUI
 			// Allow custom container setup
 			setupContainer?.Invoke( p );
 
+			// Initialize value if needed
+			if ( !state.Values.ContainsKey( "value" ) )
+			{
+				state.Values["value"] = currentValue;
+			}
+
+			// Create or update children
 			if ( p.ChildrenCount == 0 )
 			{
 				// Create label for controls that need it
@@ -327,20 +400,20 @@ public class IMXGUI
 					p.AddChild( labelElement );
 				}
 
-				// Create the control
+				// Create control
 				var control = new TControl();
 
 				// Set initial value
 				setControlValue( control, (T)state.Values["value"] );
 
-				// Additional control setup
+				// Additional setup
 				additionalSetup?.Invoke( control );
 
 				p.AddChild( control );
 			}
 			else
 			{
-				// Get the control (either the panel itself for CheckBox or the second child)
+				// Get the control
 				TControl control;
 				if ( typeof( TControl ) == typeof( CheckBox ) )
 					control = p as TControl;
@@ -349,36 +422,36 @@ public class IMXGUI
 
 				if ( control != null )
 				{
-					// Handle external value changes
+					// Check if external value changed
 					if ( !object.Equals( state.Values["value"], currentValue ) )
 					{
 						state.Values["value"] = currentValue;
 						setControlValue( control, currentValue );
 					}
 
-					// Update state value if UI changed
-					T currentControlValue = getControlValue( control );
-					if ( !object.Equals( currentControlValue, state.Values["value"] ) )
+					// Check if control value changed
+					T controlValue = getControlValue( control );
+					if ( !object.Equals( controlValue, state.Values["value"] ) )
 					{
-						state.Values["value"] = currentControlValue;
+						state.Values["value"] = controlValue;
 						state.Changed = true;
 					}
 				}
 			}
-		} );
 
-		// If state changed, update ref param
-		if ( state.Changed )
+		} );
+		// Update ref parameter if state changed
+		if ( state != null && state.Changed )
 		{
 			value = (T)state.Values["value"];
+			changed = true;
 			state.Changed = false;
-			return true;
 		}
 
-		return false;
+		return changed;
 	}
 
-	// Checkbox control - refactored
+	// Checkbox control
 	public static bool Checkbox( string label, ref bool value )
 	{
 		return HandleValueControl<bool, CheckBox>(
@@ -386,16 +459,12 @@ public class IMXGUI
 			ref value,
 			( cb, val ) => cb.Checked = val,
 			( cb ) => cb.Checked,
-			p => { /* Custom container setup not needed for checkbox */ },
-			cb =>
-			{
-				cb.LabelText = label;
-				// Any additional checkbox setup
-			}
+			null,
+			cb => cb.LabelText = label
 		);
 	}
 
-	// Slider control - refactored
+	// Slider control
 	public static bool Slider( string label, ref float value, float min, float max )
 	{
 		return HandleValueControl<float, SliderScale>(
@@ -403,7 +472,7 @@ public class IMXGUI
 			ref value,
 			( slider, val ) => slider.Value = val,
 			( slider ) => slider.Value,
-			null, // Use default container setup
+			null,
 			slider =>
 			{
 				slider.MinValue = min;
@@ -413,7 +482,7 @@ public class IMXGUI
 		);
 	}
 
-	// Text input field - refactored
+	// Text input field
 	public static bool InputText( string label, ref string value )
 	{
 		return HandleValueControl<string, TextEntry>(
@@ -421,11 +490,8 @@ public class IMXGUI
 			ref value,
 			( input, val ) => input.Text = val,
 			( input ) => input.Text,
-			null, // Use default container setup
-			input =>
-			{
-				input.Style.FlexGrow = 1;
-			}
+			null,
+			input => input.Style.FlexGrow = 1
 		);
 	}
 
@@ -433,6 +499,9 @@ public class IMXGUI
 	public static void EndFrame()
 	{
 		if ( !IsInitialized() ) return;
+
+		// Reset element counters for next frame
+		_elementCounters.Clear();
 
 		// Clean up unused windows
 		var windowsToRemove = new List<string>();
@@ -448,32 +517,9 @@ public class IMXGUI
 		foreach ( var key in windowsToRemove )
 		{
 			_windows.Remove( key );
-			_elements.Remove( key );
+			_windowElements.Remove( key );
 			_elementState.Remove( key );
-		}
-
-		// Clean up unused elements in active windows
-		foreach ( var windowId in _activeWindows )
-		{
-			if ( !_elements.ContainsKey( windowId ) ) continue;
-
-			var elementsToRemove = new List<string>();
-			foreach ( var entry in _elements[windowId] )
-			{
-				if ( !_activeElements.Contains( entry.Key ) )
-				{
-					entry.Value.Delete();
-					elementsToRemove.Add( entry.Key );
-				}
-			}
-
-			foreach ( var key in elementsToRemove )
-			{
-				_elements[windowId].Remove( key );
-				if ( _elementState.ContainsKey( windowId ) )
-					_elementState[windowId].Remove( key );
-			}
+			_elementOrder.Remove( key );
 		}
 	}
 }
-
