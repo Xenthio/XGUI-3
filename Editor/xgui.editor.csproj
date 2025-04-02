@@ -5,7 +5,7 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>xgui.editor</AssemblyName>
 		<PackageId>xgui.editor</PackageId>
-		<LangVersion>11</LangVersion>
+		<LangVersion>13</LangVersion>
 		<NoWarn>1701;1702;1591;</NoWarn>
 		<WarningsAsErrors></WarningsAsErrors>
 		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
@@ -13,10 +13,12 @@
 		<DefineConstants>SANDBOX;ADDON;DEBUG</DefineConstants>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
+		<DesignTimeBuild Condition="'$(DesignTimeBuild)' == 'true'">true</DesignTimeBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
 		
+		<CompilerVisibleProperty Include="DesignTimeBuild" />
 		<None Update="**\*.cs.scss" DependentUpon="%(Filename)" />
 		<Compile Update="**\*.razor.cs" DependentUpon="%(Filename)" />
 		<None Update="**\*.razor.scss" DependentUpon="%(Filename)" />
@@ -42,7 +44,8 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<Analyzer Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed\Sandbox.Generator.dll"/>
+		<Analyzer Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed\Sandbox.CodeUpgrader.dll"/>
+		<Analyzer Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed\Sandbox.Generator.dll" Condition="$(DesignTimeBuild) != 'true'"/>
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.System.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Engine.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Filesystem.dll" />

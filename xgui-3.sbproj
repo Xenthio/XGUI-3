@@ -1,14 +1,14 @@
 {
-  "Title": "XGUI",
+  "Title": "XGUI-3",
   "Type": "library",
   "Org": "xenthio",
-  "Ident": "xgui",
+  "Ident": "xgui-3",
   "Schema": 1,
   "IncludeSourceFiles": false,
   "Resources": null,
   "PackageReferences": [],
   "EditorReferences": null,
-  "IsWhitelistDisabled": false,
+  "IsStandaloneOnly": false,
   "Metadata": {
     "CsProjName": "",
     "Compiler": {

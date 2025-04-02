@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>xgui.unittest</AssemblyName>
-		<PackageId>xgui.unittest</PackageId>
+		<AssemblyName>xgui-3.unittest</AssemblyName>
+		<PackageId>xgui-3.unittest</PackageId>
 		<LangVersion>13</LangVersion>
 		<NoWarn>1701;1702;1591;</NoWarn>
 		<WarningsAsErrors></WarningsAsErrors>
@@ -44,7 +44,7 @@
 
   <PropertyGroup>
 	<OutputPath>E:\SteamLibrary\steamapps\common\sbox/.vs/output/</OutputPath>
-	<DocumentationFile>E:\SteamLibrary\steamapps\common\sbox/.vs/output/xgui.unittest.xml</DocumentationFile>
+	<DocumentationFile>E:\SteamLibrary\steamapps\common\sbox/.vs/output/xgui-3.unittest.xml</DocumentationFile>
 	<RootNamespace>XGUI</RootNamespace>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
@@ -65,8 +65,8 @@
 
   <ItemGroup>
 		<ProjectReference Include="E:\SteamLibrary\steamapps\common\sbox\addons\tools\Code\Base Editor Library.csproj" />
-		<ProjectReference Include="E:\S&amp;box Addons\xgui_test\Libraries\XGUI\Code\xgui.csproj" />
-		<ProjectReference Include="E:\S&amp;box Addons\xgui_test\Libraries\XGUI\Editor\xgui.editor.csproj" />
+		<ProjectReference Include="E:\S&amp;box Addons\xgui-3_test\Libraries\XGUI-3\Code\xgui-3.csproj" />
+		<ProjectReference Include="E:\S&amp;box Addons\xgui-3_test\Libraries\XGUI-3\Editor\xgui-3.editor.csproj" />
 
   </ItemGroup>
 

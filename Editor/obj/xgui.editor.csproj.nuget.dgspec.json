@@ -13,20 +13,24 @@
         "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
         "outputPath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Code\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net9.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net9.0": {
+            "targetAlias": "net9.0",
             "projectReferences": {
               "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\Base Library.csproj": {
                 "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\Base Library.csproj"
@@ -38,11 +42,12 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "imports": [
             "net461",
             "net462",
@@ -59,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
@@ -72,26 +77,39 @@
         "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
         "outputPath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Editor\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net9.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net9.0": {
+            "targetAlias": "net9.0",
             "projectReferences": {
               "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Code\\xgui.csproj": {
                 "projectPath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Code\\xgui.csproj"
               },
               "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj": {
                 "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj"
+              },
+              "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj": {
+                "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj"
+              },
+              "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj": {
+                "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj"
+              },
+              "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj": {
+                "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj"
               }
             }
           }
@@ -100,11 +118,12 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "imports": [
             "net461",
             "net462",
@@ -121,7 +140,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
@@ -134,32 +153,40 @@
         "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
         "outputPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\Code\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net9.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net9.0": {
+            "targetAlias": "net9.0",
             "projectReferences": {}
           }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
         },
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "imports": [
             "net461",
             "net462",
@@ -176,7 +203,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
@@ -189,20 +216,24 @@
         "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
         "outputPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net9.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net9.0": {
+            "targetAlias": "net9.0",
             "projectReferences": {}
           }
         },
@@ -210,11 +241,12 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "imports": [
             "net461",
             "net462",
@@ -231,7 +263,208 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj",
+        "projectName": "actiongraph",
+        "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj",
+        "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
+        "outputPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj": {
+                "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj",
+        "projectName": "hammer",
+        "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj",
+        "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
+        "outputPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj": {
+                "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj",
+        "projectName": "shadergraph",
+        "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj",
+        "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
+        "outputPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj": {
+                "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

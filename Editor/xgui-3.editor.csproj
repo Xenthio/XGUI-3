@@ -3,16 +3,15 @@
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>xgui.unittest</AssemblyName>
-		<PackageId>xgui.unittest</PackageId>
+		<AssemblyName>xgui-3.editor</AssemblyName>
+		<PackageId>xgui-3.editor</PackageId>
 		<LangVersion>13</LangVersion>
 		<NoWarn>1701;1702;1591;</NoWarn>
 		<WarningsAsErrors></WarningsAsErrors>
 		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<DefineConstants>SANDBOX;ADDON;DEBUG</DefineConstants>
-		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-		<IsTestProject>true</IsTestProject>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
 		<DesignTimeBuild Condition="'$(DesignTimeBuild)' == 'true'">true</DesignTimeBuild>
 	</PropertyGroup>
@@ -29,12 +28,7 @@
 	<ItemGroup>
 		<AdditionalFiles Include="**/*.razor" />
 	</ItemGroup>
-<ItemGroup>
-	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-	<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-	<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-	<PackageReference Include="coverlet.collector" Version="6.0.0" />
-</ItemGroup>
+
 
 
 	<ItemGroup>
@@ -44,7 +38,7 @@
 
   <PropertyGroup>
 	<OutputPath>E:\SteamLibrary\steamapps\common\sbox/.vs/output/</OutputPath>
-	<DocumentationFile>E:\SteamLibrary\steamapps\common\sbox/.vs/output/xgui.unittest.xml</DocumentationFile>
+	<DocumentationFile>E:\SteamLibrary\steamapps\common\sbox/.vs/output/xgui-3.editor.xml</DocumentationFile>
 	<RootNamespace>XGUI</RootNamespace>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
@@ -61,12 +55,16 @@
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Compiling.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Microsoft.CodeAnalysis.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Bind.dll" />
+		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Facepunch.ActionGraphs.dll" />
+		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/SkiaSharp.dll" />
 	</ItemGroup>
 
   <ItemGroup>
+		<ProjectReference Include="E:\SteamLibrary\steamapps\common\sbox\editor\ActionGraph\Code\actiongraph.csproj" />
+		<ProjectReference Include="E:\SteamLibrary\steamapps\common\sbox\editor\Hammer\Code\hammer.csproj" />
 		<ProjectReference Include="E:\SteamLibrary\steamapps\common\sbox\addons\tools\Code\Base Editor Library.csproj" />
-		<ProjectReference Include="E:\S&amp;box Addons\xgui_test\Libraries\XGUI\Code\xgui.csproj" />
-		<ProjectReference Include="E:\S&amp;box Addons\xgui_test\Libraries\XGUI\Editor\xgui.editor.csproj" />
+		<ProjectReference Include="E:\SteamLibrary\steamapps\common\sbox\editor\ShaderGraph\Code\shadergraph.csproj" />
+		<ProjectReference Include="E:\S&amp;box Addons\xgui-3_test\Libraries\XGUI-3\Code\xgui-3.csproj" />
 
   </ItemGroup>
 

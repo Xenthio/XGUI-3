@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0M+qvNLkB0gtnZpUY5gdhwqTKaZFFrVwMhxonTYISrIFGO9gbSOxeJowVVchSL5bE9hkE0XNU8FgWBQJM1p6dQ==",
+  "dgSpecHash": "xBdTjLJeNLE=",
   "success": true,
-  "projectFilePath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\UnitTests\\xgui.unittest.csproj",
+  "projectFilePath": "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\UnitTests\\xgui-3.unittest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\thego\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\thego\\.nuget\\packages\\microsoft.codecoverage\\17.7.2\\microsoft.codecoverage.17.7.2.nupkg.sha512",

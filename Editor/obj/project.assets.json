@@ -1,10 +1,23 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {
+    "net9.0": {
+      "actiongraph/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Base Editor Library": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/actiongraph.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/actiongraph.dll": {}
+        }
+      },
       "Base Editor Library/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v7.0",
+        "framework": ".NETCoreApp,Version=v9.0",
         "compile": {
           "bin/placeholder/Base Editor Library.dll": {}
         },
@@ -14,7 +27,7 @@
       },
       "Base Library/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v7.0",
+        "framework": ".NETCoreApp,Version=v9.0",
         "compile": {
           "bin/placeholder/Base Library.dll": {}
         },
@@ -22,22 +35,53 @@
           "bin/placeholder/Base Library.dll": {}
         }
       },
-      "xgui/1.0.0": {
+      "hammer/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v7.0",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Base Editor Library": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/hammer.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/hammer.dll": {}
+        }
+      },
+      "shadergraph/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Base Editor Library": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/shadergraph.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/shadergraph.dll": {}
+        }
+      },
+      "xgui-3/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "Base Library": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/xgui.dll": {}
+          "bin/placeholder/xgui-3.dll": {}
         },
         "runtime": {
-          "bin/placeholder/xgui.dll": {}
+          "bin/placeholder/xgui-3.dll": {}
         }
       }
     }
   },
   "libraries": {
+    "actiongraph/1.0.0": {
+      "type": "project",
+      "path": "../../../../../SteamLibrary/steamapps/common/sbox/editor/ActionGraph/Code/actiongraph.csproj",
+      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/editor/ActionGraph/Code/actiongraph.csproj"
+    },
     "Base Editor Library/1.0.0": {
       "type": "project",
       "path": "../../../../../SteamLibrary/steamapps/common/sbox/addons/tools/Code/Base Editor Library.csproj",
@@ -48,50 +92,77 @@
       "path": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/Code/Base Library.csproj",
       "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/Code/Base Library.csproj"
     },
-    "xgui/1.0.0": {
+    "hammer/1.0.0": {
       "type": "project",
-      "path": "../Code/xgui.csproj",
-      "msbuildProject": "../Code/xgui.csproj"
+      "path": "../../../../../SteamLibrary/steamapps/common/sbox/editor/Hammer/Code/hammer.csproj",
+      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/editor/Hammer/Code/hammer.csproj"
+    },
+    "shadergraph/1.0.0": {
+      "type": "project",
+      "path": "../../../../../SteamLibrary/steamapps/common/sbox/editor/ShaderGraph/Code/shadergraph.csproj",
+      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/editor/ShaderGraph/Code/shadergraph.csproj"
+    },
+    "xgui-3/1.0.0": {
+      "type": "project",
+      "path": "../Code/xgui-3.csproj",
+      "msbuildProject": "../Code/xgui-3.csproj"
     }
   },
   "projectFileDependencyGroups": {
-    "net7.0": [
+    "net9.0": [
       "Base Editor Library >= 1.0.0",
-      "xgui >= 1.0.0"
+      "actiongraph >= 1.0.0",
+      "hammer >= 1.0.0",
+      "shadergraph >= 1.0.0",
+      "xgui-3 >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\thego\\.nuget\\packages\\": {}
+    "C:\\Users\\thego\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Editor\\xgui.editor.csproj",
-      "projectName": "xgui.editor",
-      "projectPath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Editor\\xgui.editor.csproj",
+      "projectUniqueName": "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\Editor\\xgui-3.editor.csproj",
+      "projectName": "xgui-3.editor",
+      "projectPath": "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\Editor\\xgui-3.editor.csproj",
       "packagesPath": "C:\\Users\\thego\\.nuget\\packages\\",
-      "outputPath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Editor\\obj\\",
+      "outputPath": "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\Editor\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
         "C:\\Users\\thego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net7.0"
+        "net9.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "projectReferences": {
-            "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Code\\xgui.csproj": {
-              "projectPath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Code\\xgui.csproj"
+            "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\Code\\xgui-3.csproj": {
+              "projectPath": "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\Code\\xgui-3.csproj"
             },
             "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj": {
               "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\Code\\Base Editor Library.csproj"
+            },
+            "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj": {
+              "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj"
+            },
+            "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj": {
+              "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj"
+            },
+            "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj": {
+              "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj"
             }
           }
         }
@@ -100,11 +171,12 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
-      "net7.0": {
-        "targetAlias": "net7.0",
+      "net9.0": {
+        "targetAlias": "net9.0",
         "imports": [
           "net461",
           "net462",
@@ -121,7 +193,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

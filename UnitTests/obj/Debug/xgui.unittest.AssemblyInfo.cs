@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("xgui.unittest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4dcb614aad29e86cf87c9a3d107d82a4e500e80d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+924dd95642bb71462e8df1454d70032e6bb1ff73")]
 [assembly: System.Reflection.AssemblyProductAttribute("xgui.unittest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("xgui.unittest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

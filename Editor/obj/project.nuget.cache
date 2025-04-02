@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Z+n9kOKHWWwtGaBC+mAqYaiqj8F3gy6TA1fzkQf0P6SMIBFZindsYbBtAokS0FE0x0AkkU951WHGhp4UgAF2mA==",
+  "dgSpecHash": "C6odbiUOX/o=",
   "success": true,
-  "projectFilePath": "E:\\S&box Addons\\xgui_test\\Libraries\\XGUI\\Editor\\xgui.editor.csproj",
+  "projectFilePath": "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\Editor\\xgui-3.editor.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
