@@ -6,7 +6,7 @@ namespace XGUI;
 [Library( "controllabel" )]
 public class ControlLabel : Panel
 {
-	Label Label;
+	public Label Label;
 	public ControlLabel()
 	{
 		AddClass( "controllabel" );
@@ -15,11 +15,16 @@ public class ControlLabel : Panel
 	public override void Tick()
 	{
 		base.Tick();
-		SetClass( "focus", PanelHasFocus( this ) || Children.Where( x => PanelHasFocus( x ) ).Any() || Children.OfType<ComboBox>().Where( x => x.IsOpen ).Any() );
+		var shouldFocus = PanelHasFocus( this ) || AnyChildHasFocus( this );
+		SetClass( "focus", shouldFocus );
+	}
+	public bool AnyChildHasFocus( Panel panel )
+	{
+		return panel.Children.Where( x => PanelHasFocus( x ) ).Any() || panel.Children.OfType<ComboBox>().Where( x => x.IsOpen ).Any();
 	}
 	public bool PanelHasFocus( Panel panel )
 	{
-		return panel.HasFocus || panel.HasClass( "focus" );
+		return panel.HasFocus; //panel.HasClass( "focus" );
 	}
 	public override void SetProperty( string name, string value )
 	{

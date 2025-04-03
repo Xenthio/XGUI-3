@@ -21,12 +21,13 @@ public partial class ImXGUI
 		bool changed = false;
 		var currentValue = value;
 
-		var container = GetOrCreateElement<Panel>( label, p =>
+		var elementcreate = ( Panel p ) =>
 		{
 			// Default container setup
 			p.Style.FlexDirection = FlexDirection.Row;
 			p.Style.AlignItems = Align.Center;
 			p.Style.Margin = Length.Pixels( 2 );
+			p.SetClass( "controllabel", true );
 
 			// Allow custom container setup
 			setupContainer?.Invoke( p );
@@ -38,15 +39,15 @@ public partial class ImXGUI
 			}
 
 			// Create or update children
-			if ( p.ChildrenCount == 0 )
+			if ( p.ChildrenCount == ((p is ControlLabel) ? 1 : 0) )
 			{
 				// Create label for controls that need it
-				if ( typeof( TControl ) != typeof( XGUI.CheckBox ) )
+				if ( p is ControlLabel ctrlLabel )
 				{
-					var labelElement = new Label();
-					labelElement.Text = label;
-					labelElement.Style.MinWidth = Length.Pixels( 80 );
-					p.AddChild( labelElement );
+					//var labelElement = new Label();
+					ctrlLabel.Label.Text = label;
+					ctrlLabel.Label.Style.MinWidth = Length.Pixels( 80 );
+					//p.AddChild( labelElement );
 				}
 
 				// Create control
@@ -64,10 +65,10 @@ public partial class ImXGUI
 			{
 				// Get the control
 				TControl control = p.Children.OfType<TControl>().FirstOrDefault();
-				additionalSetup?.Invoke( control );
 
 				if ( control != null )
 				{
+					additionalSetup?.Invoke( control );
 					// Get the current value from the control
 					T controlValue = getControlValue( control );
 
@@ -88,7 +89,18 @@ public partial class ImXGUI
 				}
 			}
 
-		} );
+		};
+
+		Panel container;
+		if ( typeof( TControl ) != typeof( XGUI.CheckBox ) )
+		{
+			container = GetOrCreateElement<ControlLabel>( label, elementcreate );
+		}
+		else
+		{
+			container = GetOrCreateElement<Panel>( label, elementcreate );
+		}
+
 
 		// Update ref parameter if state changed
 		if ( state != null && state.Changed )
