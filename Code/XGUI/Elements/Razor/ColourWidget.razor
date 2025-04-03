@@ -1,0 +1,159 @@
+@using System;
+@using System.Collections.Generic;
+@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.Razor;
+
+@namespace XGUI
+@inherits Panel
+
+<root class="colour-widget">
+    <label>Select Colour</label>
+
+    <div class="colour-picker">
+        <div class="colour-map" @ref="ColourMap" style="background-color: @GetHueColor();">
+            <div class="colour-map-overlay white"></div>
+            <div class="colour-map-overlay black"></div>
+            <div class="picker-thumb" style="left: @($"{SaturationPct}%"); top: @($"{(100-ValuePct)}%")"></div>
+        </div>
+
+        <div class="hue-slider" @ref="HueSlider" style="cursor: pointer;">
+            <div class="hue-thumb" style="left: @($"{HuePct}%")"></div>
+        </div>
+
+        <div class="preview-swatch" style="background-color: @CurrentColor.Hex"></div>
+    </div>
+
+    <div class="swatch-grid">
+        @foreach (var colour in WebColours)
+        {
+            <div class="swatch" style="background-color:@colour.Hex;" @onclick=@(() => OnSwatchClick(colour))></div>
+        }
+    </div>
+</root>
+
+@code {
+    public Action<Color> OnChange { get; set; }
+
+    private Panel ColourMap { get; set; }
+    private Panel HueSlider { get; set; }
+    private Color CurrentColor { get; set; } = Color.White;
+
+    private float Hue { get; set; } = 0f;
+    private float Saturation { get; set; } = 1f;
+    private float Value { get; set; } = 1f;
+
+    private float HuePct => Hue / 360f * 100f;
+    private float SaturationPct => Saturation * 100f;
+    private float ValuePct => Value * 100f;
+
+    private Panel ActivePanel { get; set; }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (firstTime)
+        {
+            AddClass("colour-widget");
+        }
+    }
+
+    protected override void OnMouseDown(MousePanelEvent e)
+    {
+        base.OnMouseDown(e);
+        if (e.Target == ColourMap)
+        {
+            ActivePanel = ColourMap;
+            UpdateColorFromMap(e.LocalPosition);
+        }
+        else if (e.Target == HueSlider)
+        {
+            ActivePanel = HueSlider;
+            UpdateHueFromSlider(e.LocalPosition);
+        }
+    }
+
+    protected override void OnMouseMove(MousePanelEvent e)
+    {
+        base.OnMouseMove(e);
+
+        if (ActivePanel == null) return;
+
+        if (ActivePanel == ColourMap)
+        {
+            UpdateColorFromMap(e.LocalPosition);
+        }
+        else if (ActivePanel == HueSlider)
+        {
+            UpdateHueFromSlider(e.LocalPosition);
+        }
+    }
+
+    protected override void OnMouseUp(MousePanelEvent e)
+    {
+        base.OnMouseUp(e);
+        ActivePanel = null;
+    }
+
+    private void UpdateColorFromMap(Vector2 pos)
+    {
+        var bounds = ColourMap.Box.Rect;
+        Saturation = Math.Clamp(pos.x / bounds.Width, 0, 1);
+        Value = Math.Clamp(1 - (pos.y / bounds.Height), 0, 1);
+        UpdateCurrentColor();
+    }
+
+    private void UpdateHueFromSlider(Vector2 pos)
+    {
+        var bounds = HueSlider.Box.Rect;
+        Hue = Math.Clamp(pos.x / bounds.Width * 360f, 0, 360);
+        UpdateCurrentColor();
+    }
+
+    private void UpdateCurrentColor()
+    {
+        var hsv = new ColorHsv(Hue, Saturation, Value, 1);
+        CurrentColor = hsv.ToColor();
+        OnChange?.Invoke(CurrentColor);
+        StateHasChanged();
+    }
+
+    private string GetHueColor()
+    {
+        var hsv = new ColorHsv(Hue, 1, 1, 1);
+        return hsv.ToColor().Hex;
+    }
+
+    private void OnSwatchClick(Color color)
+    {
+        CurrentColor = color;
+        var hsv = color.ToHsv();
+        Hue = hsv.Hue;
+        Saturation = hsv.Saturation;
+        Value = hsv.Value;
+        OnChange?.Invoke(CurrentColor);
+        StateHasChanged();
+    }
+
+    public List<Color> WebColours = new List<Color>
+    {
+        Color.FromRgb(0xFF0000), // Red
+        Color.FromRgb(0x800000), // Maroon
+        Color.FromRgb(0xFFA500), // Orange
+        Color.FromRgb(0xFFFF00), // Yellow
+        Color.FromRgb(0x808000), // Olive
+        Color.FromRgb(0x00FF00), // Lime Green
+        Color.FromRgb(0x008000), // Green
+        Color.FromRgb(0x00FFFF), // Aqua
+        Color.FromRgb(0x008080), // Teal
+        Color.FromRgb(0x0000FF), // Blue
+        Color.FromRgb(0x000080), // Navy Blue
+        Color.FromRgb(0xFF00FF), // Fuchsia
+        Color.FromRgb(0x800080), // Purple
+        Color.FromRgb(0xFFFFFF), // White
+        Color.FromRgb(0xC0C0C0), // Silver
+        Color.FromRgb(0x808080), // Gray
+        Color.FromRgb(0x000000), // Black
+    };
+}

@@ -33,5 +33,6 @@ public class ControlLabel : Panel
 			Label.Text = value;
 			return;
 		}
+		base.SetProperty( name, value );
 	}
 }

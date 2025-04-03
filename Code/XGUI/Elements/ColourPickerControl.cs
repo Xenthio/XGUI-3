@@ -185,9 +185,7 @@ public class ColourPickerControl : Panel
 
 	private void SelectColorFromDropdown( Color chosenColor )
 	{
-		CurrentColor = chosenColor; // This updates visuals and triggers ValueChanged
-		ToggleDropdown(); // Close dropdown after selection
-		UpdateVisuals(); // Ensure dropdown is hidden
+		CurrentColor = chosenColor; // This updates visuals and triggers ValueChanged  
 	}
 
 	// --- Dropdown Content ---
@@ -195,23 +193,12 @@ public class ColourPickerControl : Panel
 	private void SetupDropdownContent( Panel parent )
 	{
 		parent.Style.FlexDirection = FlexDirection.Column; // Or Row/Grid as needed
-
+		parent.SetClass( "pane-panel", true );
+		parent.SetClass( "panel", true );
+		var widget = parent.AddChild<ColourWidget>();
 		var grid = parent.Add.Panel( "swatch-grid" );
 
-		// Example: Add a grid of preset color swatches
-		Color[] swatches = new Color[] {
-			Color.Red, Color.Green, Color.Blue,
-			Color.Yellow, Color.Magenta, Color.Cyan,
-			Color.White, Color.Gray, Color.Black,
-			Color.Orange
-		};
-
-		foreach ( var swatchColor in swatches )
-		{
-			var swatchButton = grid.Add.Panel( "swatch" );
-			swatchButton.Style.BackgroundColor = swatchColor;
-			swatchButton.AddEventListener( "onclick", () => SelectColorFromDropdown( swatchColor ) );
-		}
+		widget.OnChange += SelectColorFromDropdown;
 
 		// TODO: Add a proper color wheel / saturation / value picker here later
 	}

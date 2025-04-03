@@ -77,6 +77,14 @@ public partial class Pane : Panel
 		Focus();
 	}
 
+	public void UpdateStyle()
+	{
+		foreach ( var stylesheet in PopupSource.AllStyleSheets )
+		{
+			StyleSheet.Add( stylesheet );
+		}
+	}
+
 	/// <summary>
 	/// Sets <see cref="PopupSource"/>, <see cref="Position"/> and <see cref="PopupSourceOffset"/>.
 	/// Applies relevant CSS classes.
