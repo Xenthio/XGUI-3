@@ -99,7 +99,7 @@ public partial class Pane : Panel
 		Position = position;
 		PopupSourceOffset = offset;
 
-		AddClass( "pane-panel" );
+		AddClass( "dropdown-panel" );
 		PositionMe();
 
 		switch ( Position )

@@ -192,8 +192,7 @@ public class ColourPickerControl : Panel
 	// Replace this with a more sophisticated picker eventually!
 	private void SetupDropdownContent( Panel parent )
 	{
-		parent.Style.FlexDirection = FlexDirection.Column; // Or Row/Grid as needed
-		parent.SetClass( "pane-panel", true );
+		parent.Style.FlexDirection = FlexDirection.Column; // Or Row/Grid as needed 
 		parent.SetClass( "panel", true );
 		var widget = parent.AddChild<ColourWidget>();
 		var grid = parent.Add.Panel( "swatch-grid" );

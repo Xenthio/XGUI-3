@@ -9,6 +9,12 @@ $xgui-slider-thumbsizedonotcompensate: 1;
 	font-size: $default-text-size;
 	font-family: $default-text-font;
 	font-smooth: $default-text-smooth;
+
+	border-top: 1px solid $border-colour-top;
+	border-left: 1px solid $border-colour-left;
+	border-bottom: 1px solid $border-colour-bottom;
+	border-right: 1px solid $border-colour-right;
+	background-color: $base-colour;
 }
 
 @import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUIGameMenu.scss";

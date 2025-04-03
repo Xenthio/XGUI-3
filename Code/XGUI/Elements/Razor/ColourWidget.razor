@@ -12,6 +12,7 @@
 
     <div class="colour-picker">
         <div class="colour-map" @ref="ColourMap" style="background-color: @GetHueColor();">
+        @* <div class="colour-map" @ref="ColourMap" style="background-image: linear-gradient(to bottom, @GetHueColor(), #000000);"> *@
             <div class="colour-map-overlay white"></div>
             <div class="colour-map-overlay black"></div>
             <div class="picker-thumb" style="left: @($"{SaturationPct}%"); top: @($"{(100-ValuePct)}%")"></div>

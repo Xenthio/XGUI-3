@@ -5,6 +5,7 @@
 $base-colour: rgba(76,88,68,255);
 $base-colour-inset: #3e4637;
 $base-colour-active: #958831;
+$base-colour-alt: #4C5844;
 
 $border-colour-top: #889180;
 $border-colour-left: #889180;
@@ -29,6 +30,10 @@ $default-text-colour-disabled-shadow: #889180;
 $default-text-size: 13px;
 $default-text-font: Tahoma;
 $default-text-smooth: never;
+
+$slider-step-colour: #7F8C7F;
+$slider-step-min-colour: #889180;
+$slider-step-max-colour: #889180;
 
 $window-title-icon: url("XGUI/Resources/icon_steam.png");
 $window-minimise-button: url("XGUI/Resources/icon_minimize.png");

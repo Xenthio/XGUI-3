@@ -21,31 +21,31 @@
 		border-right: 1px solid $border-colour-right;
 
 		&:hover {
-			background-color: rgba(76,88,68,255);
+			background-color: $base-colour-alt;
 		}
 	}
 
 	&:active {
 		> .thumb {
-			background-color: rgba(76,88,68,255);
+			background-color: $base-colour-alt;
 		}
 	}
 
 	> .scalestepmin {
-		color: #889180;
+		color: $slider-step-min-colour;
 		font-size: 9px;
 	}
 
 	> .scalestepmax {
 		font-size: 9px;
-		color: #889180;
+		color: $slider-step-max-colour;
 	}
 
 	> .scalesteps {
 
 		> .step {
 			left: 4px;
-			background-color: #7f8c7f;
+			background-color: $slider-step-colour;
 			width: 1px;
 			height: 5px;
 		}

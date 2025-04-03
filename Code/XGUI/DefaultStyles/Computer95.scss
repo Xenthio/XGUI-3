@@ -49,6 +49,19 @@ $outer-boxshadow-inset: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1p
 $outer-boxshadow-window: 1px 0px 0px 0px $border-colour-right-outer-window, 1px 1px 0px 0px $border-colour-right-outer-window, 1px -1px 0px 0px $border-colour-right-outer-window, -1px 1px 0px 0px $border-colour-bottom-outer-window, -1px 0px 0px 0px $border-colour-left-outer-window, 0px -1px 0px 0px $border-colour-top-outer-window, -1px -1px 0px 0px $border-colour-top-outer-window;
 $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0px $border-colour-left-outer, 0px -1px 0px 0px $border-colour-top-outer;
 
+.Panel {
+    color: $default-text-colour;
+    border-top: 1px solid $border-colour-top-window;
+    border-left: 1px solid $border-colour-left-window;
+    border-bottom: 1px solid $border-colour-bottom-window;
+    border-right: 1px solid $border-colour-right-window;
+    box-shadow: $outer-boxshadow-window;
+    background-color: $base-colour;
+    font-size: $default-text-size;
+    font-family: $default-text-font;
+    font-smooth: $default-text-smooth;
+}
+
 .Window {
     overflow: hidden;
     padding: 1px;
@@ -349,7 +362,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 // Popup / Pane
 
-.pane-panel {
+.dropdown-panel {
     background-color: $base-colour-inset;
     border: 1px solid black;
 
@@ -360,7 +373,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
         height: 13px;
 
         &:hover {
-            color:white;
+            color: white;
             background-color: $base-colour-active;
         }
     }
