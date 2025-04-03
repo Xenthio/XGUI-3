@@ -64,6 +64,7 @@ public partial class ImXGUI
 			{
 				// Get the control
 				TControl control = p.Children.OfType<TControl>().FirstOrDefault();
+				additionalSetup?.Invoke( control );
 
 				if ( control != null )
 				{

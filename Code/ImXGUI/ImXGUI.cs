@@ -243,8 +243,8 @@ public partial class ImXGUI // Todo, partial to move things out into seperate fi
 		if ( (flags & IMXGUIWindowFlags.NoInputs) != 0 )
 			window.Style.PointerEvents = PointerEvents.None;
 
-		window.Style.Width = 300;
-		window.Style.Height = 200;
+		window.Style.Width = 320;
+		window.Style.Height = 300;
 	}
 
 	// End a window (operates within the _currentContext)

@@ -175,6 +175,8 @@ $window-title-icon: url("XGUI/Resources/icon_down.png");
 }
 
 .slider {
+    margin-top: 2px;
+    margin-bottom: 2px;
 
     > .thumb {
         background-color: $element-colour;

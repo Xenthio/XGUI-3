@@ -2,6 +2,7 @@
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
+using System.Linq;
 namespace XGUI
 {
 	/// <summary>
@@ -200,6 +201,19 @@ namespace XGUI
 
 		int positionHash;
 
+		bool ThumbPosDoNotCompensateForThumbSize()
+		{
+			/*foreach ( var b in StyleSheet.CollectVariables() )
+			{
+				Log.Info( $"{b.key}: {b.value}" );
+			}*/
+			if ( StyleSheet.CollectVariables().Any( x => x.key == "$xgui-slider-thumbsizedonotcompensate" && x.value.ToBool() ) )
+			{
+				return true;
+			}
+			return false;
+		}
+
 		/// <summary>
 		/// Updates the styles for TrackInner and Thumb to position us based on the current value.
 		/// Note this purposely uses percentages instead of pixels when setting up, this way we don't
@@ -213,6 +227,14 @@ namespace XGUI
 			positionHash = hash;
 
 			var pos = MathX.LerpInverse( Value, MinValue, MaxValue, true );
+
+			if ( !ThumbPosDoNotCompensateForThumbSize() )
+			{
+				var thumbSize = Thumb.Box.Rect.Width;
+				// pos needs to be adjusted to account for the thumb size in pixels, but still needs to be a fraction
+				var pixelPos = pos * SliderControl.Box.Rect.Width - (thumbSize);
+				pos = MathX.LerpInverse( pixelPos, 0, SliderControl.Box.Rect.Width, true );
+			}
 
 			TrackInner.Style.Width = Length.Fraction( pos );
 			Thumb.Style.Left = Length.Fraction( pos );

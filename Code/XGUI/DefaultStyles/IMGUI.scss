@@ -172,25 +172,27 @@ $window-title-icon: url("XGUI/Resources/icon_down.png");
     > .label {
         height: 20px;
     }
-}
-
+} 
 .slider {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 22px;
 
     > .thumb {
         background-color: $element-colour;
         width: 12px;
-        height: 15px;
+        height: 17px;
     }
 
     > .track {
-        height: 19px;
+        height: 22px;
         background-color: $frame-background-colour;
     }
 
     > .scalesteps {
 
         > .step {
-            display:none;
+            display: none;
         }
     }
 }
@@ -198,5 +200,6 @@ $window-title-icon: url("XGUI/Resources/icon_down.png");
 // textentry
 
 .textentry {
+    height: 22px;
     background-color: $frame-background-colour;
 }
