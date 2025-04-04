@@ -174,6 +174,7 @@ public partial class ImXGUI // Todo, partial to move things out into seperate fi
 			// Setup content panel
 			_currentPanel = new Panel();
 			_currentPanel.ElementName = $"{title}_ContentPanel"; // Give it a name for debugging
+			_currentPanel.SetClass( "window-content-panel", true ); // Add a class for styling
 			_currentPanel.Style.FlexDirection = FlexDirection.Column;
 			_currentPanel.Style.OverflowY = OverflowMode.Scroll; // Default scroll
 			_currentPanel.Style.FlexGrow = 1;
