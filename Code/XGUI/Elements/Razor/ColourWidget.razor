@@ -11,9 +11,9 @@
     <label>Select Colour</label>
 
     <div class="colour-picker">
-        <div class="colour-map" @ref="ColourMap" style="background-color: @GetHueColor();">
-        @* <div class="colour-map" @ref="ColourMap" style="background-image: linear-gradient(to bottom, @GetHueColor(), #000000);"> *@
-            <div class="colour-map-overlay white"></div>
+        <div class="colour-map" @ref="ColourMap">
+            @* <div class="colour-map-overlay main" style="background-color: @GetHueColor();"></div> *@
+            <div class="colour-map-overlay white" style="background: @GenerateWhiteToHueGradient();"></div>
             <div class="colour-map-overlay black"></div>
             <div class="picker-thumb" style="left: @($"{SaturationPct}%"); top: @($"{(100-ValuePct)}%")"></div>
         </div>
@@ -135,6 +135,34 @@
         Value = hsv.Value;
         OnChange?.Invoke(CurrentColor);
         StateHasChanged();
+    }
+
+    private string GenerateWhiteToHueGradient()
+    {
+        var hueColor = GetHueColor();
+        var hueColorObj = Color.Parse(hueColor).Value;
+
+        var gradientStops = new List<string>();
+        const int steps = 10; // 11 points (0% to 100%)
+
+        for (int i = 0; i <= steps; i++)
+        {
+            float t = i / (float)steps;
+
+            // Calculate intermediate color using linear interpolation
+            var r = (byte)Math.Round(255 * (1 - t) + hueColorObj.r * t * 255);
+            var g = (byte)Math.Round(255 * (1 - t) + hueColorObj.g * t * 255);
+            var b = (byte)Math.Round(255 * (1 - t) + hueColorObj.b * t * 255);
+
+            // For the intermediate stops, set alpha based on position (full alpha at left, zero at right)
+            var a = 255;
+
+            // Add the color stop to the gradient
+            var hex = $"#{r:X2}{g:X2}{b:X2}{a:X2}";
+            gradientStops.Add(hex);
+        }
+
+        return $"linear-gradient(to right, {string.Join(", ", gradientStops)})";
     }
 
     public List<Color> WebColours = new List<Color>

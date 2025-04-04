@@ -11,12 +11,12 @@ public partial class ImXGUI
 	public static bool Checkbox( string label, ref bool value )
 	{
 		return HandleValueControl<bool, XGUI.CheckBox>(
-			label,
-			ref value,
-			( cb, val ) => cb.Checked = val,
-			( cb ) => cb.Checked,
-			null,
-			cb => cb.LabelText = label
+			label: label,
+			value: ref value,
+			setControlValue: ( cb, val ) => cb.Checked = val,
+			getControlValue: ( cb ) => cb.Checked,
+			setupContainer: null,
+			additionalSetup: cb => cb.LabelText = label
 		);
 	}
 }
