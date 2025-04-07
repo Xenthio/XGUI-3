@@ -1,0 +1,71 @@
+﻿.TabContainer {
+	margin: 6px;
+	flex-direction: column;
+	justify-content: flex-start;
+
+	> .tabs {
+		z-index: 1;
+		
+		// This wrapper aligns the tabs properly
+		flex-direction: row;
+
+		> .button {
+			background-color: $sheet-colour;
+			border-top: 1px solid $sheet-border-colour-top;
+			border-left: 1px solid $sheet-border-colour-left;
+			border-bottom: 1px solid $sheet-border-colour-top;
+			border-right: 0; // Remove right border
+			font-size: $default-text-size;
+			font-family: $default-text-font;
+			font-smooth: $default-text-smooth;
+			padding-bottom: 1px;
+			border-radius: 0px;
+			border-top-left-radius: 1px;
+			border-top-right-radius: 1px;
+			padding-left: 6px;
+			padding-right: 6px;
+			// Move unselected ones down
+			height: 18px;
+			align-items: center;
+			min-width: 48px;
+			top: 4px;
+			z-index: -10; 
+			margin-right: -1px; // Negative margin allows borders to overlap
+
+			&:not(:last-child) {
+				border-right: 1px solid $sheet-border-colour-right; // Add right border to all except last child
+			}
+
+			&.active {
+				padding-bottom: 3px;
+				color: $default-text-colour-active;
+				background-color: $sheet-colour-active;
+				// Offset up when selected
+				top: 1px;
+				z-index: 15000;
+				border-bottom: 0px;
+				height: 21px;
+				border-right: 1px solid $sheet-border-colour-right; // Always show right border for active tab
+				margin-right: -1px; // Compensate for the right border
+			}
+
+			&:hover {
+			}
+			
+			// Last child should always have right border
+			&:last-child {
+				border-right: 1px solid $sheet-border-colour-right;
+			}
+		}
+	}
+
+	> .sheets {
+		overflow: hidden;
+		background-color: $sheet-colour-active;
+		border-top: 1px solid $sheet-border-colour-top;
+		border-left: 1px solid $sheet-border-colour-left;
+		border-bottom: 1px solid $sheet-border-colour-bottom;
+		border-right: 1px solid $sheet-border-colour-right;
+		padding: 5px;
+	}
+}

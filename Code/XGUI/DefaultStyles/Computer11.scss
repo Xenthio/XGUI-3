@@ -8,6 +8,13 @@ $base-colour: #F0F0F0;
 $base-colour-inset: #FFFFFF;
 $base-colour-active: #00047C;
 
+$sheet-colour: #F3F3F3;
+$sheet-colour-active: #F9F9F9;
+$sheet-border-colour-top: #E5E5E5;
+$sheet-border-colour-left: #E5E5E5;
+$sheet-border-colour-bottom: #E5E5E5;
+$sheet-border-colour-right: #E5E5E5;
+
 $control-colour: #FDFDFD;
 $control-colour-inset: #FFFFFF;
 $control-colour-active: #CCE4F7;
@@ -215,5 +222,25 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		padding-top: 1px;
 		transition: all 0.2s linear;
 		border-bottom: solid 2px #0067C0;
+	}
+}
+.TabContainer {
+
+	> .tabs {
+
+		> .button {
+			transition: all 0s linear;
+
+			&.active {
+				transition: all 0s linear;
+			}
+
+			&:hover {
+			}
+		}
+	}
+
+
+	> .sheets {
 	}
 }
