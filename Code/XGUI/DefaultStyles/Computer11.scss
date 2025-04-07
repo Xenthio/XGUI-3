@@ -81,7 +81,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 @import "/XGUI/DefaultStyles/BaseStyles/Windows.scss";
 
 .Window {
-	font-weight: 450;
+	font-weight: normal;
 	border-radius: 8.01px;
 	box-shadow: 0px 0px 24px 1px, rgba(0,0,0,0.3);
 
@@ -150,10 +150,10 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 .checkbox {
 	.checkpanel, iconpanel {
 		transition: all 0.15s linear;
-		border-top: 1px solid #626262;
-		border-left: 1px solid #626262;
-		border-bottom: 1px solid #626262;
-		border-right: 1px solid #626262;
+		border-top: 0.25px solid #626262;
+		border-left: 0.25px solid #626262;
+		border-bottom: 0.25px solid #626262;
+		border-right: 0.25px solid #626262;
 		border-radius: 3px;
 		background-color: transparent;
 		width: 13px;
@@ -165,7 +165,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		> .checkpanel, .iconpanel {
 			transition: all 0.15s linear;
 			border: none;
-			background-color: $accent-colour; 
+			background-color: $accent-colour;
 
 			.checklabel {
 				font-family: "Segoe Fluent Icons";
@@ -199,8 +199,8 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 .textentry,
 .textbox {
 	border-radius: 1px;
-	border: solid 1px #ECECEC;
-	border-bottom: solid 1px #838383;
+	border: solid 0.25px #ECECEC;
+	border-bottom: solid 0.25px #838383;
 	transition: all 0.3s linear;
 
 	&:hover {
@@ -212,7 +212,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	}
 
 	&:focus {
-		padding-top:1px;
+		padding-top: 1px;
 		transition: all 0.2s linear;
 		border-bottom: solid 2px #0067C0;
 	}

@@ -4,13 +4,18 @@ namespace XGUI;
 public class XGUIRootComponent : PanelComponent
 {
 	public XGUIRootPanel XGUIPanel { get; private set; }
+	public ScreenPanel ScreenPanel { get; private set; }
 	protected override void OnStart()
 	{
 		// check if there's a screenpanel here, create one if not.
-		if ( GameObject.Components.TryGet<ScreenPanel>( out var screenPanel ) == false )
+		if ( GameObject.Components.TryGet<ScreenPanel>( out var screenPanel ) )
 		{
-			var pnl = GameObject.AddComponent<ScreenPanel>();
-			pnl.AutoScreenScale = false;
+			ScreenPanel = screenPanel;
+		}
+		else
+		{
+			ScreenPanel = GameObject.AddComponent<ScreenPanel>();
+			ScreenPanel.AutoScreenScale = false;
 		}
 		base.OnStart();
 
@@ -18,5 +23,10 @@ public class XGUIRootComponent : PanelComponent
 		Panel.AddChild( XGUIPanel );
 
 		Scene.GetSystem<XGUISystem>().Panel = XGUIPanel;
+	}
+	protected override void OnFixedUpdate()
+	{
+		base.OnFixedUpdate();
+		ScreenPanel.Scale = Screen.DesktopScale;
 	}
 }

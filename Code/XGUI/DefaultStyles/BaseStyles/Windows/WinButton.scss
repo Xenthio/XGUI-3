@@ -2,25 +2,25 @@
 	height: 21px;
 	align-items: center;
 	justify-content: center;
-	border-top: 1px solid $control-border-colour-top;
-	border-left: 1px solid $control-border-colour-left;
-	border-bottom: 1px solid $control-border-colour-bottom;
-	border-right: 1px solid $control-border-colour-right;
+	border-top: 0.25px solid $control-border-colour-top;
+	border-left: 0.25px solid $control-border-colour-left;
+	border-bottom: 0.25px solid $control-border-colour-bottom;
+	border-right: 0.25px solid $control-border-colour-right;
 	background-color: $control-colour;
 
 	&:hover {
-		border-top: 1px solid $control-border-colour-top-hover;
-		border-left: 1px solid $control-border-colour-left-hover;
-		border-bottom: 1px solid $control-border-colour-bottom-hover;
-		border-right: 1px solid $control-border-colour-right-hover;
+		border-top: 0.25px solid $control-border-colour-top-hover;
+		border-left: 0.25px solid $control-border-colour-left-hover;
+		border-bottom: 0.25px solid $control-border-colour-bottom-hover;
+		border-right: 0.25px solid $control-border-colour-right-hover;
 		background-color: $control-colour-hover;
 	}
 
 	&:active {
-		border-top: 1px solid $control-border-colour-top-active;
-		border-left: 1px solid $control-border-colour-left-active;
-		border-bottom: 1px solid $control-border-colour-bottom-active;
-		border-right: 1px solid $control-border-colour-right-active;
+		border-top: 0.25px solid $control-border-colour-top-active;
+		border-left: 0.25px solid $control-border-colour-left-active;
+		border-bottom: 0.25px solid $control-border-colour-bottom-active;
+		border-right: 0.25px solid $control-border-colour-right-active;
 		background-color: $control-colour-active;
 
 		&:focus, &.focus {
