@@ -1,0 +1,66 @@
+
+.Window {
+	overflow: hidden;
+	color: $default-text-colour;
+	border: 1px solid $window-border-colour;
+	border-radius:6px;
+	background-color: $base-colour;
+	font-size: $default-text-size;
+	font-family: $default-text-font;
+	font-smooth: $default-text-smooth;
+
+	> .window-content-panel {
+		padding: 6px;
+	}
+
+	&.unfocused {
+		.TitleBar {
+			background-color: $window-titlebar-colour-inactive;
+			color: $window-titlebar-text-colour-inactive;
+		}
+	}
+
+	.TitleBar {
+		align-items: center;
+		height: 30px;
+		background-color: $window-titlebar-colour;
+		color: $window-titlebar-text-colour;
+		flex-shrink: 0;
+
+		.TitleSpacer {
+			padding: 10px;
+		}
+
+		.TitleIcon {
+			width: 16px;
+			height: 16px;
+			background-size: cover;
+		}
+
+		.TitleLabel {
+			font-weight: $window-title-text-weight;
+		}
+
+		.Control {
+			align-items: center;
+			justify-content: center;
+			border-top: 0.25px solid $border-colour-top;
+			border-left: 0.25px solid $border-colour-left;
+			border-bottom: 0.25px solid $border-colour-bottom;
+			border-right: 0.25px solid $border-colour-right;
+			font-family: Marlett;
+			font-size: 10;
+
+			&:active {
+				border-top: 0.25px solid $border-colour-top-inset;
+				border-left: 0.25px solid $border-colour-left-inset;
+				border-bottom: 0.25px solid $border-colour-bottom-inset;
+				border-right: 0.25px solid $border-colour-right-inset;
+
+				&:focus, &.focus {
+					border: 0px;
+				}
+			}
+		}
+	}
+}
