@@ -25,10 +25,31 @@ $control-colour-hover: #787A7F;
 $control-colour-hover-2: #717377;
 $control-colour-active: #606165;
 $control-colour-active-2: #595A5E;
-$control-colour-focus: #5A5B5F;
-$control-colour-focus-2: #5A5B5F;
+$control-colour-focus: #48494C;
+$control-colour-focus-2: #414144;
 $control-colour-open: #CCE4F7;
 $control-colour-open-2: #CCE4F7;
+
+$control-border-colour: #525356; 
+$control-border-colour-hover: #838589;
+$control-border-colour-active: #6B6C70;
+$control-border-colour-focus: #0078D4;
+$control-border-colour-open: #005FB7;
+
+// button types
+
+$control-colour-primary: #3F73D4;
+$control-colour-primary-2: #3C6FCD;
+$control-colour-primary-hover: #4C8AFF;
+$control-colour-primary-hover-2: #4C8AFF;
+$control-colour-primary-active: #4681EE;
+$control-colour-primary-active-2: #447DE6;
+
+$control-border-colour-primary: #618DDF;
+$control-border-colour-primary-hover: #70A2FF;
+$control-border-colour-primary-active: #6C9DF8;
+
+// -------------
 
 $control-inset-colour: #201F21;
 $control-inset-colour-hover: #19181A;
@@ -37,12 +58,6 @@ $checkbox-colour: #201F21;
 $checkbox-colour-checked: #323E4D;
 $checkbox-border-colour-checked: #3D5168;
 $checkbox-icon-colour: #54A6FF;
-
-$control-border-colour: #525356; 
-$control-border-colour-hover: #838589;
-$control-border-colour-active: #6B6C70;
-$control-border-colour-focus: #0078D4;
-$control-border-colour-open: #005FB7;
  
 $border-colour-top: #D0D0D0;
 $border-colour-left: #D0D0D0;

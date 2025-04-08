@@ -67,6 +67,7 @@ public partial class Window : Panel
 			if ( autofocus == "1" )
 			{
 				button.Focus();
+				button.AddClass( "autofocused" );
 			}
 		}
 	}

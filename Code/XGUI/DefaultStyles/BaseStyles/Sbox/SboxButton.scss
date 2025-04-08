@@ -7,7 +7,6 @@
 	background-image: linear-gradient(to right, $control-colour, $control-colour-2);
 	padding: 6px;
 
-
 	&:focus, &.focus {
 		border: 0.25px solid $control-border-colour-focus;
 		background-image: linear-gradient(to right, $control-colour-focus, $control-colour-focus-2);
@@ -21,8 +20,21 @@
 	&:active {
 		border: 0.25px solid $control-border-colour-active;
 		background-image: linear-gradient(to right, $control-colour-active, $control-colour-active-2);
+	}
 
-		&:focus, &.focus {
+	&.autofocused,
+	&.primary {
+		border: 0.25px solid $control-border-colour-primary;
+		background-image: linear-gradient(to right, $control-colour-primary, $control-colour-primary-2);
+
+		&:hover {
+			border: 0.25px solid $control-border-colour-primary-hover;
+			background-image: linear-gradient(to right, $control-colour-primary-hover, $control-colour-primary-hover-2);
+		}
+
+		&:active {
+			border: 0.25px solid $control-border-colour-primary-active;
+			background-image: linear-gradient(to right, $control-colour-primary-active, $control-colour-primary-active-2);
 		}
 	}
 }
