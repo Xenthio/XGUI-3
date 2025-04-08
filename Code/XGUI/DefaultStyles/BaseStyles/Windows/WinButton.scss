@@ -7,6 +7,16 @@
 	border-bottom: 0.25px solid $control-border-colour-bottom;
 	border-right: 0.25px solid $control-border-colour-right;
 	background-color: $control-colour;
+	padding: 6px;
+
+
+	&:focus, &.focus {
+		border-top: 0.25px solid $control-border-colour-top-focus;
+		border-left: 0.25px solid $control-border-colour-left-focus;
+		border-bottom: 0.25px solid $control-border-colour-bottom-focus;
+		border-right: 0.25px solid $control-border-colour-right-focus;
+		background-color: $control-colour-focus;
+	}
 
 	&:hover {
 		border-top: 0.25px solid $control-border-colour-top-hover;
@@ -24,11 +34,12 @@
 		background-color: $control-colour-active;
 
 		&:focus, &.focus {
-			border: 0px;
 		}
 	}
+}
 
-	&:focus, &.focus {
-		box-shadow: 0px 0px 0px 2px black, $outer-boxshadow;
+.self-layout {
+	.button {
+		min-width: 73px;
 	}
 }

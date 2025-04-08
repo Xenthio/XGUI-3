@@ -35,7 +35,7 @@
 //@import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUISidebar.scss";
 
 // Slider
-//@import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUISlider.scss";
+@import "/XGUI/DefaultStyles/BaseStyles/Windows/WinSlider.scss";
 
 // Checkbox
 @import "/XGUI/DefaultStyles/BaseStyles/Windows/WinCheckBox.scss";
@@ -44,4 +44,4 @@
 //@import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUILabels.scss";
 
 // ComboBox/Selector/Dropdown
-//@import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUIComboBox.scss";
+@import "/XGUI/DefaultStyles/BaseStyles/Windows/WinComboBox.scss";

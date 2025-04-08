@@ -16,6 +16,7 @@ namespace XGUI
 		public Panel Track { get; protected set; }
 		public Panel TrackInner { get; protected set; }
 		public Panel Thumb { get; protected set; }
+		public Label ThumbIconLabel { get; protected set; }
 		public Panel ScaleSteps { get; protected set; }
 		public Label ScaleStepsMin { get; protected set; }
 		public Label ScaleStepsMax { get; protected set; }
@@ -56,6 +57,7 @@ namespace XGUI
 			TrackInner = Track.Add.Panel( "inner" );
 
 			Thumb = SliderControl.Add.Panel( "thumb" );
+			ThumbIconLabel = Thumb.Add.Label( "", "thumbicon" );
 
 			if ( HasScales )
 			{

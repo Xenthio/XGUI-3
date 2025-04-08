@@ -5,7 +5,6 @@
 
 	> .tabs {
 		z-index: 1;
-		
 		// This wrapper aligns the tabs properly
 		flex-direction: row;
 
@@ -18,18 +17,19 @@
 			font-size: $default-text-size;
 			font-family: $default-text-font;
 			font-smooth: $default-text-smooth;
-			padding-bottom: 1px;
 			border-radius: 0px;
 			border-top-left-radius: 1px;
 			border-top-right-radius: 1px;
+			padding: 0px;
 			padding-left: 6px;
 			padding-right: 6px;
+			padding-bottom: 1px;
 			// Move unselected ones down
 			height: 18px;
 			align-items: center;
 			min-width: 48px;
 			top: 4px;
-			z-index: -10; 
+			z-index: -10;
 			margin-right: -1px; // Negative margin allows borders to overlap
 
 			&:not(:last-child) {
@@ -51,7 +51,6 @@
 
 			&:hover {
 			}
-			
 			// Last child should always have right border
 			&:last-child {
 				border-right: 1px solid $sheet-border-colour-right;

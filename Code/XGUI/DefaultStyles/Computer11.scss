@@ -3,6 +3,9 @@
 @import "/XGUI/FunctionStyles/FunctionStyles.scss";
 
 $accent-colour: #005FB8;
+$accent-colour-2: #0078D7;
+
+$border-colour: #0078D7;
 
 $base-colour: #F0F0F0;
 $base-colour-inset: #FFFFFF;
@@ -17,8 +20,10 @@ $sheet-border-colour-right: #E5E5E5;
 
 $control-colour: #FDFDFD;
 $control-colour-inset: #FFFFFF;
-$control-colour-active: #CCE4F7;
 $control-colour-hover: #E0EEF9;
+$control-colour-active: #CCE4F7;
+$control-colour-focus: #FDFDFD;
+$control-colour-open: #CCE4F7;
 
 $control-border-colour-top: #D0D0D0;
 $control-border-colour-left: #D0D0D0;
@@ -34,6 +39,16 @@ $control-border-colour-top-active: #005499;
 $control-border-colour-left-active: #005499;
 $control-border-colour-bottom-active: #005499;
 $control-border-colour-right-active: #005499;
+
+$control-border-colour-top-focus: #0078D4;
+$control-border-colour-left-focus: #0078D4;
+$control-border-colour-bottom-focus: #006BBE;
+$control-border-colour-right-focus: #0078D4;
+
+$control-border-colour-top-open: #005FB7;
+$control-border-colour-left-open: #005FB7;
+$control-border-colour-bottom-open: #005FB7;
+$control-border-colour-right-open: #005FB7;
  
 $border-colour-top: #D0D0D0;
 $border-colour-left: #D0D0D0;
@@ -70,6 +85,22 @@ $border-colour-top-outer-inset: #808080;
 $border-colour-left-outer-inset: #808080;
 $border-colour-bottom-outer-inset: #FFFFFF;
 $border-colour-right-outer-inset: #FFFFFF;
+
+$slider-track-colour: #E7EAEA;
+$slider-track-border-colour-top: #D6D6D6;
+$slider-track-border-colour-left: #D6D6D6;
+$slider-track-border-colour-bottom: #D6D6D6;
+$slider-track-border-colour-right: #D6D6D6;
+
+$slider-step-colour: #C4C4C4;
+$slider-step-min-colour: #C4C4C4;
+$slider-step-max-colour: #C4C4C4;
+
+$slider-thumb-colour: #0078D7;
+$slider-thumb-border-colour-top: #0078D7;
+$slider-thumb-border-colour-left: #0078D7;
+$slider-thumb-border-colour-bottom: #0078D7;
+$slider-thumb-border-colour-right: #0078D7;
 
 $default-text-size: 12px;
 $default-text-font: Segoe UI Variable;
@@ -162,9 +193,25 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		border-bottom: 0.25px solid #626262;
 		border-right: 0.25px solid #626262;
 		border-radius: 3px;
-		background-color: transparent;
+		background-color: #F3F3F3;
 		width: 13px;
 		height: 13px;
+		min-width: 13px;
+		min-height: 13px;
+
+		&:hover {
+			transition: all 0.15s linear;
+			background-color: #EAEAEA;
+
+			&:active {
+				transition: all 0.15s linear;
+				background-color: #E2E2E2;
+				border-top: 0.25px solid #C3C3C3;
+				border-left: 0.25px solid #C3C3C3;
+				border-bottom: 0.25px solid #C3C3C3;
+				border-right: 0.25px solid #C3C3C3;
+			}
+		}
 	}
 
 	&.checked {
@@ -243,4 +290,57 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 	> .sheets {
 	}
+}
+
+.slider {
+	> .thumb {
+		color: $slider-thumb-colour;
+		height: 14px;
+		margin-bottom: 5px;
+
+		> .thumbicon {
+			font-family: 'Segoe UI Symbol';
+			font-size: 18px;
+			transform: translate(-4px, 1px);
+			content: "⏷";
+		}
+
+		&:hover {
+			background-color: #171717;
+			color: #171717;
+			border-color: #171717;
+		}
+
+		&:active {
+			background-color: #CCCCCC;
+			color: #CCCCCC;
+			border-color: #CCCCCC;
+		}
+	}
+}
+.button {
+	&.selector {
+		border-radius: 2px;
+	}
+}
+.selector {
+	border-top: 0.25px solid $control-border-colour-top;
+	border-left: 0.25px solid $control-border-colour-left;
+	border-bottom: 0.25px solid $control-border-colour-bottom;
+	border-right: 0.25px solid $control-border-colour-right;
+
+	> .selector_indicator {
+		border: 0px;
+		background-color: transparent;
+		content: "";
+		font-size:10px;
+		font-family: "Segoe Fluent Icons";
+		top:2px;
+		align-items: center;
+	}
+}
+
+
+.dropdown-panel {
+	box-shadow: 2px 2px 5px 0px, rgba(0,0,0,0.7);
 }
