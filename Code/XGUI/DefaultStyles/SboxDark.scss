@@ -69,7 +69,7 @@ $border-colour-left-outer: #FFFFFF;
 $border-colour-bottom-outer: #000000;
 $border-colour-right-outer: #000000;
 
-$window-titlebar-colour: #111111;
+$window-titlebar-colour: #151515;
 $window-titlebar-colour-inactive: #333333;
 $window-titlebar-text-colour: #F8F8F8;
 $window-titlebar-text-colour-inactive: #919191;
@@ -107,7 +107,7 @@ $default-text-smooth: auto;
 
 $title-text-size: 12px;
 $title-text-font: Poppins;
-$title-text-weight: bold;
+$title-text-weight: black;
 $title-text-smooth: auto;
 
 $default-text-colour: #DDDDDD;
@@ -116,45 +116,5 @@ $default-text-colour-inactive: #67686C;
 $default-text-colour-alt: #111111;
 
 @import "/XGUI/DefaultStyles/BaseStyles/Sbox.scss";
-
-.Window {
-
-	.titlebar {
-		font-family: Poppins;
-		font-weight: bold;
-	}
-}
-
-.button {
-
-	&:hover {
-		background: linear-gradient(to right, #787A7F, #717377);
-	}
-
-	&:active {
-		background: linear-gradient(to right, #606165, #595A5E);
-	}
-}
+  
  
-
-
-.TabContainer {
-
-	> .tabs {
-
-		> .button {
-			border: none;
-
-			&.active { 
-			}
-
-			&:hover { 
-			}
-		}
-	}
-
-
-	> .sheets {
-		border: none;
-	}
-}

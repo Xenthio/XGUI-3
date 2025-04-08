@@ -3,14 +3,14 @@
 	overflow: hidden;
 	color: $default-text-colour;
 	border: 1px solid $window-border-colour;
-	border-radius:6px;
+	border-radius: 6px;
 	background-color: $base-colour;
 	font-size: $default-text-size;
 	font-family: $default-text-font;
 	font-smooth: $default-text-smooth;
 
 	> .window-content-panel {
-		padding: 6px;
+		padding: 8px;
 	}
 
 	&.unfocused {
@@ -23,8 +23,13 @@
 	.TitleBar {
 		align-items: center;
 		height: 30px;
+		font-family: Poppins;
+		font-weight: bold;
 		background-color: $window-titlebar-colour;
 		color: $window-titlebar-text-colour;
+		font-size: $title-text-size;
+		font-family: $title-text-font;
+		font-weight: $title-text-weight; 
 		flex-shrink: 0;
 
 		.TitleSpacer {
@@ -44,23 +49,32 @@
 		.Control {
 			align-items: center;
 			justify-content: center;
-			border-top: 0.25px solid $border-colour-top;
-			border-left: 0.25px solid $border-colour-left;
-			border-bottom: 0.25px solid $border-colour-bottom;
-			border-right: 0.25px solid $border-colour-right;
-			font-family: Marlett;
-			font-size: 10;
+			aspect-ratio: 1;
+			margin-right: 4px;
+		}
 
-			&:active {
-				border-top: 0.25px solid $border-colour-top-inset;
-				border-left: 0.25px solid $border-colour-left-inset;
-				border-bottom: 0.25px solid $border-colour-bottom-inset;
-				border-right: 0.25px solid $border-colour-right-inset;
+		.MinimiseButton {
+			background-image: url("XGUI/Resources/sbox/minimize.png");
+			background-size: 8px;
+			background-position: center;
+			background-repeat: no-repeat;
+			color: rgba(0,0,0,0);
+		}
 
-				&:focus, &.focus {
-					border: 0px;
-				}
-			}
+		.MaximiseButton {
+			background-image: url("XGUI/Resources/sbox/restore.png");
+			background-size: 8px;
+			background-position: center;
+			background-repeat: no-repeat;
+			color: rgba(0,0,0,0);
+		}
+
+		.CloseButton {
+			background-image: url("XGUI/Resources/sbox/close.png");
+			background-size: 8px;
+			background-position: center;
+			background-repeat: no-repeat;
+			color: rgba(0,0,0,0);
 		}
 	}
 }
