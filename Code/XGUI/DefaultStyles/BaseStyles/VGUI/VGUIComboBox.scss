@@ -41,6 +41,12 @@
 // Popup / Pane
 
 .dropdown-panel {
+	font-size: $default-text-size;
+	font-family: $default-text-font;
+	font-smooth: $default-text-smooth;
+	color: $default-text-colour;
+	pointer-events: all;
+
 	background-color: $base-colour;
 	border-top: 1px solid $border-colour-top;
 	border-left: 1px solid $border-colour-left;
@@ -114,5 +120,10 @@ selectlist {
 				color: $default-text-colour;
 			}
 		}
+	}
+}
+.self-layout {
+	> .combobox {
+		min-width: 128px;
 	}
 }

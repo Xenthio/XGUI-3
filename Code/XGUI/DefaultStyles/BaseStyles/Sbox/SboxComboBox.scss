@@ -33,6 +33,11 @@
 .dropdown-panel {
 	background-color: $base-colour-inset;
 	border: 1px solid $border-colour;
+	font-size: $default-text-size;
+	font-family: $default-text-font;
+	font-smooth: $default-text-smooth;
+	color: $default-text-colour;
+	pointer-events: all;
 
 	> .button {
 		background-color: $base-colour-inset;
@@ -47,5 +52,11 @@
 			background-color: $base-colour-active;
 			transition: all 0s none;
 		}
+	}
+}
+
+.self-layout {
+	> .selector {
+		min-width: 121px;
 	}
 }

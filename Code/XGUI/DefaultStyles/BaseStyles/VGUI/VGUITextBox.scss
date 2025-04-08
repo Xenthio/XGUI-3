@@ -16,3 +16,10 @@
 		padding: 0px;
 	}
 }
+
+.self-layout {
+	> .TextBox,
+	> .TextEntry {
+		min-width: 128px;
+	}
+}

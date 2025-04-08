@@ -48,9 +48,14 @@ $outer-boxshadow: 1px 0px 0px 0px $border-colour-right-outer, 1px 1px 0px 0px $b
 $outer-boxshadow-inset: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px 0px 0px $border-colour-right-outer-inset, 1px -1px 0px 0px $border-colour-right-outer-inset, -1px 1px 0px 0px $border-colour-bottom-outer-inset, -1px 0px 0px 0px $border-colour-left-outer-inset, 0px -1px 0px 0px $border-colour-top-outer-inset, -1px -1px 0px 0px $border-colour-top-outer-inset;
 $outer-boxshadow-window: 1px 0px 0px 0px $border-colour-right-outer-window, 1px 1px 0px 0px $border-colour-right-outer-window, 1px -1px 0px 0px $border-colour-right-outer-window, -1px 1px 0px 0px $border-colour-bottom-outer-window, -1px 0px 0px 0px $border-colour-left-outer-window, 0px -1px 0px 0px $border-colour-top-outer-window, -1px -1px 0px 0px $border-colour-top-outer-window;
 $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0px $border-colour-left-outer, 0px -1px 0px 0px $border-colour-top-outer;
+.self-layout {
+    &.self-layout-row {
+        flex-direction: row;
+        margin-bottom: 6px;
+    }
+}
 
 .Panel {
-    color: $default-text-colour;
     border-top: 1px solid $border-colour-top-window;
     border-left: 1px solid $border-colour-left-window;
     border-bottom: 1px solid $border-colour-bottom-window;
@@ -60,6 +65,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
     font-size: $default-text-size;
     font-family: $default-text-font;
     font-smooth: $default-text-smooth;
+    color: $default-text-colour;
 }
 
 .Window {
@@ -183,6 +189,11 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
         box-shadow: 0px 0px 0px 2px black, $outer-boxshadow;
     }
 }
+.self-layout {
+    > .button {
+        min-width: 73px;
+    }
+}
 
 .textentry {
     border-top: 1px solid $border-colour-top-inset;
@@ -195,10 +206,15 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
     padding: 0px;
     padding-top: 3px;
 }
+.self-layout {
+    > .textentry {
+        min-width: 100px;
+    }
+}
+
 
 .TabContainer {
     flex-direction: column;
-
     > .tabs {
 
         > .button {
@@ -322,6 +338,21 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
         box-shadow: $outer-boxshadow-inset;
     }
 }
+
+.sliderentry {
+
+    > .slider {
+    }
+
+    .textentry:not( .one.two ) {
+        max-width: 48px;
+        min-width: 48px;
+        width: 48px;
+        height: 24px;
+        overflow: hidden;
+        margin-left: 16px;
+    }
+}
 // Selector/Dropdown
 
 .selector {
@@ -359,11 +390,21 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
         padding-top: 3px;
     }
 }
-
+.self-layout {
+    > .selector {
+        min-width: 121px;
+    }
+}
 // Popup / Pane
 
 .dropdown-panel {
     background-color: $base-colour-inset;
+    font-size: $default-text-size;
+    font-family: $default-text-font;
+    font-smooth: $default-text-smooth;
+    color: $default-text-colour;
+    pointer-events:all;
+
     border: 1px solid black;
 
     > .button {

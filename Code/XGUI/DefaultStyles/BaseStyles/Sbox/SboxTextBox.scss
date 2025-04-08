@@ -8,3 +8,10 @@
 		background-color: $control-inset-colour-hover;
 	}
 }
+
+.self-layout {
+	> .textentry,
+	> .textbox {
+		min-width: 100px;
+	}
+}

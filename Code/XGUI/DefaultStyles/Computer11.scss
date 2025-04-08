@@ -123,9 +123,18 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	border-radius: 8.01px;
 	box-shadow: 0px 0px 24px 1px, rgba(0,0,0,0.3);
 
+	&.unfocused {
+		> .TitleBar {
+			> .Control { 
+				color: $window-titlebar-text-colour-inactive;
+			}
+		}
+	}
+
 	.TitleBar {
 
 		.Control {
+			color: $window-titlebar-text-colour;
 			width: 45px;
 			height: 29px;
 			border: none;
@@ -133,7 +142,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 			font-size: 10px;
 			top: -1px;
 			transition: all 0.2s linear;
-			background-color: #E7E9EF00;
+			background-color: #F1F3F900;
 
 			&:hover {
 				transition: all 0.2s linear;
@@ -148,7 +157,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		}
 
 		.CloseButton {
-			font-family: "Segoe MDL2 Assets";
+			font-family: "Segoe Fluent Icons";
 
 			.label {
 				content: "";
@@ -168,7 +177,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		}
 
 		.MinimiseButton {
-			font-family: "Segoe MDL2 Assets";
+			font-family: "Segoe Fluent Icons";
 
 			.label {
 				content: "";
@@ -176,7 +185,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		}
 
 		.MaximiseButton {
-			font-family: "Segoe MDL2 Assets";
+			font-family: "Segoe Fluent Icons";
 
 			.label {
 				content: "";

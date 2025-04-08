@@ -3,6 +3,9 @@ namespace XGUI;
 [Title( "XGUI Root Component" )]
 public class XGUIRootComponent : PanelComponent
 {
+	[Property]
+	public bool UseDesktopScale { get; set; } = true;
+
 	public XGUIRootPanel XGUIPanel { get; private set; }
 	public ScreenPanel ScreenPanel { get; private set; }
 	protected override void OnStart()
@@ -27,6 +30,9 @@ public class XGUIRootComponent : PanelComponent
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
-		ScreenPanel.Scale = Screen.DesktopScale;
+		if ( UseDesktopScale )
+		{
+			ScreenPanel.Scale = Screen.DesktopScale;
+		}
 	}
 }

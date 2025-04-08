@@ -8,5 +8,6 @@
 
 .dropdown-panel {
 	position:absolute;
+	pointer-events:all;
 	flex-direction:column;
 }

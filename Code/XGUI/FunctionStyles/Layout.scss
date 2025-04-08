@@ -1,0 +1,18 @@
+.self-layout {
+	&.self-layout-row {
+		flex-direction: row;
+		margin-bottom: 8px;
+	}
+}
+
+.margin {
+	margin: 8px;
+}
+
+.row {
+	flex-direction: row;
+}
+
+.column {
+	flex-direction: column;
+}

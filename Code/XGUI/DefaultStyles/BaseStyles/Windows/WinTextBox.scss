@@ -7,3 +7,9 @@
 	height: 22px;
 	padding: 0px;
 }
+
+.self-layout {
+	>.textentry {
+		min-width: 100px;
+	}
+}

@@ -259,6 +259,10 @@ public partial class Pane : Panel
 
 	void PositionMe()
 	{
+		//copy stylesheet from source panel
+		UpdateStyle();
+		Parent = FindRootPanel();
+
 		var rect = PopupSource.Box.Rect;
 
 		var w = Parent.Box.Rect.Width * PopupSource.ScaleFromScreen;
@@ -268,8 +272,8 @@ public partial class Pane : Panel
 		Style.MaxHeight = Screen.Height - 50;
 
 		Style.Width = rect.Width;
-		Style.Left = (rect.Left - Parent.Box.Left - 1);
-		Style.Top = (rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset;
+		Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+		Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
 
 		Style.Dirty();
 	}

@@ -55,3 +55,18 @@
 		background-color: $slider-track-colour;
 	}
 }
+
+.sliderentry {
+
+	> .slider {
+	}
+
+	.textentry:not( .one.two ) { 
+		max-width: 48px;
+		min-width: 48px;
+		width: 48px;
+		height: 24px;
+		overflow: hidden;
+		margin-left: 16px; 
+	}
+}

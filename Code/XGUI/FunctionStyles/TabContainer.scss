@@ -19,10 +19,10 @@
         flex-direction: column;
         flex-grow: 1;
 
-        tab {
+        >tab {
             flex-grow: 1;
 
-            div {
+            >div {
                 flex-grow: 0;
                 flex-direction: column;
             }

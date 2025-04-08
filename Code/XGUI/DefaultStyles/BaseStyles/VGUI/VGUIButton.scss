@@ -35,3 +35,9 @@
 		box-shadow: 0px 0px 0px 1px black;
 	}
 }
+
+.self-layout {
+	> .button {
+		min-width: 128px;
+	}
+}
