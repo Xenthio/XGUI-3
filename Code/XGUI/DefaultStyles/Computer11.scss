@@ -276,13 +276,25 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	> .tabs {
 
 		> .button {
+			border-right: 0; // Remove right border
 			transition: all 0s linear;
+			margin-right: -1px; // Negative margin allows borders to overlap
+
+			&:not(:last-child) {
+				border-right: 1px solid $sheet-border-colour-right; // Add right border to all except last child
+			}
 
 			&.active {
 				transition: all 0s linear;
+				border-right: 1px solid $sheet-border-colour-right; // Always show right border for active tab
+				margin-right: -1px; // Compensate for the right border
 			}
 
 			&:hover {
+			}
+			// Last child should always have right border
+			&:last-child {
+				border-right: 1px solid $sheet-border-colour-right;
 			}
 		}
 	}
