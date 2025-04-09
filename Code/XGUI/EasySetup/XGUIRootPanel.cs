@@ -9,7 +9,6 @@ public class XGUIRootPanelOld : Panel
 		Current = this;
 		Style.Width = Length.Percent( 100 );
 		Style.Height = Length.Percent( 100 );
-		Style.PointerEvents = PointerEvents.All;
 		Style.Cursor = "unset";
 		Log.Info( "XGUI Root Panel Initialised." );
 	}

@@ -35,7 +35,6 @@ public partial class Window : Panel
 
 		AddClass( "Panel" );
 		AddClass( "Window" );
-		Style.PointerEvents = PointerEvents.All;
 		Style.Position = PositionMode.Absolute;
 		Style.FlexDirection = FlexDirection.Column;
 	}
