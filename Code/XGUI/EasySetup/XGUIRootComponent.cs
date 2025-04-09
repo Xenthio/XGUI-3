@@ -28,6 +28,7 @@ public class XGUIRootComponent : PanelComponent
 		XGUIPanel = new XGUIRootPanel();
 		Panel.AddChild( XGUIPanel );
 
+		Scene.GetSystem<XGUISystem>().Component = this;
 		Scene.GetSystem<XGUISystem>().Panel = XGUIPanel;
 	}
 	protected override void OnFixedUpdate()

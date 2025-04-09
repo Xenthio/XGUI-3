@@ -4,6 +4,7 @@ namespace XGUI;
 
 public class XGUISystem : GameObjectSystem
 {
+	public XGUIRootComponent Component { get; internal set; }
 	public XGUIRootPanel Panel { get; internal set; }
 	public XGUISystem( Scene scene ) : base( scene )
 	{

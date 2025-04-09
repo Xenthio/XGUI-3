@@ -30,4 +30,21 @@
 		Current = this;
 		base.Tick();
 	}
+	protected override void OnMouseDown(MousePanelEvent e)
+	{
+		base.OnMouseDown(e);
+		// if we're not clicking on anything, blur.
+		if (e.Target == this)
+		{
+			Blur();
+		}
+		else
+		{
+			e.StopPropagation();
+		}
+	}
+	protected override void OnClick(MousePanelEvent e)
+	{
+		base.OnClick(e);	
+	}
 }
