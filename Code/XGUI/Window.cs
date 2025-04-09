@@ -166,14 +166,25 @@ public partial class Window : Panel
 
 			PreMinimisedPos = Position;
 
-			Position.x = 0;
+			var offset = 0;
+
+			// offset x for other minimised windows
+			foreach ( Window window in Parent.Children.OfType<Window>() )
+			{
+				if ( window.Minimised )
+				{
+					offset += 180;
+				}
+			}
+			Position.x = 0 + offset;
 
 			var newheight = TitleBar.Box.Rect.Size.y + ((TitleBar.Box.Rect.Position.y - Box.Rect.Position.y) * 2);
 			Log.Info( newheight );
 			Position.y = Parent.Box.Rect.Size.y - newheight;
 
+
 			Style.Height = newheight;
-			Style.Width = 128;
+			Style.Width = 180;
 			Minimised = true;
 		}
 		else
