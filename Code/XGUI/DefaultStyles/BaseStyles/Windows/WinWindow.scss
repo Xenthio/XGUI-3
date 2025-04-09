@@ -24,7 +24,8 @@
 
 	.TitleBar {
 		align-items: center;
-		height: 30px;
+		padding: 2px;
+		height: 18px;
 		background-color: $window-titlebar-colour;
 		color: $window-titlebar-text-colour;
 		flex-shrink: 0;
@@ -40,12 +41,17 @@
 		}
 
 		.TitleLabel {
+			text-align: center; 
 			font-weight: $window-title-text-weight;
 		}
 
 		.Control {
+			padding: 0px;
 			align-items: center;
 			justify-content: center;
+			width: 16px;
+			height: 14px;
+			color: $default-text-colour;
 			border-top: 0.25px solid $border-colour-top;
 			border-left: 0.25px solid $border-colour-left;
 			border-bottom: 0.25px solid $border-colour-bottom;
@@ -64,5 +70,9 @@
 				}
 			}
 		}
+	}
+
+	.CloseButton {
+		margin-left: 3px;
 	}
 }

@@ -18,8 +18,8 @@
 			font-family: $default-text-font;
 			font-smooth: $default-text-smooth;
 			border-radius: 0px;
-			border-top-left-radius: 1px;
-			border-top-right-radius: 1px;
+			border-top-left-radius: 2px;
+			border-top-right-radius: 2px;
 			padding: 0px;
 			padding-left: 6px;
 			padding-right: 6px;
@@ -27,7 +27,7 @@
 			// Move unselected ones down
 			height: 18px;
 			align-items: center;
-			min-width: 48px;
+			min-width: 64px;
 			top: 4px;
 			z-index: -10;
 

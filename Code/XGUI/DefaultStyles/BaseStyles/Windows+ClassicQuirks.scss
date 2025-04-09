@@ -1,0 +1,34 @@
+// Additional optional feature for Windows based styles.
+
+.button {
+	padding:2px;
+	>.label:not(.iconpanel){ 
+		margin-top:2px;
+	}
+}
+
+.window {
+	> .titlebar {
+		> .titlelabel {
+			top: 1px;
+		}
+
+		> .control {
+			> .label {
+				margin-top: 0px;
+			} 
+		}
+	}
+}
+
+.TabContainer {
+	> .tabs {
+		> .button {
+			&.active {
+				> .label {
+					margin-top: 0px;
+				}
+			}
+		}
+	}
+}

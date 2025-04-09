@@ -20,18 +20,20 @@
 	> .scalestepmin {
 		color: $slider-step-min-colour;
 		font-size: 9px;
+		top: 25px;
 	}
 
 	> .scalestepmax {
 		font-size: 9px;
 		color: $slider-step-max-colour;
+		top: 25px;
+		right: 0px;
 	}
 
 	> .scalesteps {
 		top: 17px;
 
 		> .step {
-			left: 4px;
 			background-color: $slider-step-colour;
 			width: 1px;
 			height: 3px;

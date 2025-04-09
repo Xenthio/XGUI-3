@@ -125,13 +125,15 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 	&.unfocused {
 		> .TitleBar {
-			> .Control { 
+			> .Control {
 				color: $window-titlebar-text-colour-inactive;
 			}
 		}
 	}
 
 	.TitleBar {
+		padding: 0px;
+		height: 30px;
 
 		.Control {
 			color: $window-titlebar-text-colour;
@@ -157,6 +159,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		}
 
 		.CloseButton {
+			margin-left: 0px;
 			font-family: "Segoe Fluent Icons";
 
 			.label {
@@ -285,6 +288,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	> .tabs {
 
 		> .button {
+			min-width: 48px;
 			border-right: 0; // Remove right border
 			transition: all 0s linear;
 			margin-right: -1px; // Negative margin allows borders to overlap

@@ -1,0 +1,35 @@
+// Additional optional feature for Windows based styles.
+
+// button that is not any of the following: combobox, selector, button parented to tab
+.button {
+	&:active {
+		> label {
+			top: 1px;
+			left: 1px;
+		}
+	}
+}
+
+// dont apply to these
+
+.selector {
+	&:active {
+		> label {
+			top: 0px;
+			left: 0px;
+		}
+	}
+}
+
+.TabContainer {
+	> .tabs {
+		> .button {
+			&:active {
+				> label {
+					top: 0px;
+					left: 0px;
+				}
+			}
+		}
+	}
+}
