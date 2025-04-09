@@ -2,10 +2,10 @@
 .Window {
 	overflow: hidden;
 	color: $default-text-colour;
-	border-top: 0.25px solid $border-colour-top-window;
-	border-left: 0.25px solid $border-colour-left-window;
-	border-bottom: 0.25px solid $border-colour-bottom-window;
-	border-right: 0.25px solid $border-colour-right-window;
+	border-top: 1px solid $border-colour-top-window;
+	border-left: 1px solid $border-colour-left-window;
+	border-bottom: 1px solid $border-colour-bottom-window;
+	border-right: 1px solid $border-colour-right-window;
 	background-color: $base-colour;
 	font-size: $default-text-size;
 	font-family: $default-text-font;
@@ -72,18 +72,18 @@
 			width: 16px;
 			height: 14px;
 			color: $default-text-colour;
-			border-top: 0.25px solid $border-colour-top;
-			border-left: 0.25px solid $border-colour-left;
-			border-bottom: 0.25px solid $border-colour-bottom;
-			border-right: 0.25px solid $border-colour-right;
+			border-top: 1px solid $border-colour-top;
+			border-left: 1px solid $border-colour-left;
+			border-bottom: 1px solid $border-colour-bottom;
+			border-right: 1px solid $border-colour-right;
 			font-family: Marlett;
 			font-size: 10;
 
 			&:active {
-				border-top: 0.25px solid $border-colour-top-inset;
-				border-left: 0.25px solid $border-colour-left-inset;
-				border-bottom: 0.25px solid $border-colour-bottom-inset;
-				border-right: 0.25px solid $border-colour-right-inset;
+				border-top: 1px solid $border-colour-top-inset;
+				border-left: 1px solid $border-colour-left-inset;
+				border-bottom: 1px solid $border-colour-bottom-inset;
+				border-right: 1px solid $border-colour-right-inset;
 
 				&:focus, &.focus {
 					border: 0px;

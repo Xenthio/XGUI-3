@@ -29,7 +29,7 @@
 		color: $window-titlebar-text-colour;
 		font-size: $title-text-size;
 		font-family: $title-text-font;
-		font-weight: $title-text-weight; 
+		font-weight: $title-text-weight;
 		flex-shrink: 0;
 
 		.TitleSpacer {
@@ -40,6 +40,8 @@
 			width: 16px;
 			height: 16px;
 			background-size: cover;
+			background-image: url("XGUI/Resources/sbox/icon.png");
+			margin: 6px;
 		}
 
 		.TitleLabel {

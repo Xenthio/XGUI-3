@@ -16,3 +16,14 @@
 .column {
 	flex-direction: column;
 }
+
+// For ImXGUI
+.window-content-panel {
+	> .button {
+		margin-bottom: 6px;
+	}
+
+	> .label {
+		margin-bottom: 6px;
+	}
+}
