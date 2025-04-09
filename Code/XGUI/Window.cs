@@ -255,6 +255,8 @@ public partial class Window : Panel
 
 		Style.ZIndex = (Parent.ChildrenCount - Parent.GetChildIndex( this )) * 10;
 
+		SetClass( "minimised", this.Minimised );
+		SetClass( "maximised", this.Maximised );
 		SetClass( "unfocused", !this.HasFocus );
 		FocusUpdate();
 	}
