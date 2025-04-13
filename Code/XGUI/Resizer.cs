@@ -11,8 +11,11 @@ public class Resizer : Panel
 	protected override void OnMouseDown( MousePanelEvent e )
 	{
 		base.OnMouseDown( e );
-
-		var parent = Parent as Window;
+		Window parent;
+		if ( Parent is Window )
+			parent = Parent as Window;
+		else
+			parent = Parent.Parent as Window;
 		parent.draggingB = true;
 		parent.draggingR = true;
 		//draggingT = true;
@@ -25,7 +28,11 @@ public class Resizer : Panel
 	protected override void OnMouseUp( MousePanelEvent e )
 	{
 		base.OnMouseUp( e );
-		var parent = Parent as Window;
+		Window parent;
+		if ( Parent is Window )
+			parent = Parent as Window;
+		else
+			parent = Parent.Parent as Window;
 		parent.draggingB = false;
 		parent.draggingR = false;
 		parent.draggingT = false;
@@ -39,7 +46,11 @@ public class Resizer : Panel
 	{
 		base.OnMouseMove( e );
 
-		var parent = Parent as Window;
+		Window parent;
+		if ( Parent is Window )
+			parent = Parent as Window;
+		else
+			parent = Parent.Parent as Window;
 
 		parent.ResizeMove();
 	}

@@ -140,7 +140,35 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 .Window {
 	border: none;
 	background-color: transparent;
-	background: linear-gradient(to bottom, #00000000 2%, $base-colour 2% );
+	background: linear-gradient(to bottom, #00000000 2.3%, $base-colour 2.3% );
+
+	&.unfocused {
+		.TitleBar {
+			background-color: transparent;
+		}
+	}
+
+	&.minimised {
+		.TitleBar {
+			.MinimiseButton {
+				> .label {
+					content: "";
+					background: url("XGUI/Resources/7/restore_icon.png");
+				}
+			}
+		}
+	}
+
+	&.maximised {
+		.TitleBar {
+			.MaximiseButton {
+				> .label {
+					content: "";
+					background: url("XGUI/Resources/7/restore_icon.png");
+				}
+			}
+		}
+	}
 
 	.TitleBar {
 		height: 28px;
@@ -154,6 +182,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		border-image-width-bottom: 5px;
 		background-color: transparent;
 		background: url("XGUI/Resources/7/title_bg.png");
+		background-size:contain;
 
 		.Control {
 			margin-left: 2px;
@@ -165,6 +194,17 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 			border-image-width-right: 2px;
 			border-image-width-top: 2px;
 			border-image-width-bottom: 2px;
+
+
+			&:hover {
+				border-image: url("XGUI/Resources/7/title_control_hover.png");
+				background: url("XGUI/Resources/7/title_control_bg_hover.png");
+			}
+
+			&:active {
+				border-image: url("XGUI/Resources/7/title_control_active.png");
+				background: url("XGUI/Resources/7/title_control_bg_active.png");
+			}
 		}
 
 		.MinimiseButton {
@@ -215,8 +255,8 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 			}
 
 			&:active {
-				border: none;
-				background: url("XGUI/Resources/7/title_control_close_active.png");
+				border-image: url("XGUI/Resources/7/title_control_close_active.png");
+				background: url("XGUI/Resources/7/title_control_close_bg_active.png");
 			}
 		}
 	}
@@ -272,16 +312,42 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 }
 
 
-.TabContainer {
+.textentry,
+.textbox {
+	border-radius: 3px;
+	border: solid 0.25px #ECECEC;
+	border-top: solid 0.25px #ABADB3;
+	border-right: solid 0.25px #DBDFE6;
+	border-left: solid 0.25px #DBDFE6;
+	border-bottom: solid 0.25px #E3E9EF;
+	transition: all 0.3s linear;
 
-	> .tabs {
-
-		> .button { 
-			height:19px;
-		}
+	&:hover {
+		transition: all 0.3s linear;
+		border-top: solid 0.25px #5794BF;
+		border-left: solid 0.25px #B7D5EA;
+		border-right: solid 0.25px #B7D5EA;
+		border-bottom: solid 0.25px #C7E2F1;
 	}
 
+	&:active {
+		transition: all 0.2s linear;
+	}
 
-	> .sheets {
+	&:focus {
+		padding-top: 1px;
+		transition: all 0.2s linear;
+		border-top: solid 0.25px #3D7BAD;
+		border-left: solid 0.25px #B5CFE7;
+		border-right: solid 0.25px #B5CFE7;
+		border-bottom: solid 0.25px #B7D9ED;
+	}
+}
+
+.selector { 
+
+	> .selector_indicator {
+		border: 0px;
+		background-color:transparent;
 	}
 }
