@@ -13,10 +13,10 @@ $base-colour-active: #00047C;
 
 $sheet-colour: #F3F3F3;
 $sheet-colour-active: #F9F9F9;
-$sheet-border-colour-top: #E5E5E5;
-$sheet-border-colour-left: #E5E5E5;
-$sheet-border-colour-bottom: #E5E5E5;
-$sheet-border-colour-right: #E5E5E5;
+$sheet-border-colour-top: #898C95;
+$sheet-border-colour-left: #898C95;
+$sheet-border-colour-bottom: #898C95;
+$sheet-border-colour-right: #898C95;
 
 $control-colour: #F1F1F1;
 $control-colour-inset: #FFFFFF;
@@ -124,9 +124,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	border-image: url("XGUI/Resources/7/control.png");
 	background-image: url("XGUI/Resources/7/control_background.png");
 	background-size: contain;
-	background-position: center;
-	border-radius:1px;
-	transition: background-image 0.2s linear;
+	background-position: center; 
 
 	&:hover {
 		border-image: url("XGUI/Resources/7/control_hover.png");
@@ -140,16 +138,150 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 }
 
 .Window {
-	border: none; 
+	border: none;
+	background-color: transparent;
+	background: linear-gradient(to bottom, #00000000 2%, $base-colour 2% );
 
 	.TitleBar {
 		height: 28px;
+		padding: 4px;
+		padding-top: 8px;
+		padding-bottom: 0px;
 		border-image: url("XGUI/Resources/7/title.png");
-		border-image-width-left:5px;
-		border-image-width-right:5px;
-		border-image-width-top:5px;
-		border-image-width-bottom:5px;
+		border-image-width-left: 5px;
+		border-image-width-right: 5px;
+		border-image-width-top: 5px;
+		border-image-width-bottom: 5px;
 		background-color: transparent;
 		background: url("XGUI/Resources/7/title_bg.png");
+
+		.Control {
+			margin-left: 2px;
+			width: 31px;
+			height: 17px;
+			border-image: url("XGUI/Resources/7/title_control.png");
+			background: url("XGUI/Resources/7/title_control_bg.png");
+			border-image-width-left: 2px;
+			border-image-width-right: 2px;
+			border-image-width-top: 2px;
+			border-image-width-bottom: 2px;
+		}
+
+		.MinimiseButton {
+			> .label {
+				background: url("XGUI/Resources/7/minimise_icon.png");
+				background-position: center;
+				background-size: cover;
+				width: 13px;
+				height: 13px;
+				content: "";
+			}
+		}
+
+		.MaximiseButton {
+			> .label {
+				background: url("XGUI/Resources/7/maximise_icon.png");
+				background-position: center;
+				background-size: cover;
+				width: 13px;
+				height: 13px;
+				content: "";
+			}
+		}
+
+		.CloseButton {
+			border: none;
+			border-image: url("XGUI/Resources/7/title_control_close.png");
+			background: url("XGUI/Resources/7/title_control_close_bg.png");
+			border-image-width-left: 2px;
+			border-image-width-right: 2px;
+			border-image-width-top: 2px;
+			border-image-width-bottom: 2px;
+			width: 31px;
+			height: 17px;
+
+			> .label {
+				background: url("XGUI/Resources/7/close_icon.png");
+				background-position: center;
+				background-size: cover;
+				width: 13px;
+				height: 13px;
+				content: "";
+			}
+
+			&:hover {
+				border-image: url("XGUI/Resources/7/title_control_close_hover.png");
+				background: url("XGUI/Resources/7/title_control_close_bg_hover.png");
+			}
+
+			&:active {
+				border: none;
+				background: url("XGUI/Resources/7/title_control_close_active.png");
+			}
+		}
+	}
+
+	> .window-content {
+		border-image: url("XGUI/Resources/7/window_content.png");
+		border-image-width-top: 1px;
+		border-image-width-left: 8px;
+		border-image-width-right: 8px;
+		border-image-width-bottom: 8px;
+	}
+}
+
+.TabContainer {
+
+	> .tabs {
+
+		> .button {
+			height: 19px;
+			border-radius: 0px;
+			border-image: url("XGUI/Resources/7/tab.png");
+			border-image-width-top: 2px;
+			border-image-width-left: 2px;
+			border-image-width-right: 2px;
+			border-image-width-bottom: 2px;
+			background: url("XGUI/Resources/7/tab_bg.png");
+			margin-bottom: 1px;
+
+			&.active {
+				border-image: url("XGUI/Resources/7/tab_active.png");
+				background: url("XGUI/Resources/7/tab_bg_active.png");
+			}
+
+			&.active {
+				padding-bottom: 3px;
+				color: $default-text-colour-active;
+				background-color: $sheet-colour-active;
+				border-image-width-top: 2px;
+				border-image-width-left: 2px;
+				border-image-width-right: 2px;
+				border-image-width-bottom: 2px;
+				// Offset up when selected
+				top: 2px;
+				z-index: 15000;
+				height: 21px;
+			}
+		}
+	}
+
+
+	> .sheets {
+	}
+}
+
+
+.TabContainer {
+
+	> .tabs {
+
+		> .button { 
+			height:19px;
+		}
+	}
+
+
+	> .sheets {
 	}
 }
