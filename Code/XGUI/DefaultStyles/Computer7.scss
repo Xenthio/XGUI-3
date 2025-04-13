@@ -12,7 +12,7 @@ $base-colour-inset: #FFFFFF;
 $base-colour-active: #00047C;
 
 $sheet-colour: #F3F3F3;
-$sheet-colour-active: #F9F9F9;
+$sheet-colour-active: #FFFFFF;
 $sheet-border-colour-top: #898C95;
 $sheet-border-colour-left: #898C95;
 $sheet-border-colour-bottom: #898C95;
@@ -103,7 +103,7 @@ $slider-thumb-border-colour-bottom: #707070;
 $slider-thumb-border-colour-right: #707070;
 
 $default-text-size: 12px;
-$default-text-font: Segoe UI Variable;
+$default-text-font: "Segoe UI Historic";
 $default-text-smooth: auto;
 
 $default-text-colour: #000000;
@@ -398,6 +398,10 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 				z-index: 15000;
 				height: 21px;
 			}
+
+			&:first-child {
+				margin-left: 2px;
+			}
 		}
 	}
 
@@ -467,5 +471,21 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		border: none;
 		background: none;
 		background-image: none;
+	}
+}
+
+
+.slider {
+	> .thumb {
+		border: none;
+		background-image: url("XGUI/Resources/7/slider_thumb.png");
+
+		&:hover {
+			background-image: url("XGUI/Resources/7/slider_thumb_hover.png");
+		}
+
+		&:active {
+			background-image: url("XGUI/Resources/7/slider_thumb_active.png"); 
+		}
 	}
 }
