@@ -1,0 +1,139 @@
+@using System;
+@using System.Collections.Generic;
+@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.Razor;
+
+@namespace XGUI
+@inherits Panel
+
+<root class="window">
+    @* Title bar *@
+    <div class="TitleBar">
+        <div class="TitleIcon"></div>
+        <div class="TitleLabel">@Title</div>
+        <div class="TitleSpacer" @onmousedown="DragBarDown" @onmouseup="DragBarUp" @onmousemove="Drag"></div>
+        @if (HasMinimise)
+        {
+            <button class="Control MinimiseButton" @onclick="Minimise">0</button>
+        }
+        @if (HasMaximise)
+        {
+            <button class="Control MaximiseButton" @onclick="Maximise">1</button>
+        }
+        @if (HasClose)
+        {
+            <button class="Control CloseButton" @onclick="Close">r</button>
+        }
+    </div>
+
+    @* Content area *@
+    <div class="window-content">
+        @ChildContent
+    </div>
+</root>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    public Vector2 Position;
+    public Vector2 Size;
+
+    // Window properties
+    public string Title { get; set; } = "Window";
+    public bool HasMinimise { get; set; } = false;
+    public bool HasMaximise { get; set; } = false;
+    public bool HasClose { get; set; } = true;
+
+    public WindowNew()
+    {
+        AddClass("Panel");
+        AddClass("Window");
+        Style.Position = PositionMode.Absolute;
+        Style.FlexDirection = FlexDirection.Column;
+    }
+
+    public override void Tick()
+    {
+        base.Tick();
+
+        // Apply position to styles
+        Style.Left = Position.x;
+        Style.Top = Position.y;
+    }
+
+    // Window functionality
+    private bool _dragging = false;
+    private float _dragOffsetX = 0;
+    private float _dragOffsetY = 0;
+
+    public void DragBarDown()
+    {
+        var mousePos = FindRootPanel().MousePosition;
+        _dragOffsetX = mousePos.x - Position.x;
+        _dragOffsetY = mousePos.y - Position.y;
+        _dragging = true;
+    }
+
+    public void DragBarUp()
+    {
+        _dragging = false;
+    }
+
+    public void Drag()
+    {
+        if (!_dragging) return;
+
+        var mousePos = FindRootPanel().MousePosition;
+        Position = new Vector2(
+            mousePos.x - _dragOffsetX,
+            mousePos.y - _dragOffsetY
+        );
+    }
+
+    public void Minimise()
+    {
+        // Implement minimize functionality
+    }
+
+    public void Maximise()
+    {
+        // Implement maximize functionality
+    }
+
+    public void Close()
+    {
+        Delete();
+    }
+
+    // Override SetProperty to handle window attributes
+    public override void SetProperty(string name, string value)
+    {
+        switch (name)
+        {
+            case "title":
+                Title = value;
+                break;
+            case "hasminimise":
+                HasMinimise = bool.Parse(value);
+                break;
+            case "hasmaximise":
+                HasMaximise = bool.Parse(value);
+                break;
+            case "hasclose":
+                HasClose = bool.Parse(value);
+                break;
+            case "x":
+                if (float.TryParse(value, out float x))
+                    Position = new Vector2(x, Position.y);
+                break;
+            case "y":
+                if (float.TryParse(value, out float y))
+                    Position = new Vector2(Position.x, y);
+                break;
+            default:
+                base.SetProperty(name, value);
+                break;
+        }
+    }
+}
