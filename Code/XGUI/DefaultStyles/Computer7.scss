@@ -270,6 +270,101 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	}
 }
 
+.checkbox {
+	.checkpanel, iconpanel {
+		transition: all 0.15s linear;
+		border: none;
+		background-image: url("XGUI/Resources/7/checkbox.png");
+		width: 13px;
+		height: 13px;
+		min-width: 13px;
+		min-height: 13px;
+
+		&:hover {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/7/checkbox_hover.png");
+
+			&:active {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/7/checkbox_active.png");
+			}
+		}
+	}
+
+	&.checked {
+
+		> .checkpanel, .iconpanel {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/7/checkbox_checked.png");
+
+			&:hover {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/7/checkbox_checked_hover.png");
+
+				&:active {
+					transition: all 0.15s linear;
+					background-image: url("XGUI/Resources/7/checkbox_checked_active.png");
+				}
+			}
+
+			.checklabel { 
+				content: "";
+			}
+		}
+	}
+}
+
+
+.radiobutton { 
+
+	.checkpanel, iconpanel { 
+		bottom:1px;
+		transition: all 0.15s linear;
+		border: none;
+		background-image: url("XGUI/Resources/7/radiobutton.png");
+		width: 13px;
+		height: 13px;
+		min-width: 13px;
+		min-height: 13px;
+
+		> .label {
+			display: none;
+		}
+
+		&:hover {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/7/radiobutton_hover.png");
+
+			&:active {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/7/radiobutton_active.png");
+			}
+		}
+	}
+
+	&.checked {
+
+		> .checkpanel, .iconpanel {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/7/radiobutton_checked.png");
+
+			&:hover {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/7/radiobutton_checked_hover.png");
+
+				&:active {
+					transition: all 0.15s linear;
+					background-image: url("XGUI/Resources/7/radiobutton_checked_active.png");
+				}
+			}
+
+			.checklabel {
+				content: "";
+			}
+		}
+	}
+}
+
 .TabContainer {
 
 	> .tabs {
@@ -344,10 +439,33 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	}
 }
 
-.selector { 
+.selector {
 
 	> .selector_indicator {
 		border: 0px;
-		background-color:transparent;
+		background-color: transparent;
+	}
+
+	&.open {
+		border-image: url("XGUI/Resources/7/control_active.png");
+		background-image: url("XGUI/Resources/7/control_background_active.png");
+	}
+
+	&:hover {
+		border-image: url("XGUI/Resources/7/control_hover.png");
+		background-image: url("XGUI/Resources/7/control_background_hover.png");
+	}
+
+	&:active {
+		border-image: url("XGUI/Resources/7/control_active.png");
+		background-image: url("XGUI/Resources/7/control_background_active.png");
+	}
+}
+
+.dropdown-panel {
+	>.button {
+		border: none;
+		background: none;
+		background-image: none;
 	}
 }
