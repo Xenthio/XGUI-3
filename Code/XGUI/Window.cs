@@ -43,6 +43,12 @@ public partial class Window : Panel
 		base.OnAfterTreeRender( firstTime );
 		if ( firstTime )
 		{
+			// warn if we dont have a child with class window-content
+			if ( !Children.Any( x => x.HasClass( "window-content" ) ) )
+			{
+				Log.Warning( $"The window {this} does not have a child with class window-content, this is standard practice as of XGUI-3" );
+			}
+
 			CreateTitleBar();
 			this.AddEventListener( "onmousedown", ResizeDown );
 			this.AddEventListener( "onmouseup", ResizeUp );
@@ -228,7 +234,13 @@ public partial class Window : Panel
 	public void Close()
 	{
 		Log.Info( "close" );
+		OnClose();
 		Delete();
+	}
+
+	public virtual void OnClose()
+	{
+		// Override this to do something when the window closes
 	}
 
 	public override void Tick()
