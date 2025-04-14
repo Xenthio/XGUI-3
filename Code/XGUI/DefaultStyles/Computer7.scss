@@ -140,7 +140,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 .Window {
 	border: none;
 	background-color: transparent;
-	background: linear-gradient(to bottom, #00000000 2.3%, $base-colour 2.3% );
+	background: linear-gradient(to bottom, #00000000 6%, $base-colour 6% );
 
 	&.unfocused {
 		.TitleBar {
@@ -182,7 +182,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		border-image-width-bottom: 5px;
 		background-color: transparent;
 		background: url("XGUI/Resources/7/title_bg.png");
-		background-size:contain;
+		background-size: contain;
 
 		.Control {
 			margin-left: 2px;
@@ -267,6 +267,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		border-image-width-left: 8px;
 		border-image-width-right: 8px;
 		border-image-width-bottom: 8px;
+		background-color: $base-colour;
 	}
 }
 
