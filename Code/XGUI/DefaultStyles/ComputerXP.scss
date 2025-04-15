@@ -289,9 +289,11 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	> .window-content {
 		border-image: url("XGUI/Resources/XP/window_content.png");
 		border-image-width-top: 1px;
-		border-image-width-left: 8px;
-		border-image-width-right: 8px;
-		border-image-width-bottom: 8px;
+		border-image-width-left: 5px;
+		border-image-width-right: 5px;
+		border-image-width-bottom: 5px;
 		background-color: $base-colour;
+		border-width: 5px;
+		border-top-width: -1px;
 	}
 }
