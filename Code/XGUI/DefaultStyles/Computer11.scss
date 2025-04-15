@@ -288,10 +288,20 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 	> .tabs {
 
-		> .button { 
-			transition: all 0s linear; 
+		> .button {
+			transition: all 0s linear;
+			border-right: 0; // Remove right border
+
 			&:hover {
-			} 
+			}
+
+			&.active {
+				border-right: 1px solid $sheet-border-colour-right;
+			}
+			// Last child should always have right border
+			&:last-child {
+				border-right: 1px solid $sheet-border-colour-right;
+			}
 		}
 	}
 
