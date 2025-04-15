@@ -191,6 +191,10 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		padding-bottom: 0px;
 		background-color: transparent;
 
+		.TitleElements {
+			padding: 5px;
+		}
+
 		.TitleBackground {
 			border-image: url("XGUI/Resources/XP/title.png");
 			border-image-width-top: 6px;
@@ -207,28 +211,25 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 		.TitleLabel {
 			font-smooth: always;
+			text-shadow: 1px 1px 0px 0px #0A1883;
 		}
 
 		.Control {
+			border: none;
 			margin-left: 2px;
-			width: 31px;
-			height: 17px;
-			border-image: url("XGUI/Resources/XP/title_control.png");
-			background: url("XGUI/Resources/XP/title_control_bg.png");
-			border-image-width-left: 2px;
-			border-image-width-right: 2px;
-			border-image-width-top: 2px;
-			border-image-width-bottom: 2px;
+			width: 21px;
+			height: 21px;
+			background: url("XGUI/Resources/XP/title_control.png");
 
 
 			&:hover {
-				border-image: url("XGUI/Resources/XP/title_control_hover.png");
-				background: url("XGUI/Resources/XP/title_control_bg_hover.png");
+				border: none;
+				background: url("XGUI/Resources/XP/title_control_hover.png");
 			}
 
 			&:active {
-				border-image: url("XGUI/Resources/XP/title_control_active.png");
-				background: url("XGUI/Resources/XP/title_control_bg_active.png");
+				border: none;
+				background: url("XGUI/Resources/XP/title_control_active.png");
 			}
 		}
 
@@ -256,14 +257,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 		.CloseButton {
 			border: none;
-			border-image: url("XGUI/Resources/XP/title_control_close.png");
-			background: url("XGUI/Resources/XP/title_control_close_bg.png");
-			border-image-width-left: 2px;
-			border-image-width-right: 2px;
-			border-image-width-top: 2px;
-			border-image-width-bottom: 2px;
-			width: 31px;
-			height: 17px;
+			background: url("XGUI/Resources/XP/title_control_close.png");
 
 			> .label {
 				background: url("XGUI/Resources/XP/close_icon.png");
@@ -275,13 +269,13 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 			}
 
 			&:hover {
-				border-image: url("XGUI/Resources/XP/title_control_close_hover.png");
-				background: url("XGUI/Resources/XP/title_control_close_bg_hover.png");
+				border: none;
+				background: url("XGUI/Resources/XP/title_control_close_hover.png");
 			}
 
 			&:active {
-				border-image: url("XGUI/Resources/XP/title_control_close_active.png");
-				background: url("XGUI/Resources/XP/title_control_close_bg_active.png");
+				border: none;
+				background: url("XGUI/Resources/XP/title_control_close_active.png");
 			}
 		}
 	}
