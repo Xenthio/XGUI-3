@@ -6,6 +6,10 @@
 			> .TitleSpacer {
 				flex-grow: 1;
 			}
+
+			> .Control {
+				flex-shrink: 0;
+			}
 		}
 
 		> .TitleBackground {

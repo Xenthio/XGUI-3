@@ -1,5 +1,6 @@
 ﻿// Checkbox
 .checkbox {
+    flex-shrink: 0;
 
     .checkpanel, iconpanel {
 
@@ -21,7 +22,7 @@
 
         > .checkpanel, .iconpanel {
             .checklabel {
-                opacity: 1; 
+                opacity: 1;
             }
         }
 
