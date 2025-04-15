@@ -7,6 +7,12 @@
 		z-index: 1;
 		// This wrapper aligns the tabs properly
 		flex-direction: row;
+		min-width: 0px;
+
+		> .label {
+			text-align: center;
+			flex-grow: 1;
+		}
 
 		> .button {
 			background-color: $sheet-colour;
@@ -27,7 +33,7 @@
 			// Move unselected ones down
 			height: 18px;
 			align-items: center;
-			min-width: 64px;
+			min-width: 48px;
 			top: 4px;
 			z-index: -10;
 
@@ -40,7 +46,7 @@
 				z-index: 15000;
 				border-bottom: 0px;
 				height: 21px;
-			}
+			} 
 
 			&:hover {
 			}
