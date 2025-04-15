@@ -211,7 +211,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 		.TitleLabel {
 			font-smooth: always;
-			text-shadow: 1px 1px 0px 0px #0A1883;
+			filter: drop-shadow(1px 1px 0px 0px #0A1883);
 		}
 
 		.Control {
