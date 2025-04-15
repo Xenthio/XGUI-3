@@ -291,3 +291,41 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		border-top-width: -1px;
 	}
 }
+
+
+.TabContainer {
+
+	> .tabs {
+
+		> .button {
+			height: 19px;
+			border-radius: 0px;
+			border-image: url("XGUI/Resources/XP/tab.png");
+			border-image-width-top: 4px;
+			border-image-width-left: 4px;
+			border-image-width-right: 4px;
+			border-image-width-bottom: 4px;
+			border-width: 4px;
+			padding-bottom: 0px;
+			background: url("XGUI/Resources/XP/tab_bg.png");
+			top: 3px;
+
+			&.active {
+				padding-bottom: 2px;
+				border-image: url("XGUI/Resources/XP/tab_active.png");
+				border-image-width-top: 4px;
+				border-image-width-left: 4px;
+				border-image-width-right: 4px;
+				border-image-width-bottom: 4px;
+				border-width: 4px;
+				background: url("XGUI/Resources/XP/tab_bg_active.png");
+				top: 1px;  
+			} 
+		}
+	}
+
+
+
+	> .sheets {
+	}
+}

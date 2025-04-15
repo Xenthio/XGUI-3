@@ -9,11 +9,6 @@
 		flex-direction: row;
 		min-width: 0px;
 
-		> .label {
-			text-align: center;
-			flex-grow: 1;
-		}
-
 		> .button {
 			background-color: $sheet-colour;
 			border-top: 1px solid $sheet-border-colour-top;
@@ -37,6 +32,11 @@
 			top: 4px;
 			z-index: -10;
 
+			> .label {
+				text-align: center;
+				flex-grow: 1;
+			}
+
 			&.active {
 				padding-bottom: 3px;
 				color: $default-text-colour-active;
@@ -46,7 +46,7 @@
 				z-index: 15000;
 				border-bottom: 0px;
 				height: 21px;
-			} 
+			}
 
 			&:hover {
 			}
