@@ -31,11 +31,9 @@ public partial class Window : Panel
 
 	public Window()
 	{
-
-		TitleBar = new TitleBar()
-		{
-			ParentWindow = this
-		};
+		TitleBar = new TitleBar();
+		TitleBar.ParentWindow = this;
+		AddChild( TitleBar );
 
 		AddClass( "Panel" );
 		AddClass( "Window" );
@@ -124,8 +122,6 @@ public partial class Window : Panel
 		</div>
 		*/
 
-
-		TitleBar.AddClass( "TitleBar" );
 
 		AddChild( TitleBar );
 		var bg = TitleBar.AddChild<Panel>( "TitleBackground" );
