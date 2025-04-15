@@ -50,6 +50,10 @@
 		color: $window-titlebar-text-colour;
 		flex-shrink: 0;
 
+		.TitleElements {
+			align-items: center;
+		}
+
 		.TitleSpacer {
 			padding: 10px;
 		}
