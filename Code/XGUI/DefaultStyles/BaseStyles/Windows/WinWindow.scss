@@ -43,12 +43,15 @@
 	}
 
 	.TitleBar {
-		align-items: center;
 		padding: 2px;
 		height: 18px;
 		background-color: $window-titlebar-colour;
 		color: $window-titlebar-text-colour;
 		flex-shrink: 0;
+
+		.TitleElements {
+			align-items: center;
+		}
 
 		.TitleSpacer {
 			padding: 10px;
