@@ -32,6 +32,10 @@
 		font-weight: $title-text-weight;
 		flex-shrink: 0;
 
+		.TitleElements {
+			align-items: center;
+		}
+
 		.TitleSpacer {
 			padding: 10px;
 		}
