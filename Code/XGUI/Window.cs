@@ -5,10 +5,9 @@ namespace XGUI;
 
 public partial class Window : Panel
 {
-	public Panel TitleBar { get; set; } = new Panel();
-	public Label TitleLabel { get; set; } = new Label();
-	public Panel TitleIcon { get; set; } = new Panel();
-	public Panel TitleSpacer { get; set; } = new Panel();
+	public string Title = "Window";
+	public TitleBar TitleBar { get; set; }
+
 
 	public Vector2 Position;
 	public Vector2 Size;
@@ -32,6 +31,11 @@ public partial class Window : Panel
 
 	public Window()
 	{
+
+		TitleBar = new TitleBar()
+		{
+			ParentWindow = this
+		};
 
 		AddClass( "Panel" );
 		AddClass( "Window" );
@@ -122,30 +126,10 @@ public partial class Window : Panel
 
 
 		TitleBar.AddClass( "TitleBar" );
-		TitleIcon.AddClass( "TitleIcon" );
-		TitleLabel.AddClass( "TitleLabel" );
-		TitleSpacer.AddClass( "TitleSpacer" );
-		ControlsClose.AddClass( "Control" );
-		ControlsClose.AddClass( "CloseButton" );
-		ControlsMinimise.AddClass( "Control" );
-		ControlsMinimise.AddClass( "MinimiseButton" );
-		ControlsMaximise.AddClass( "Control" );
-		ControlsMaximise.AddClass( "MaximiseButton" );
 
 		AddChild( TitleBar );
-		TitleBar.AddChild( TitleIcon );
-		TitleBar.AddChild( TitleLabel );
-		TitleBar.AddChild( TitleSpacer );
+		var bg = TitleBar.AddChild<Panel>( "TitleBackground" );
 		TitleBar.Style.ZIndex = 100;
-		if ( HasMinimise ) TitleBar.AddChild( ControlsMinimise );
-		if ( HasMaximise ) TitleBar.AddChild( ControlsMaximise );
-		if ( HasClose ) TitleBar.AddChild( ControlsClose );
-
-
-		TitleSpacer.AddEventListener( "onmousedown", DragBarDown );
-		TitleSpacer.AddEventListener( "onmouseup", DragBarUp );
-		TitleSpacer.AddEventListener( "onmousedrag", Drag );
-		TitleSpacer.Style.FlexGrow = 1;
 
 		// The "0", "1" and "r" are for the marlett/webdings font
 		// Ideally i want these to be set from the theming CSS space
@@ -477,7 +461,7 @@ public partial class Window : Panel
 		{
 			case "title":
 				{
-					TitleLabel.Text = value;
+					Title = value;
 					return;
 				}
 			case "hasminimise":

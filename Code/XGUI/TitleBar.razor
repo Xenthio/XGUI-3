@@ -1,0 +1,63 @@
+@using System;
+@using System.Collections.Generic;
+@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.Razor;
+
+@namespace XGUI
+@inherits Panel
+
+<root class="TitleBar">
+	<div class="TitleElements">
+		<div class="TitleIcon" @ref=TitleIcon></div>
+		<div class="TitleLabel" @ref=Label>@ParentWindow.Title</div>
+		<div class="TitleSpacer" @ref=TitleSpacer @onmousedown=@DragBarDown @onmouseup=@DragBarUp @onmousemove=@Drag></div>
+		@if (ParentWindow.HasMinimise)
+        {
+            <button class="Control MinimiseButton" @onclick=@Minimise>0</button>
+        }
+		@if (ParentWindow.HasMaximise)
+        {
+            <button class="Control MaximiseButton" @onclick=@Maximise>1</button>
+        }
+		@if (ParentWindow.HasClose)
+        {
+            <button class="Control CloseButton" @onclick=@Close>r</button>
+        }
+    </div> 
+	<div class="TitleBackground">
+    </div>
+</root>
+
+@code {
+	public Window ParentWindow { get; set; }
+
+	public Label Label { get; set; }
+	public Panel TitleIcon { get; set; }
+	public Panel TitleSpacer { get; set; }
+
+	public void DragBarDown()
+	{
+		ParentWindow.DragBarDown();
+	}
+	public void DragBarUp()
+	{
+		ParentWindow.DragBarUp();
+	}
+	public void Drag()
+	{
+		ParentWindow.Drag();
+	}
+	public void Minimise()
+	{
+		ParentWindow.Minimise();
+	}
+	public void Maximise()
+	{
+		ParentWindow.Maximise();
+	}
+	public void Close()
+	{
+		ParentWindow.Close();
+	}
+}

@@ -164,7 +164,7 @@ public partial class ImXGUI // Todo, partial to move things out into seperate fi
 		if ( _currentWindow == null )
 		{
 			_currentWindow = new Window();
-			_currentWindow.TitleLabel.Text = title;
+			_currentWindow.Title = title;
 			ApplyWindowFlags( _currentWindow, flags );
 
 			_currentWindow.StyleSheet.Load( CurrentStyle );

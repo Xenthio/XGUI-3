@@ -28,7 +28,7 @@ public class XGUIView : SceneRenderingWidget
 	{
 		Window = new Window();
 		Window.StyleSheet.Load( "/XGUI/DefaultStyles/OliveGreen.scss" );
-		Window.TitleLabel.Text = "My New Window";
+		Window.Title = "My New Window";
 		Window.MinSize = new Vector2( 200, 200 );
 		Panel.AddChild( Window );
 
