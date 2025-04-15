@@ -471,6 +471,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 .slider {
 	> .thumb {
+		background-color: transparent;
 		border: none;
 		background-image: url("XGUI/Resources/7/slider_thumb.png");
 
@@ -479,7 +480,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		}
 
 		&:active {
-			background-image: url("XGUI/Resources/7/slider_thumb_active.png"); 
+			background-image: url("XGUI/Resources/7/slider_thumb_active.png");
 		}
 	}
 }

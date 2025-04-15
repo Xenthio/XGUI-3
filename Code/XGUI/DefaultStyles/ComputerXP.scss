@@ -87,15 +87,15 @@ $border-colour-left-outer-inset: #808080;
 $border-colour-bottom-outer-inset: #FFFFFF;
 $border-colour-right-outer-inset: #FFFFFF;
 
-$slider-track-colour: #E7EAEA;
-$slider-track-border-colour-top: #B0B0B0;
-$slider-track-border-colour-left: #B0B0B0;
-$slider-track-border-colour-bottom: #FCFCFC;
-$slider-track-border-colour-right: #FCFCFC;
+$slider-track-colour: #F0EDE0;
+$slider-track-border-colour-top: #9D9C99;
+$slider-track-border-colour-left: #9D9C99;
+$slider-track-border-colour-bottom: #FFFFFF;
+$slider-track-border-colour-right: #FFFFFF;
 
-$slider-step-colour: #C4C4C4;
-$slider-step-min-colour: #C4C4C4;
-$slider-step-max-colour: #C4C4C4;
+$slider-step-colour: #A1A192;
+$slider-step-min-colour: #A1A192;
+$slider-step-max-colour: #A1A192;
 
 $slider-thumb-colour: #EFEFEF;
 $slider-thumb-border-colour-top: #707070;
@@ -120,7 +120,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 @import "/XGUI/DefaultStyles/BaseStyles/Windows.scss";
 @import "/XGUI/DefaultStyles/BaseStyles/Windows+VisualStyleQuirks.scss";
 
-.button {
+.button:not(.selector) {
 	border-image: url("XGUI/Resources/XP/control.png");
 	background-image: url("XGUI/Resources/XP/control_background.png");
 	background-size: contain;
@@ -293,6 +293,33 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	}
 }
 
+.combobox,
+.selector {
+	> .selector_indicator {
+		width: 15px;
+		height: 17px; 
+		border:none;
+		background-color: transparent;
+		background-image: url("XGUI/Resources/XP/combobox_indicator.png");
+		background-position: center;
+		background-size: contain; 
+		margin-right:1px;
+		content:"";
+	}
+}
+.dropdown-panel {
+	> .button {
+		border: none;
+		background-image: none;
+		height:13px;
+
+		&:hover {
+			border: none;
+			background-image: none;
+			background-color: $accent-colour-2;
+		}
+	}
+}
 
 .TabContainer {
 
@@ -332,5 +359,119 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 
 	> .sheets {
+	}
+}
+
+
+.checkbox {
+	.checkpanel, iconpanel {
+		transition: all 0.15s linear;
+		border: none;
+		background-image: url("XGUI/Resources/XP/checkbox.png");
+		width: 13px;
+		height: 13px;
+		min-width: 13px;
+		min-height: 13px;
+
+		&:hover {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/XP/checkbox_hover.png");
+
+			&:active {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/XP/checkbox_active.png");
+			}
+		}
+	}
+
+	&.checked {
+
+		> .checkpanel, .iconpanel {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/XP/checkbox_checked.png");
+
+			&:hover {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/XP/checkbox_checked_hover.png");
+
+				&:active {
+					transition: all 0.15s linear;
+					background-image: url("XGUI/Resources/XP/checkbox_checked_active.png");
+				}
+			}
+
+			.checklabel {
+				content: "";
+			}
+		}
+	}
+}
+
+
+.radiobutton {
+
+	.checkpanel, iconpanel {
+		bottom: 1px;
+		transition: all 0.15s linear;
+		border: none;
+		background-image: url("XGUI/Resources/XP/radiobutton.png");
+		width: 13px;
+		height: 13px;
+		min-width: 13px;
+		min-height: 13px;
+
+		> .label {
+			display: none;
+		}
+
+		&:hover {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/XP/radiobutton_hover.png");
+
+			&:active {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/XP/radiobutton_active.png");
+			}
+		}
+	}
+
+	&.checked {
+
+		> .checkpanel, .iconpanel {
+			transition: all 0.15s linear;
+			background-image: url("XGUI/Resources/XP/radiobutton_checked.png");
+
+			&:hover {
+				transition: all 0.15s linear;
+				background-image: url("XGUI/Resources/XP/radiobutton_checked_hover.png");
+
+				&:active {
+					transition: all 0.15s linear;
+					background-image: url("XGUI/Resources/XP/radiobutton_checked_active.png");
+				}
+			}
+
+			.checklabel {
+				content: "";
+			}
+		}
+	}
+}
+
+.slider {
+	> .thumb {
+		background-color:transparent;
+		width:11px;
+		height:21px;
+		border: none;
+		background-image: url("XGUI/Resources/XP/slider_thumb.png");
+
+		&:hover {
+			background-image: url("XGUI/Resources/XP/slider_thumb_hover.png");
+		}
+
+		&:active {
+			background-image: url("XGUI/Resources/XP/slider_thumb_active.png");
+		}
 	}
 }
