@@ -160,6 +160,39 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	&.unfocused {
 		.TitleBar {
 			background-color: transparent;
+
+
+			.Control {
+				background: url("XGUI/Resources/XP/title_control_unfocused.png");
+			}
+
+			.CloseButton {
+				background: url("XGUI/Resources/XP/title_control_close_unfocused.png");
+			}
+
+			.TitleBackground {
+				border-image: url("XGUI/Resources/XP/title_unfocused.png");
+				border-image-width-top: 6px;
+				border-image-width-bottom: 6px;
+				border-width: 6px;
+				border-image-width-right: 33px;
+				border-image-width-left: 33px;
+				border-right-width: 33px;
+				border-left-width: 33px;
+				background-image: url("XGUI/Resources/XP/title_bg_unfocused.png");
+				background-size: contain;
+			}
+		}
+
+		> .window-content {
+			border-image: url("XGUI/Resources/XP/window_content_unfocused.png");
+			border-image-width-top: 1px;
+			border-image-width-left: 5px;
+			border-image-width-right: 5px;
+			border-image-width-bottom: 5px;
+			background-color: $base-colour;
+			border-width: 5px;
+			border-top-width: -1px;
 		}
 	}
 
