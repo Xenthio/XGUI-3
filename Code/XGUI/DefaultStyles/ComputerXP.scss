@@ -182,6 +182,10 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 				background-image: url("XGUI/Resources/XP/title_bg_unfocused.png");
 				background-size: contain;
 			}
+
+			.TitleLabel { 
+				filter: drop-shadow(1px 1px 0px 0px transparent);
+			}
 		}
 
 		> .window-content {

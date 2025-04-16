@@ -63,7 +63,7 @@ $border-colour-right-outer: #000000;
 $window-titlebar-colour: #F1F3F9;
 $window-titlebar-colour-inactive: #F3F3F3;
 $window-titlebar-text-colour: #000000;
-$window-titlebar-text-colour-inactive: #919191;
+$window-titlebar-text-colour-inactive: #434E54;
 $window-title-text-weight: normal;
 $window-title-text-size: 12px;
 
@@ -147,6 +147,30 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	&.unfocused {
 		.TitleBar {
 			background-color: transparent;
+			border-image: url("XGUI/Resources/7/title_unfocused.png");
+			background: url("XGUI/Resources/7/title_bg_unfocused.png");
+			border-image-width-left: 5px;
+			border-image-width-right: 5px;
+			border-image-width-top: 5px;
+			border-image-width-bottom: 5px;
+
+			.Control {
+				border-image: url("XGUI/Resources/7/title_control_unfocused.png");
+				background: url("XGUI/Resources/7/title_control_bg_unfocused.png");
+				border-image-width-left: 2px;
+				border-image-width-right: 2px;
+				border-image-width-top: 2px;
+				border-image-width-bottom: 2px;
+			}
+		}
+
+		> .window-content {
+			border-image: url("XGUI/Resources/7/window_content_unfocused.png");
+			border-image-width-top: 1px;
+			border-image-width-left: 8px;
+			border-image-width-right: 8px;
+			border-image-width-bottom: 8px;
+			background-color: $base-colour;
 		}
 	}
 
