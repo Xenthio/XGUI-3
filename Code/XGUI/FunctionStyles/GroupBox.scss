@@ -1,0 +1,13 @@
+.group-box {
+	border: 1px solid #808080;
+	background-clip: padding-box;
+	padding: 8px;
+	width: 100%;
+
+	.group-box-title {
+		position: absolute;
+		background-color: inherit;
+		top: -10px;
+		left: 10px;
+	}
+}
