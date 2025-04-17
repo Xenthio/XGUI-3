@@ -1,12 +1,15 @@
 .group-box {
-	border: 1px solid #808080; /* Windows-style border */
-	padding: 6px;
+	border: 1px solid $groupbox-border-colour;
+	padding: 5px;
+	margin-top: 8px;
+	padding-top: 14px;
+
 
 	.group-box-title {
-		padding-right: 6px;
-		padding-left: 6px;
+		padding-right: 3px;
+		padding-left: 3px;
 		position: absolute;
-		top: -10px;
-		left: 10px;
+		top: -9px;
+		left: 6px;
 	}
 }
