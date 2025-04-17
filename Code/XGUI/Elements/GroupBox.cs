@@ -71,7 +71,7 @@ public class GroupBox : Panel
 		// Traverse up the hierarchy
 		while ( current != null )
 		{
-			if ( current.ComputedStyle.BackgroundColor == null )
+			if ( current.ComputedStyle?.BackgroundColor == null )
 			{
 				current = current.Parent;
 				continue;

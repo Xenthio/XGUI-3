@@ -103,10 +103,10 @@ $slider-thumb-border-colour-left: #707070;
 $slider-thumb-border-colour-bottom: #707070;
 $slider-thumb-border-colour-right: #707070;
 
-$groupbox-border-colour: #808080;
+$groupbox-border-colour: #D0D0BF;
 
-$default-text-size: 12.08px;
-$default-text-font: "Tahoma";
+$default-text-size: 11px;
+$default-text-font: "Microsoft Sans Serif";
 $default-text-smooth: never;
 
 $default-text-colour: #000000;
@@ -250,6 +250,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 
 		.TitleLabel {
+			font-family: Tahoma;
 			font-smooth: always;
 			filter: drop-shadow(1px 1px 0px 0px #0A1883);
 		}
@@ -376,8 +377,8 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 			padding-bottom: 0px;
 			background: url("XGUI/Resources/XP/tab_bg.png");
 			top: 3px;
-			padding-right: 14px;
-			padding-left: 14px;
+			padding-right: 3px;
+			padding-left: 3px;
 
 			&.active {
 				padding-bottom: 2px;
@@ -389,8 +390,8 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 				border-width: 4px;
 				background: url("XGUI/Resources/XP/tab_bg_active.png");
 				top: 1px;
-				padding-right: 16px;
-				padding-left: 16px;
+				padding-right: 5px;
+				padding-left: 5px;
 			}
 		}
 	}
@@ -398,6 +399,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 
 
 	> .sheets {
+		background: linear-gradient(to bottom, #FFFFFF, #F4F3EE); 
 	}
 }
 
@@ -512,5 +514,13 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 		&:active {
 			background-image: url("XGUI/Resources/XP/slider_thumb_active.png");
 		}
+	}
+}
+
+.group-box {
+	border-radius: 4px;
+
+	> .group-box-title {
+		color: #0046D5;
 	}
 }
