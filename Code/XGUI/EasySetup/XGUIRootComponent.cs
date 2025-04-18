@@ -11,6 +11,11 @@ public class XGUIRootComponent : PanelComponent
 
 	public XGUIRootPanel XGUIPanel { get; private set; }
 	public ScreenPanel ScreenPanel { get; private set; }
+
+	public XGUIRootComponent()
+	{
+
+	}
 	protected override void OnStart()
 	{
 		// check if there's a screenpanel here, create one if not.

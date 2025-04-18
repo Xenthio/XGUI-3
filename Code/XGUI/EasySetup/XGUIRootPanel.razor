@@ -24,6 +24,29 @@
 		Style.Cursor = "unset";
 		Log.Info("XGUI Root Panel Initialised.");
 	}
+	public Panel PanelAtPos(Vector2 position)
+	{
+		// Helper method to find the deepest panel at the given position
+		return FindPanelAt(this, position);
+	}
+
+	private Panel FindPanelAt(Panel parent, Vector2 position)
+	{
+		// Check if position is within parent bounds
+		if (!parent.Box.Rect.IsInside(position))
+			return null;
+
+		// Check children first (depth-first)
+		foreach (var child in parent.Children)
+		{
+			var result = FindPanelAt(child, position);
+			if (result != null)
+				return result;
+		}
+
+		// If no children contain the position, return the parent
+		return parent;
+	}
 
 	public override void Tick()
 	{
