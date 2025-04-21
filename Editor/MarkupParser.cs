@@ -1,267 +1,216 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq; // For Linq methods like Any
-using System.Text.RegularExpressions;
+using System.Text;
 
 namespace XGUI.XGUIEditor
 {
-	public static class MarkupParser
+	public static class SimpleMarkupParser
 	{
-		// More robust Regex:
-		// Group 1: Opening tag name (e.g., div)
-		// Group 2: Attributes string (e.g., class="xyz" style="color:red;")
-		// Group 3: Set if self-closing (e.g., /)
-		// Group 4: Inner content if not self-closing
-		// Group 5: Closing tag name (should match Group 1)
-		// This needs careful balancing for nested tags. Regex is often not the best tool for full HTML/XML parsing.
-		// Let's try a less greedy Regex combined with iterative processing.
-
-		// Regex to find the *next* opening tag, self-closing tag, or closing tag.
-		private static readonly Regex _htmlTagFinderRegex = new Regex(
-			@"<(/?)(\w[\w:]*)([^>]*?)(\/?)>",
-			RegexOptions.Compiled | RegexOptions.IgnoreCase );
-
-		// Regex to find attributes within a tag's attribute string part
-		private static readonly Regex _attributeRegex = new Regex(
-			@"(?<name>[\w-]+)(?:\s*=\s*(?:""(?<value_double>[^""]*)""|'(?<value_single>[^']*)'|(?<value_unquoted>[^\s>""]+)))?",
-			RegexOptions.Compiled | RegexOptions.IgnoreCase );
-
-
-		public static List<MarkupNode> Parse( string htmlContent )
+		// Entry point: parses markup string into a tree of MarkupNode
+		public static List<MarkupNode> Parse( string input )
 		{
-			List<MarkupNode> rootNodes = new List<MarkupNode>();
-			if ( string.IsNullOrWhiteSpace( htmlContent ) )
+			var nodes = new List<MarkupNode>();
+			int pos = 0;
+			while ( pos < input.Length )
 			{
-				return rootNodes;
-			}
+				SkipWhitespace( input, ref pos );
+				if ( pos >= input.Length ) break;
 
-			// We'll use a stack to keep track of the current parent node as we parse nesting
-			Stack<MarkupNode> nodeStack = new Stack<MarkupNode>();
-			int currentPosition = 0;
-
-			// Find all tag matches in the content
-			var matches = _htmlTagFinderRegex.Matches( htmlContent );
-
-			foreach ( Match match in matches )
-			{
-				int tagStart = match.Index;
-				int tagEnd = tagStart + match.Length;
-
-				// 1. Handle any text content *before* this tag
-				if ( tagStart > currentPosition )
+				if ( input[pos] == '<' )
 				{
-					string text = htmlContent.Substring( currentPosition, tagStart - currentPosition );
-					if ( !string.IsNullOrWhiteSpace( text ) )
-					{
-						var textNode = new MarkupNode( NodeType.Text )
-						{
-							TextContent = DecodeHtml( text ), // Store decoded text
-							SourceStart = currentPosition,
-							SourceEnd = tagStart,
-						};
-
-						// Add text node to the current parent (if any) or to root nodes
-						if ( nodeStack.Any() )
-						{
-							nodeStack.Peek().Children.Add( textNode );
-							textNode.Parent = nodeStack.Peek();
-						}
-						else
-						{
-							rootNodes.Add( textNode );
-						}
-					}
-				}
-
-				// 2. Process the tag itself
-				bool isClosingTag = !string.IsNullOrEmpty( match.Groups[1].Value ); // Has '/' at start?
-				string tagName = match.Groups[2].Value;
-				string attributesString = match.Groups[3].Value;
-				bool isSelfClosing = !string.IsNullOrEmpty( match.Groups[4].Value ); // Has '/' at end?
-
-				if ( !isClosingTag )
-				{
-					Log.Info( $"Parser Creating Node: {tagName} | Start: {tagStart} | End: {tagEnd} | CurrentParserIndex: {currentPosition}" );
-					// --- Opening or Self-Closing Tag ---	
-					var elementNode = new MarkupNode( NodeType.Element )
-					{
-						TagName = tagName,
-						SourceStart = tagStart,
-						SourceEnd = tagEnd, // Initial end, might extend if not self-closing
-						IsSelfClosing = isSelfClosing
-					};
-
-					// Parse attributes
-					ParseAttributes( attributesString, elementNode.Attributes );
-
-					// Add to parent or root
-					if ( nodeStack.Any() )
-					{
-						nodeStack.Peek().Children.Add( elementNode );
-						elementNode.Parent = nodeStack.Peek();
-					}
-					else
-					{
-						rootNodes.Add( elementNode );
-					}
-
-					// If it's not self-closing, push onto the stack to become the new parent
-					if ( !isSelfClosing )
-					{
-						nodeStack.Push( elementNode );
-					}
+					var node = ParseElement( input, ref pos );
+					if ( node != null ) nodes.Add( node );
 				}
 				else
 				{
-					// --- Closing Tag --- </tag>
-					if ( nodeStack.Any() && nodeStack.Peek().TagName.Equals( tagName, System.StringComparison.OrdinalIgnoreCase ) )
-					{
-						// Matching closing tag found, pop the stack
-						MarkupNode closedNode = nodeStack.Pop();
-						// Update the end position of the element node to include the closing tag
-						closedNode.SourceEnd = tagEnd;
-					}
-					else
-					{
-						// Mismatched closing tag or closing tag with no opening tag!
-						Log.Warning( $"Markup Parse Warning: Found closing tag '</{tagName}>' without matching opening tag at position {tagStart}." );
-						// We could try to recover or just ignore it. Ignoring for now.
-					}
-				}
-
-				// Update current position in the source string
-				currentPosition = tagEnd;
-			}
-
-			// 3. Handle any remaining text content *after* the last tag
-			if ( currentPosition < htmlContent.Length )
-			{
-				string trailingText = htmlContent.Substring( currentPosition );
-				if ( !string.IsNullOrWhiteSpace( trailingText ) )
-				{
-					var textNode = new MarkupNode( NodeType.Text )
-					{
-						TextContent = DecodeHtml( trailingText ),
-						SourceStart = currentPosition,
-						SourceEnd = htmlContent.Length,
-					};
-
-					if ( nodeStack.Any() ) // Should technically not happen if markup is well-formed
-					{
-						nodeStack.Peek().Children.Add( textNode );
-						textNode.Parent = nodeStack.Peek();
-					}
-					else
-					{
-						rootNodes.Add( textNode );
-					}
+					var text = ParseText( input, ref pos );
+					if ( !string.IsNullOrWhiteSpace( text ) )
+						nodes.Add( new MarkupNode { Type = NodeType.Text, TextContent = text } );
 				}
 			}
-
-			// Check for unclosed tags
-			if ( nodeStack.Any() )
-			{
-				foreach ( var unclosedNode in nodeStack ) // Iterate from top (most nested) down
-				{
-					Log.Warning( $"Markup Parse Warning: Tag '<{unclosedNode.TagName}>' starting at {unclosedNode.SourceStart} was never closed." );
-					// Optionally, we could try to "auto-close" them at the end of the content,
-					// but this can be ambiguous. For now, just warn.
-					// Set end position to end of content for recovery?
-					unclosedNode.SourceEnd = htmlContent.Length;
-				}
-			}
-
-
-			return rootNodes;
+			return nodes;
 		}
 
-		private static void ParseAttributes( string attributesString, Dictionary<string, string> attributes )
+		private static MarkupNode ParseElement( string input, ref int pos )
 		{
-			if ( string.IsNullOrWhiteSpace( attributesString ) ) return;
+			// Assumes input[pos] == '<'
+			int start = pos;
+			pos++; // skip '<'
+			SkipWhitespace( input, ref pos );
 
-			var attrMatches = _attributeRegex.Matches( attributesString );
-			foreach ( Match match in attrMatches )
+			// Read tag name
+			var tagName = ReadWhile( input, ref pos, c => char.IsLetterOrDigit( c ) || c == '-' || c == '_' );
+			if ( string.IsNullOrEmpty( tagName ) ) return null;
+
+			var node = new MarkupNode { Type = NodeType.Element, TagName = tagName };
+
+			// Read attributes
+			while ( true )
 			{
-				string name = match.Groups["name"].Value;
-				string value = match.Groups["value_double"].Success ? match.Groups["value_double"].Value :
-							   match.Groups["value_single"].Success ? match.Groups["value_single"].Value :
-							   match.Groups["value_unquoted"].Success ? match.Groups["value_unquoted"].Value :
-							   null; // Attribute might be valueless (e.g., "checked")
+				SkipWhitespace( input, ref pos );
+				if ( pos >= input.Length ) break;
+				if ( input[pos] == '/' || input[pos] == '>' ) break;
 
-				// Use null for valueless, empty string for value="", non-null otherwise
-				if ( value == null && match.Groups[0].Value.Contains( '=' ) ) // It had an equals sign but no parseable value (e.g. attr= or attr="")
+				// Attribute name
+				var attrName = ReadWhile( input, ref pos, c => char.IsLetterOrDigit( c ) || c == '-' || c == '_' );
+				if ( string.IsNullOrEmpty( attrName ) ) break;
+				SkipWhitespace( input, ref pos );
+
+				string attrValue = null;
+				if ( pos < input.Length && input[pos] == '=' )
 				{
-					value = string.Empty;
+					pos++; // skip '='
+					SkipWhitespace( input, ref pos );
+					attrValue = ReadAttributeValue( input, ref pos );
 				}
-
-				// Decode the value before storing
-				string decodedValue = (value != null) ? DecodeHtml( value ) : null;
-
-				// Add or update the attribute. Using OrdinalIgnoreCase in dictionary handles duplicates.
-				attributes[name] = decodedValue;
-			}
-		}
-
-		// Simple HTML Decoder (reuse from previous attempt or use library if available)
-		private static string DecodeHtml( string text )
-		{
-			if ( string.IsNullOrEmpty( text ) ) return "";
-			// Basic decoding, needs System.Web if available or manual implementation
-			// return System.Web.HttpUtility.HtmlDecode(text); // Requires System.Web
-			// Manual basic version:
-			return text.Replace( "&lt;", "<" )
-					   .Replace( "&gt;", ">" )
-					   .Replace( "&quot;", "\"" )
-					   .Replace( "&#39;", "'" )
-					   .Replace( "&amp;", "&" ); // Ampersand last
-		}
-
-		// Add this method to handle more error cases during extraction
-		public static List<MarkupNode> ParseWithDiagnostics( string htmlContent, out List<string> warnings )
-		{
-			warnings = new List<string>();
-
-			if ( string.IsNullOrWhiteSpace( htmlContent ) )
-			{
-				warnings.Add( "Empty content provided for parsing" );
-				return new List<MarkupNode>();
+				node.Attributes[attrName] = attrValue ?? "";
 			}
 
-			try
+			// Self-closing tag
+			if ( pos < input.Length - 1 && input[pos] == '/' && input[pos + 1] == '>' )
 			{
-				var nodes = Parse( htmlContent );
+				pos += 2;
+				return node;
+			}
 
-				// Validate nodes after parsing
-				foreach ( var node in nodes.Where( n => n.Type == NodeType.Element ) )
+			// End of open tag
+			if ( pos < input.Length && input[pos] == '>' )
+			{
+				pos++;
+				// Parse children until </tag>
+				while ( true )
 				{
-					// Check for suspicious source positions
-					if ( node.SourceEnd <= node.SourceStart )
+					SkipWhitespace( input, ref pos );
+					if ( pos >= input.Length ) break;
+					if ( input[pos] == '<' && pos + 1 < input.Length && input[pos + 1] == '/' )
 					{
-						warnings.Add( $"Node <{node.TagName}> has invalid source positions: Start={node.SourceStart}, End={node.SourceEnd}" );
+						// End tag
+						pos += 2;
+						var endTag = ReadWhile( input, ref pos, c => char.IsLetterOrDigit( c ) || c == '-' || c == '_' );
+						SkipWhitespace( input, ref pos );
+						if ( pos < input.Length && input[pos] == '>' ) pos++;
+						break;
 					}
-
-					// Check if source extraction works
-					try
+					else if ( input[pos] == '<' )
 					{
-						string nodeSource = htmlContent.Substring( node.SourceStart, node.SourceLength );
-						if ( !nodeSource.StartsWith( "<" ) || !nodeSource.EndsWith( ">" ) )
+						var child = ParseElement( input, ref pos );
+						if ( child != null )
 						{
-							warnings.Add( $"Node <{node.TagName}> source doesn't begin with '<' or end with '>': {nodeSource}" );
+							child.Parent = node;
+							node.Children.Add( child );
 						}
 					}
-					catch ( Exception ex )
+					else
 					{
-						warnings.Add( $"Cannot extract source for node <{node.TagName}>: {ex.Message}" );
+						var text = ParseText( input, ref pos );
+						if ( !string.IsNullOrWhiteSpace( text ) )
+							node.Children.Add( new MarkupNode { Type = NodeType.Text, TextContent = text, Parent = node } );
 					}
 				}
+			}
+			return node;
+		}
 
-				return nodes;
-			}
-			catch ( Exception ex )
+		private static string ParseText( string input, ref int pos )
+		{
+			int start = pos;
+			while ( pos < input.Length && input[pos] != '<' )
+				pos++;
+			return input.Substring( start, pos - start );
+		}
+
+		private static string ReadWhile( string input, ref int pos, Func<char, bool> predicate )
+		{
+			int start = pos;
+			while ( pos < input.Length && predicate( input[pos] ) )
+				pos++;
+			return input.Substring( start, pos - start );
+		}
+
+		private static string ReadAttributeValue( string input, ref int pos )
+		{
+			if ( pos >= input.Length ) return "";
+			if ( input[pos] == '"' || input[pos] == '\'' )
 			{
-				warnings.Add( $"Critical parsing error: {ex.Message}" );
-				return new List<MarkupNode>();
+				char quote = input[pos++];
+				int start = pos;
+				while ( pos < input.Length && input[pos] != quote )
+					pos++;
+				var val = input.Substring( start, pos - start );
+				if ( pos < input.Length ) pos++; // skip closing quote
+				return val;
 			}
+			else
+			{
+				// Unquoted value
+				return ReadWhile( input, ref pos, c => !char.IsWhiteSpace( c ) && c != '>' && c != '/' );
+			}
+		}
+
+		private static void SkipWhitespace( string input, ref int pos )
+		{
+			while ( pos < input.Length && char.IsWhiteSpace( input[pos] ) )
+				pos++;
+		}
+
+		// Serialize tree back to markup
+		public static string Serialize( IEnumerable<MarkupNode> nodes )
+		{
+			var sb = new StringBuilder();
+			foreach ( var node in nodes )
+				SerializeNode( node, sb );
+			return sb.ToString();
+		}
+
+		private static void SerializeNode( MarkupNode node, StringBuilder sb )
+		{
+			if ( node.Type == NodeType.Text )
+			{
+				sb.Append( node.TextContent );
+			}
+			else if ( node.Type == NodeType.Element )
+			{
+				sb.Append( '<' ).Append( node.TagName );
+				foreach ( var attr in node.Attributes )
+				{
+					sb.Append( ' ' ).Append( attr.Key );
+					if ( !string.IsNullOrEmpty( attr.Value ) )
+						sb.Append( "=\"" ).Append( attr.Value.Replace( "\"", "&quot;" ) ).Append( '"' );
+				}
+				if ( node.Children.Count == 0 )
+				{
+					sb.Append( " />" );
+				}
+				else
+				{
+					sb.Append( '>' );
+					foreach ( var child in node.Children )
+						SerializeNode( child, sb );
+					sb.Append( "</" ).Append( node.TagName ).Append( '>' );
+				}
+			}
+		}
+		public static Dictionary<string, string> ParseAttributes(string input)
+		{
+			var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+			if (string.IsNullOrWhiteSpace(input))
+				return dict;
+
+			// Regex: key="value", key='value', key=value, or key (valueless)
+			var regex = new System.Text.RegularExpressions.Regex(
+				@"(\w+)(?:\s*=\s*(?:""([^""]*)""|'([^']*)'|([^\s""']+)))?",
+				System.Text.RegularExpressions.RegexOptions.Compiled);
+
+			foreach (System.Text.RegularExpressions.Match match in regex.Matches(input))
+			{
+				var key = match.Groups[1].Value;
+				var value = match.Groups[2].Success ? match.Groups[2].Value
+					: match.Groups[3].Success ? match.Groups[3].Value
+					: match.Groups[4].Success ? match.Groups[4].Value
+					: ""; // For valueless attributes like "checked"
+				dict[key] = value;
+			}
+			return dict;
 		}
 	}
 }
