@@ -836,6 +836,13 @@ namespace XGUI.XGUIEditor
 						case "background-color": panel.Style.BackgroundColor = ParseColor( value ); break;
 						case "color": panel.Style.FontColor = ParseColor( value ); break;
 						case "font-size": panel.Style.FontSize = ParseLength( value ); break;
+
+						case "top": panel.Style.Top = ParseLength( value ); break;
+						case "left": panel.Style.Left = ParseLength( value ); break;
+						case "right": panel.Style.Right = ParseLength( value ); break;
+						case "bottom": panel.Style.Bottom = ParseLength( value ); break;
+
+						case "position": panel.Style.Position = value.ToLowerInvariant() == "absolute" ? PositionMode.Absolute : PositionMode.Relative; break;
 						// Add other CSS properties you want to parse
 						// e.g., flex-direction, align-items, justify-content, border, border-radius, etc.
 						default: break; // Ignore unknown styles

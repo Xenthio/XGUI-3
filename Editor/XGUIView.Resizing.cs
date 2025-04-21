@@ -306,8 +306,19 @@ namespace XGUI
 					if ( node != null )
 					{
 						// Convert rect to style attributes
-						node.Attributes["style"] = $"width: {rect.Width}px; height: {rect.Height}px;" +
-												 $"left: {rect.Left}px; top: {rect.Top}px; position: absolute;";
+						//node.Attributes["style"] = $"width: {rect.Width}px; height: {rect.Height}px;" +
+						//						 $"left: {rect.Left}px; top: {rect.Top}px; position: absolute;";
+
+						node.TryModifyStyle( "width", $"{rect.Width}px" );
+						node.TryModifyStyle( "height", $"{rect.Height}px" );
+						node.TryModifyStyle( "left", $"{rect.Left}px" );
+						node.TryModifyStyle( "top", $"{rect.Top}px" );
+
+						Panel.Style.Left = rect.Left;
+						Panel.Style.Top = rect.Top;
+						Panel.Style.Width = rect.Width;
+						Panel.Style.Height = rect.Height;
+
 
 						// Force update in the designer
 						OwnerDesigner.ForceUpdate( false );

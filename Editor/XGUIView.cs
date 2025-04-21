@@ -154,7 +154,7 @@ public partial class XGUIView : SceneRenderingWidget
 		base.OnMouseMove( e );
 
 
-		if ( isMouseDown && !_isDraggingHandle )
+		if ( isMouseDown && !_isDraggingHandle && !isDragging )
 		{
 			Panel hovered = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true );
 			if ( hovered != null )
@@ -192,19 +192,64 @@ public partial class XGUIView : SceneRenderingWidget
 			{
 				DraggingPanel.Style.Position = PositionMode.Absolute;
 				var newPosition = e.LocalPosition - dragOffset;
+				Log.Info( dragOffset );
+				newPosition -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
+
 				var node = OwnerDesigner.LookupNodeByPanel( DraggingPanel );
 				if ( node != null )
 				{
-					node.Attributes["left"] = newPosition.x.ToString();
-					node.Attributes["top"] = newPosition.y.ToString();
+					/*// add or modify left/top style properties
+					string style = node.Attributes["style"];
+					// replace left/top properties if they exist
+					if ( style != null )
+					{
+						if ( style.Contains( "top:" ) )
+						{
+							// Replace any "top: Xpx;" or "top:Xpx;" pattern with the new value
+							style = System.Text.RegularExpressions.Regex.Replace(
+								style,
+								@"top:\s*[-\d\.]+px;",
+								$"top: {newPosition.y}px;"
+							);
+						}
+						else
+						{
+							style += $" top: {newPosition.y}px;";
+						}
+						if ( style.Contains( "left:" ) )
+						{
+							// Replace any "left: Xpx;" or "left:Xpx;" pattern with the new value
+							style = System.Text.RegularExpressions.Regex.Replace(
+								style,
+								@"left:\s*[-\d\.]+px;",
+								$"left: {newPosition.x}px;"
+							);
+						}
+						else
+						{
+							style += $" left: {newPosition.x}px;";
+						}
+					}
+					else
+					{
+						style = $"left: {newPosition.x}px; top: {newPosition.y}px;";
+					}
+					node.Attributes["style"] = style;*/
+					node.TryModifyStyle( "left", $"{newPosition.x}px" );
+					node.TryModifyStyle( "top", $"{newPosition.y}px" );
 				}
 				else
 				{
 					DraggingPanel.Style.Left = e.LocalPosition.x - dragOffset.x;
 					DraggingPanel.Style.Top = e.LocalPosition.y - dragOffset.y;
 				}
-				OwnerDesigner.ForceUpdate();
+				OwnerDesigner.ForceUpdate( false );
 				DraggingPanel.Style.Dirty();
+				DraggingPanel = OwnerDesigner.LookupPanelByNode( node );
+				if ( DraggingPanel == null )
+				{
+					Log.Warning( "DraggingPanel is null after UI rebuild!" );
+				}
 				return;
 			}
 
