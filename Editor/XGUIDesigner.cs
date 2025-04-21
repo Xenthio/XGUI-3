@@ -603,7 +603,7 @@ namespace XGUI.XGUIEditor
 						var newTextNode = new MarkupNode( NodeType.Text ) { TextContent = stringValue, Parent = node, SourceStart = -1, SourceEnd = -1 };
 						node.Children.Insert( 0, newTextNode );
 					}
-				} // End Inner Text Handling
+				}
 				else
 				{
 					Log.Warning( $"ModifySourceCode: Unhandled property '{propertyOrAttributeName}' for node <{node.TagName}>" );
@@ -808,16 +808,17 @@ namespace XGUI.XGUIEditor
 			Log.Info( $"Adding component <{tagName}> to source" );
 			if ( _isUpdatingUIFromCode ) return; // Avoid changes during UI rebuild
 
-			string componentCode = $"<{tagName}{(string.IsNullOrWhiteSpace( attributes ) ? "" : " " + attributes)}";
+			string componentCode;
 			if ( IsSelfClosingTag( tagName ) ) // Use helper
 			{
-				componentCode += " />";
+				componentCode = $"<{tagName}{(string.IsNullOrWhiteSpace( attributes ) ? "" : " " + attributes)} />";
 			}
 			else
 			{
-				componentCode += $"></{tagName}>"; // Add simple closing tag
+				// For elements that can have inner content, don't add innertext attribute
+				// but keep the opening and closing tags empty for now
+				componentCode = $"<{tagName}{(string.IsNullOrWhiteSpace( attributes ) ? "" : " " + attributes)}></{tagName}>";
 			}
-
 
 			// Find insertion point:
 			// Option 1: End of the root content
@@ -836,7 +837,6 @@ namespace XGUI.XGUIEditor
 				Log.Warning( "Cannot add component: <root> tag not found." );
 				return;
 			}
-
 
 			if ( insertPosition >= 0 )
 			{

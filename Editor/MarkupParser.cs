@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq; // For Linq methods like Any
 using System.Text.RegularExpressions;
 
@@ -213,6 +214,54 @@ namespace XGUI.XGUIEditor
 					   .Replace( "&quot;", "\"" )
 					   .Replace( "&#39;", "'" )
 					   .Replace( "&amp;", "&" ); // Ampersand last
+		}
+
+		// Add this method to handle more error cases during extraction
+		public static List<MarkupNode> ParseWithDiagnostics( string htmlContent, out List<string> warnings )
+		{
+			warnings = new List<string>();
+
+			if ( string.IsNullOrWhiteSpace( htmlContent ) )
+			{
+				warnings.Add( "Empty content provided for parsing" );
+				return new List<MarkupNode>();
+			}
+
+			try
+			{
+				var nodes = Parse( htmlContent );
+
+				// Validate nodes after parsing
+				foreach ( var node in nodes.Where( n => n.Type == NodeType.Element ) )
+				{
+					// Check for suspicious source positions
+					if ( node.SourceEnd <= node.SourceStart )
+					{
+						warnings.Add( $"Node <{node.TagName}> has invalid source positions: Start={node.SourceStart}, End={node.SourceEnd}" );
+					}
+
+					// Check if source extraction works
+					try
+					{
+						string nodeSource = htmlContent.Substring( node.SourceStart, node.SourceLength );
+						if ( !nodeSource.StartsWith( "<" ) || !nodeSource.EndsWith( ">" ) )
+						{
+							warnings.Add( $"Node <{node.TagName}> source doesn't begin with '<' or end with '>': {nodeSource}" );
+						}
+					}
+					catch ( Exception ex )
+					{
+						warnings.Add( $"Cannot extract source for node <{node.TagName}>: {ex.Message}" );
+					}
+				}
+
+				return nodes;
+			}
+			catch ( Exception ex )
+			{
+				warnings.Add( $"Critical parsing error: {ex.Message}" );
+				return new List<MarkupNode>();
+			}
 		}
 	}
 }

@@ -271,6 +271,11 @@ public partial class Window : Panel
 		return FindRootPanel().MousePosition;
 	}
 
+	Vector2 LocalMousePos()
+	{
+		return Parent.MousePosition;
+	}
+
 	// -------------
 	// Dragging
 	// -------------
@@ -280,7 +285,7 @@ public partial class Window : Panel
 	public void Drag()
 	{
 		if ( !Dragging ) return;
-		var mousePos = MousePos();
+		var mousePos = LocalMousePos();
 		Position.x = ((mousePos.x) - xoff);
 		Position.y = ((mousePos.y) - yoff);
 
@@ -316,6 +321,9 @@ public partial class Window : Panel
 		if ( !IsDraggable ) return;
 
 		var mousePos = MousePos();
+
+		Log.Info( this.Parent.MousePosition );
+
 		xoff = (float)((mousePos.x) - Box.Rect.Left);
 		yoff = (float)((mousePos.y) - Box.Rect.Top);
 		Dragging = true;
@@ -355,17 +363,18 @@ public partial class Window : Panel
 		if ( !IsResizable ) return;
 		// TODO FIXME: Don't resize if were dragging a window by the title bar!!
 		var Distance = 5;
-		var mousePos = FindRootPanel().MousePosition;
+		var mousePos = MousePos();
 		if ( mousePos.y.AlmostEqual( this.Box.Rect.Bottom, Distance ) ) draggingB = true;
 		if ( mousePos.x.AlmostEqual( this.Box.Rect.Right, Distance ) ) draggingR = true;
 		if ( mousePos.y.AlmostEqual( this.Box.Rect.Top, Distance ) ) draggingT = true;
 		if ( mousePos.x.AlmostEqual( this.Box.Rect.Left, Distance ) ) draggingL = true;
 		//draggingT = true;
 		//draggingL = true;
-		xoff1 = (float)((FindRootPanel().MousePosition.x) - this.Box.Rect.Right);
-		yoff1 = (float)((FindRootPanel().MousePosition.y) - this.Box.Rect.Bottom);
-		xoff2 = (float)((FindRootPanel().MousePosition.x) - this.Box.Rect.Left);
-		yoff2 = (float)((FindRootPanel().MousePosition.y) - this.Box.Rect.Top);
+
+		xoff1 = (float)((mousePos.x) - this.Box.Rect.Right);
+		yoff1 = (float)((mousePos.y) - this.Box.Rect.Bottom);
+		xoff2 = (float)((mousePos.x) - this.Box.Rect.Left);
+		yoff2 = (float)((mousePos.y) - this.Box.Rect.Top);
 	}
 	public void ResizeUp()
 	{
@@ -381,6 +390,7 @@ public partial class Window : Panel
 	public void ResizeMove()
 	{
 		var mousePos = MousePos();
+		var mousePosLocal = LocalMousePos();
 		if ( IsResizable )
 		{
 			var Distance = 5;
@@ -434,7 +444,7 @@ public partial class Window : Panel
 			if ( newheight > MinSize.y )
 			{
 				Style.Height = newheight;
-				Position.y = mousePos.y - yoff2;
+				Position.y = mousePosLocal.y - yoff2;
 			}
 		}
 
@@ -444,7 +454,7 @@ public partial class Window : Panel
 			if ( newwidth > MinSize.x )
 			{
 				Style.Width = newwidth;
-				Position.x = mousePos.x - xoff2;
+				Position.x = mousePosLocal.x - xoff2;
 			}
 		}
 
