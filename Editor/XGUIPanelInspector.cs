@@ -207,9 +207,9 @@ namespace XGUI.XGUIEditor
 			var currentStyles = ParseStyleAttribute( styleAttributeValue ); // Parse into dictionary
 
 			// Helper Action to create style editors consistently
-			Action<string, string> AddStyleEditor = ( propName, initialValue ) =>
+			Action<Layout, string, string> AddStyleEditor = ( thislayout, propName, initialValue ) =>
 			{
-				AddPropertyEditor( layout, propName.Replace( "-", " " ).ToTitleCase(), initialValue, ( value ) =>
+				AddPropertyEditor( thislayout, propName.Replace( "-", " " ).ToTitleCase(), initialValue, ( value ) =>
 				{ // Make name user-friendly
 					value = value.Trim();
 					// ... update currentStyles ...
@@ -238,19 +238,31 @@ namespace XGUI.XGUIEditor
 
 			// Add editors for common styles
 			// Use GetValueOrDefault to handle missing properties gracefully
-			AddStyleEditor( "width", currentStyles.GetValueOrDefault( "width", "" ) );
-			AddStyleEditor( "height", currentStyles.GetValueOrDefault( "height", "" ) );
-			AddStyleEditor( "margin-top", currentStyles.GetValueOrDefault( "margin-top", "" ) );
-			AddStyleEditor( "margin-right", currentStyles.GetValueOrDefault( "margin-right", "" ) );
-			AddStyleEditor( "margin-bottom", currentStyles.GetValueOrDefault( "margin-bottom", "" ) );
-			AddStyleEditor( "margin-left", currentStyles.GetValueOrDefault( "margin-left", "" ) );
-			AddStyleEditor( "padding-top", currentStyles.GetValueOrDefault( "padding-top", "" ) );
-			AddStyleEditor( "padding-right", currentStyles.GetValueOrDefault( "padding-right", "" ) );
-			AddStyleEditor( "padding-bottom", currentStyles.GetValueOrDefault( "padding-bottom", "" ) );
-			AddStyleEditor( "padding-left", currentStyles.GetValueOrDefault( "padding-left", "" ) );
-			AddStyleEditor( "background-color", currentStyles.GetValueOrDefault( "background-color", "" ) );
-			AddStyleEditor( "color", currentStyles.GetValueOrDefault( "color", "" ) ); // Font color
-			AddStyleEditor( "font-size", currentStyles.GetValueOrDefault( "font-size", "" ) );
+			var sizeGroup = AddPropertyGroup( layout, "Size" );
+
+			AddStyleEditor( sizeGroup, "width", currentStyles.GetValueOrDefault( "width", "" ) );
+			AddStyleEditor( sizeGroup, "height", currentStyles.GetValueOrDefault( "height", "" ) );
+
+			var positionGroup = AddPropertyGroup( layout, "Position" );
+			AddStyleEditor( positionGroup, "left", currentStyles.GetValueOrDefault( "left", "" ) );
+			AddStyleEditor( positionGroup, "top", currentStyles.GetValueOrDefault( "top", "" ) );
+			AddStyleEditor( positionGroup, "position", currentStyles.GetValueOrDefault( "position", "" ) );
+
+			var marginGroup = AddPropertyGroup( layout, "Margin" );
+			AddStyleEditor( marginGroup, "margin-top", currentStyles.GetValueOrDefault( "margin-top", "" ) );
+			AddStyleEditor( marginGroup, "margin-right", currentStyles.GetValueOrDefault( "margin-right", "" ) );
+			AddStyleEditor( marginGroup, "margin-bottom", currentStyles.GetValueOrDefault( "margin-bottom", "" ) );
+			AddStyleEditor( marginGroup, "margin-left", currentStyles.GetValueOrDefault( "margin-left", "" ) );
+			var paddingGroup = AddPropertyGroup( layout, "Padding" );
+			AddStyleEditor( paddingGroup, "padding-top", currentStyles.GetValueOrDefault( "padding-top", "" ) );
+			AddStyleEditor( paddingGroup, "padding-right", currentStyles.GetValueOrDefault( "padding-right", "" ) );
+			AddStyleEditor( paddingGroup, "padding-bottom", currentStyles.GetValueOrDefault( "padding-bottom", "" ) );
+			AddStyleEditor( paddingGroup, "padding-left", currentStyles.GetValueOrDefault( "padding-left", "" ) );
+			var colourGroup = AddPropertyGroup( layout, "Colour" );
+			AddStyleEditor( colourGroup, "background-color", currentStyles.GetValueOrDefault( "background-color", "" ) );
+			AddStyleEditor( colourGroup, "color", currentStyles.GetValueOrDefault( "color", "" ) ); // Font color
+			var textGroup = AddPropertyGroup( layout, "Text" );
+			AddStyleEditor( textGroup, "font-size", currentStyles.GetValueOrDefault( "font-size", "" ) );
 			// Add more styles as needed (flex-direction, etc.)
 
 
@@ -258,6 +270,17 @@ namespace XGUI.XGUIEditor
 			var pseudoGroup = AddPropertyGroup( layout, "Live State (Preview)" );
 			if ( _targetPanel != null )
 			{
+				var pseudoStates = new[] { "hover", "active", "focus" }; // Add more if needed
+				foreach ( var state in pseudoStates )
+				{
+					AddCheckboxProperty( pseudoGroup, state.ToTitleCase(), _targetPanel.HasClass( state ), ( value ) =>
+					{
+						if ( value ) _targetPanel.AddClass( state );
+						else _targetPanel.RemoveClass( state );
+					} );
+				}
+				pseudoGroup.Add( new Editor.Label( "Click to toggle states" ) );
+
 
 			}
 			else
@@ -363,6 +386,18 @@ namespace XGUI.XGUIEditor
 
 			return groupWidget.Layout;
 		}
+		private void AddPropertyTitle( Layout layout, string groupName )
+		{
+			var groupWidget = new Widget( null );
+			groupWidget.Layout = Layout.Column();
+			groupWidget.Layout.Spacing = 2;
+
+			var header = new Editor.Label( groupName );
+			header.SetStyles( "font-weight: bold; margin-top: 5px;" );
+			groupWidget.Layout.Add( header );
+			layout.Add( groupWidget );
+
+		}
 
 
 		/// <summary>
@@ -452,6 +487,9 @@ namespace XGUI.XGUIEditor
 				{
 					case "width": panel.Style.Width = ParseLength( stringValue ); break;
 					case "height": panel.Style.Height = ParseLength( stringValue ); break;
+					case "top": panel.Style.Top = ParseLength( stringValue ); break;
+					case "left": panel.Style.Left = ParseLength( stringValue ); break;
+					case "position": panel.Style.Position = stringValue == "absolute" ? PositionMode.Absolute : PositionMode.Relative; break;
 					case "margin-top": panel.Style.MarginTop = ParseLength( stringValue ); break;
 					case "margin-right": panel.Style.MarginRight = ParseLength( stringValue ); break;
 					case "margin-bottom": panel.Style.MarginBottom = ParseLength( stringValue ); break;
