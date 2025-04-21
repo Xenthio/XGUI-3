@@ -45,9 +45,6 @@ namespace XGUI.XGUIEditor
 		// Regex for extracting <root>...</root>
 		private static readonly Regex _rootContentRegex = new( @"(<root[^>]*>)([\s\S]*?)(</root>)", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline );
 
-		private Panel _draggedPanel;
-		private MarkupNode _draggedNode;
-
 		public XGUIDesigner()
 		{
 			DeleteOnClose = true;
@@ -232,46 +229,6 @@ namespace XGUI.XGUIEditor
 					ApplyAttributesToElement( newElement, node.Attributes );
 					_panelToMarkupNodeMap[newElement] = node;
 					_markupNodeToPanelMap[node] = newElement;
-
-					// --- DRAG & DROP ---
-					if ( parentPanel != _view.WindowContent ) // Don't allow dragging root
-					{
-						newElement.AddEventListener( "mousedown", () =>
-						{
-							SelectAndInspect( node, newElement );
-							_draggedPanel = newElement;
-							_draggedNode = node;
-						} );
-						newElement.AddEventListener( "mouseup", () =>
-						{
-							var targetPanel = GetPanelAt( newElement.MousePosition );
-							if ( _draggedNode == null || targetPanel == null ) return;
-							if ( !_panelToMarkupNodeMap.TryGetValue( targetPanel, out var targetNode ) ) return;
-							if ( _draggedNode == targetNode ) return; // Prevent self-parenting
-
-							// Remove from old parent
-							_draggedNode.Parent?.Children.Remove( _draggedNode );
-
-							// Add as child of targetNode
-							targetNode.Children.Add( _draggedNode );
-							_draggedNode.Parent = targetNode;
-
-							UpdateCodeFromTree();
-							ParseAndUpdateUI( _codeTextEditor.PlainText );
-
-							_draggedPanel = null;
-							_draggedNode = null;
-						} );
-					}
-
-					// --- RESIZE & ALIGNMENT HANDLES ---
-					bool isAutoLayout = parentPanel.Classes.Contains( "self-layout" ) || parentPanel.Classes.Contains( "self-layout-row" ) || parentPanel.Classes.Contains( "self-layout-column" );
-					if ( !isAutoLayout )
-					{
-						//newElement.Style.Position = PositionMode.Absolute;
-						//AddResizeHandles( newElement, node );
-						//AddAlignmentButtons( newElement, node );
-					}
 
 					foreach ( var childNode in node.Children )
 						CreatePanelsRecursive( childNode, newElement );

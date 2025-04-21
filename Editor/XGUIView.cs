@@ -2,6 +2,7 @@
 using Sandbox;
 using Sandbox.UI;
 using System;
+using XGUI.XGUIEditor;
 
 namespace XGUI;
 
@@ -43,7 +44,9 @@ public class XGUIView : SceneRenderingWidget
 		WindowContent.Style.MinHeight = 200;
 		WindowContent.Style.MinWidth = 200;
 		WindowContent.AddClass( "window-content" );
-		Window.AddChild( WindowContent ); 
+		Window.AddChild( WindowContent );
+
+		Window.FocusWindow();
 	}
 
 	public void CleanUp()
@@ -56,5 +59,27 @@ public class XGUIView : SceneRenderingWidget
 		base.PreFrame();
 		Scene.GameTick();
 	}
- 
+
+	private Panel SelectedPanel;
+	private MarkupNode SelectedNode;
+
+	private Panel DraggingPanel;
+	private MarkupNode DraggingNode;
+	protected override void OnMousePress( MouseEvent e )
+	{
+		base.OnMousePress( e );
+		// do selection here, find what we're hovering and call SelectAndInspect, we'll also have to detect mouse movement to do dragging
+	}
+	protected override void OnMouseMove( MouseEvent e )
+	{
+		base.OnMouseMove( e );
+		// if mouse down, go into dragging mode, find what we're hovering and set it as the dragging panel
+		// if dragging, update the position of the dragging panel
+		// if dragging in position absolute, update the position by desired alignment (top,bottom,left,right), if otherwise, just change child order.
+	}
+	protected override void OnMouseReleased( MouseEvent e )
+	{
+		base.OnMouseReleased( e );
+		// stop dragging if so,
+	}
 }
