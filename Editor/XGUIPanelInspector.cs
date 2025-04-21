@@ -14,6 +14,7 @@ namespace XGUI.XGUIEditor
 	/// </summary>
 	public class PanelInspector : Widget
 	{
+		public XGUIDesigner OwnerDesigner;
 		// The live panel (for previews, computed styles) - may be null
 		private Panel _targetPanel;
 		// The source node from the parsed markup - primary target for edits
@@ -503,7 +504,12 @@ namespace XGUI.XGUIEditor
 					case "font-size": panel.Style.FontSize = ParseLength( stringValue ); break;
 						// Add other style properties
 				}
+
+				var node = OwnerDesigner.LookupNodeByPanel( panel );
+				node.TryModifyStyle( propertyName, stringValue ); // Update the source node
+				OwnerDesigner.ForceUpdate( false );
 				panel.Style.Dirty(); // Mark style as dirty if needed by UI framework
+
 			}
 			catch ( Exception ex )
 			{

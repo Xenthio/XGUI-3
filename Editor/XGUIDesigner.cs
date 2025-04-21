@@ -72,7 +72,7 @@ namespace XGUI.XGUIEditor
 
 			// --- Panels ---
 			_heirarchy = new Widget( null ) { Layout = Layout.Column() };
-			_inspector = new PanelInspector() { OnPropertyChanged = OnInspectorPropertyChanged }; // Hook up delegate
+			_inspector = new PanelInspector() { OnPropertyChanged = OnInspectorPropertyChanged, OwnerDesigner = this }; // Hook up delegate
 			_componentPalette = new Widget( null ) { Layout = Layout.Column() };
 			CreateComponentPaletteInternal();
 
