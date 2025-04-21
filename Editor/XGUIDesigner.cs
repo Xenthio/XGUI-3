@@ -1,4 +1,5 @@
 using Editor;
+using Sandbox;
 using Sandbox.UI;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace XGUI.XGUIEditor
 	public class XGUIDesigner : DockWindow
 	{
 		// UI Elements
+		public XGUIOverlayWidget OverlayWidget; // do overlays here.
 		private XGUIView _view;
 		private Widget _heirarchy;
 		private PanelInspector _inspector;
@@ -32,6 +34,7 @@ namespace XGUI.XGUIEditor
 		private bool _isDirty;
 		private bool _isUpdatingUIFromCode = false; // Flag to prevent update loops
 		private bool _isUpdatingCodeFromUI = false;
+		private Menu _recentFilesMenu;
 		private readonly List<string> _recentFiles = new();
 
 		// Razor Content Cache
@@ -60,8 +63,8 @@ namespace XGUI.XGUIEditor
 			BuildMenuBar();
 
 			// --- Views ---
-			_view = new XGUIView { OnElementSelected = OnDesignViewElementSelected };
-			_view.SetSizeMode( SizeMode.Expand, SizeMode.Expand );
+			_view = new XGUIView { OnElementSelected = OnDesignViewElementSelected, OwnerDesigner = this };
+			_view.SetSizeMode( SizeMode.Flexible, SizeMode.Flexible );
 
 			_codeView = new Widget( null );
 			_codeView.SetSizeMode( SizeMode.Expand, SizeMode.Expand );
@@ -79,21 +82,34 @@ namespace XGUI.XGUIEditor
 			_view.SetWindowIcon( "visibility" );
 			DockManager.AddDock( null, _view );
 
+			// Create and add the overlay widget
+			OverlayWidget = new XGUIOverlayWidget( _view.Parent );
+			OverlayWidget.ConnectToView( _view );
+
 			_heirarchy.WindowTitle = "Hierarchy";
 			_heirarchy.SetWindowIcon( "view_list" );
-			DockManager.AddDock( null, _heirarchy, dockArea: DockArea.Left, split: 0.20f );
+			DockManager.AddDock( null, _heirarchy, dockArea: DockArea.Left, split: 0.10f );
 
 			_inspector.WindowTitle = "Inspector";
 			_inspector.SetWindowIcon( "info" );
-			DockManager.AddDock( null, _inspector, dockArea: DockArea.Right, split: 0.20f );
+			DockManager.AddDock( null, _inspector, dockArea: DockArea.Right, split: 0.10f );
 
 			_componentPalette.WindowTitle = "Component Palette";
 			_componentPalette.SetWindowIcon( "view_module" );
 			_codeView.WindowTitle = "Code View";
 			_codeView.SetWindowIcon( "code" );
 
-			DockManager.AddDock( null, _componentPalette, dockArea: DockArea.Bottom, split: 0.30f );
-			DockManager.AddDock( _componentPalette, _codeView, dockArea: DockArea.Right, split: 0.40f );
+			DockManager.AddDock( null, _componentPalette, DockArea.TopOuter, split: 0.05f );
+			DockManager.AddDock( null, _codeView, dockArea: DockArea.Bottom, split: 0.30f );
+
+			_view.Setup();
+		}
+
+		public override void OnDestroyed()
+		{
+
+			base.OnDestroyed();
+			OverlayWidget?.Destroy();
 		}
 
 		//---------------------------------------------------------------------
@@ -113,10 +129,10 @@ namespace XGUI.XGUIEditor
 			var container = _componentPalette.Layout.Add( new Widget( null ) );
 			container.SetSizeMode( SizeMode.Expand, SizeMode.Expand );
 			container.Layout = Layout.Row();
-			container.Layout.Spacing = 4;
-			var layoutsCategory = CreateComponentCategory( container.Layout, "Layouts" );
-			var controlsCategory = CreateComponentCategory( container.Layout, "Controls" );
-			var containersCategory = CreateComponentCategory( container.Layout, "Containers" );
+			container.Layout.Spacing = 8;
+			var layoutsCategory = CreateComponentCategory( container.Layout, "Layouts:" );
+			var controlsCategory = CreateComponentCategory( container.Layout, "Controls:" );
+			var containersCategory = CreateComponentCategory( container.Layout, "Containers:" );
 			AddComponentButton( layoutsCategory, "Div", "div" );
 			AddComponentButton( layoutsCategory, "Row", "div", "class=\"self-layout self-layout-row\"" );
 			AddComponentButton( layoutsCategory, "Column", "div", "class=\"self-layout self-layout-column\"" );
@@ -134,10 +150,28 @@ namespace XGUI.XGUIEditor
 		private Layout CreateComponentCategory( Layout parentLayout, string categoryName )
 		{
 			var categoryWidget = parentLayout.Add( new Widget( null ) );
-			categoryWidget.Layout = Layout.Column();
-			categoryWidget.Layout.Spacing = 2;
-			categoryWidget.Layout.Add( new Editor.Label( categoryName ) );
+			//border qt
+			categoryWidget.ContentMargins = new Margin( 8, 8, 8, 8 );
+			categoryWidget.SetStyles( "border: 1px solid #555; border-radius: 4px;" );
+			categoryWidget.Layout = Layout.Row();
+			categoryWidget.Layout.Spacing = 4;
+			var label = new Editor.Label( categoryName );
+			label.SetStyles( "font-size: 11px; font-weight: bold; color: #fff; border: none;" );
+			categoryWidget.Layout.Add( label );
 			return categoryWidget.Layout;
+		}
+
+		public MarkupNode LookupNodeByPanel( Panel panel )
+		{
+			if ( panel == null ) return null;
+			if ( _panelToMarkupNodeMap.TryGetValue( panel, out var node ) ) return node;
+			return null;
+		}
+		public Panel LookupPanelByNode( MarkupNode node )
+		{
+			if ( node == null ) return null;
+			if ( _markupNodeToPanelMap.TryGetValue( node, out var panel ) ) return panel;
+			return null;
 		}
 
 		private void OnDesignViewElementSelected( Panel selectedPanel )
@@ -176,11 +210,11 @@ namespace XGUI.XGUIEditor
 			ParseAndUpdateUI( newContent );
 		}
 
-		private void ParseAndUpdateUI( string fullRazorContent )
+		private void ParseAndUpdateUI( string fullRazorContent, bool rebuildMarkupTree = true )
 		{
 			_panelToMarkupNodeMap.Clear();
 			_markupNodeToPanelMap.Clear();
-			_rootMarkupNodes.Clear();
+			if ( rebuildMarkupTree ) _rootMarkupNodes.Clear();
 			if ( _view?.WindowContent == null )
 			{
 				_view?.CreateBlankWindow(); // Ensure base window exists
@@ -191,7 +225,7 @@ namespace XGUI.XGUIEditor
 			var rootContentMatch = _rootContentRegex.Match( fullRazorContent );
 			string htmlContent = rootContentMatch.Success ? rootContentMatch.Groups[2].Value : "";
 
-			_rootMarkupNodes = SimpleMarkupParser.Parse( htmlContent );
+			if ( rebuildMarkupTree ) _rootMarkupNodes = SimpleMarkupParser.Parse( htmlContent );
 
 			// Find the <div class="window-content"> node
 			MarkupNode windowContentNode = null;
@@ -201,6 +235,8 @@ namespace XGUI.XGUIEditor
 					node.Attributes.TryGetValue( "class", out var cls ) && cls.Contains( "window-content" ) )
 				{
 					windowContentNode = node;
+					_panelToMarkupNodeMap[_view.WindowContent] = windowContentNode;
+					_markupNodeToPanelMap[windowContentNode] = _view.WindowContent;
 					break;
 				}
 				// Optionally: search recursively if not always top-level
@@ -252,6 +288,19 @@ namespace XGUI.XGUIEditor
 			Search( _view.WindowContent );
 			return found;
 		}
+		public void ForceUpdate( bool rebuildMarkupTree = true )
+		{
+			var backup = LookupNodeByPanel( _view.SelectedPanel );
+			UpdateCodeFromTree();
+			ParseAndUpdateUI( _codeTextEditor.PlainText, rebuildMarkupTree );
+
+
+			_view.SelectedPanel = LookupPanelByNode( backup );
+			if ( _view.SelectedPanel == null )
+			{
+				Log.Warning( "_view.SelectedPanel is null after UI rebuild!" );
+			}
+		}
 		private void UpdateCodeFromTree()
 		{
 			// Serialize the tree back to markup and update the code editor
@@ -260,7 +309,8 @@ namespace XGUI.XGUIEditor
 			string newCode = $@"@using Sandbox;
 @using Sandbox.UI;
 @using XGUI;
-@inherits Panel
+@attribute [StyleSheet( ""/XGUI/DefaultStyles/OliveGreen.scss"" )]
+@inherits Window
 
 <root>
 {rootMarkup}
@@ -277,6 +327,8 @@ namespace XGUI.XGUIEditor
 		{
 			var button = layout.Add( new Editor.Button( displayName ) );
 			button.Clicked = () => AddComponentToSource( tagName, attributes );
+			button.IsDraggable = true;
+
 		}
 
 		/// <summary>
@@ -314,6 +366,11 @@ namespace XGUI.XGUIEditor
 				Attributes = SimpleMarkupParser.ParseAttributes( attributes ),
 				Children = new List<MarkupNode>()
 			};
+			// Default text for button
+			if ( tagName == "button" )
+			{
+				newNode.Children.Add( new MarkupNode { Type = NodeType.Text, TextContent = "Button" } );
+			}
 
 			// Add to window-content node
 			windowContentNode.Children.Add( newNode );
@@ -325,36 +382,35 @@ namespace XGUI.XGUIEditor
 		}
 
 
-
+		TreeView HierarchyTree;
 		/// <summary>
 		/// Updates the Hierarchy TreeView based on the _rootMarkupNodes.
 		/// </summary>
 		private void UpdateHierarchyPanelInternal()
 		{
-			// Find existing TreeView or create a new one
-			TreeView treeView = _heirarchy.Children.OfType<TreeView>().FirstOrDefault();
-			if ( treeView == null )
+			// Find existing TreeView or create a new one 
+			if ( HierarchyTree == null )
 			{
 				// Clear any old non-TreeView widgets if necessary before adding
 				// _heirarchy.Layout.Clear(true); // Use if layout needs full reset
-				treeView = new TreeView( _heirarchy );
-				_heirarchy.Layout.Add( treeView );
+				HierarchyTree = new TreeView( _heirarchy );
+				_heirarchy.Layout.Add( HierarchyTree );
 			}
 			else
 			{
-				treeView.Clear(); // Clear existing items efficiently
+				HierarchyTree.Clear(); // Clear existing items efficiently
 			}
 
-			treeView.MultiSelect = false;
-			treeView.ItemSelected = OnHierarchyNodeSelected; // Use specific handler
+			HierarchyTree.MultiSelect = false;
+			HierarchyTree.ExpandForSelection = true;
+			HierarchyTree.ItemSelected = OnHierarchyNodeSelected; // Use specific handler
 
 			// Build tree from the root MarkupNodes
 			foreach ( var rootNode in _rootMarkupNodes )
 			{
-				BuildTreeForMarkupNodeRecursive( rootNode, null, treeView ); // Pass treeview for root items
+				BuildTreeForMarkupNodeRecursive( rootNode, null, HierarchyTree ); // Pass treeview for root items
 			}
 			// Don't expand all by default? User can expand.
-			// treeView.ExpandAll();
 		}
 
 
@@ -405,8 +461,34 @@ namespace XGUI.XGUIEditor
 		//---------------------------------------------------------------------
 		// Menu Actions & File I/O
 		//---------------------------------------------------------------------
+		public void BuildMenuBar()
+		{
+			var file = MenuBar.AddMenu( "File" );
+			file.AddOption( "New", "common/new.png", New, "Ctrl+N" ).StatusTip = "New Razor File";
+			file.AddOption( "Open", "common/open.png", Open, "Ctrl+O" ).StatusTip = "Open Razor File";
+			file.AddOption( "Save", "common/save.png", () => Save(), "Ctrl+S" ).StatusTip = "Save Razor File";
+			file.AddOption( "Save As...", "common/save.png", () => Save( true ), "Ctrl+Shift+S" ).StatusTip = "Save Razor File As...";
 
-		public void BuildMenuBar() { /* (Identical to previous) */ }
+			file.AddSeparator();
+
+			_recentFilesMenu = file.AddMenu( "Recent Files" );
+
+			file.AddSeparator();
+
+			file.AddOption( "Quit", null, Close, "Ctrl+Q" ).StatusTip = "Quit";
+
+			var edit = MenuBar.AddMenu( "Edit" );
+			edit.AddSeparator();
+			edit.AddOption( "Cut", "common/cut.png", CutSelection, "Ctrl+X" );
+			edit.AddOption( "Copy", "common/copy.png", CopySelection, "Ctrl+C" );
+			edit.AddOption( "Paste", "common/paste.png", PasteSelection, "Ctrl+V" );
+			edit.AddOption( "Select All", "select_all", SelectAll, "Ctrl+A" );
+
+			var view = MenuBar.AddMenu( "View" );
+			view.AddOption( "Design View", null, ShowDesignView, "F7" );
+			view.AddOption( "Code View", null, ShowCodeView, "F8" );
+			view.AddOption( "Split View", null, ShowSplitView, "F9" );
+		}
 		void New()
 		{
 			string template = @"@using Sandbox;
@@ -430,7 +512,18 @@ namespace XGUI.XGUIEditor
 			_isDirty = false;
 			Title = "XGUI Razor Designer - Untitled";
 		}
-		void Open() { /* (Identical to previous) */ }
+		void Open()
+		{
+			var fd = new FileDialog( null );
+			fd.Title = "Open Razor File";
+			fd.SetNameFilter( "Razor Files (*.razor)" );
+			fd.SetFindFile();
+			fd.SetModeOpen();
+
+			if ( !fd.Execute() ) return;
+
+			OpenFile( fd.SelectedFile );
+		}
 		void OpenFile( string path )
 		{
 			if ( !File.Exists( path ) ) return;
@@ -454,21 +547,69 @@ namespace XGUI.XGUIEditor
 			if ( _recentFiles.Count > 10 ) _recentFiles.RemoveAt( 10 );
 			UpdateRecentFilesMenu();
 		}
-		void UpdateRecentFilesMenu() { /* (Identical to previous) */ }
-		void Save( bool saveas = false ) { /* (Identical to previous) */ }
+		void UpdateRecentFilesMenu()
+		{
+			// Clear menu items properly since Menu.Items doesn't exist
+			_recentFilesMenu.Clear();
+
+			foreach ( var path in _recentFiles )
+			{
+				string fileName = Path.GetFileName( path );
+				_recentFilesMenu.AddOption( fileName, null, () => OpenFile( path ) );
+			}
+		}
+
+		void Save( bool saveas = false )
+		{
+			if ( saveas || string.IsNullOrEmpty( _currentFilePath ) )
+			{
+				// Use FileDialog instead of SaveFileDialog
+				var fd = new FileDialog( null );
+				fd.Title = "Save Razor File";
+				fd.SetNameFilter( "Razor Files (*.razor)" );
+				fd.SetFindFile();
+				fd.SetModeSave();
+				fd.DefaultSuffix = ".razor";
+
+				if ( !fd.Execute() ) return;
+
+				SaveFile( fd.SelectedFile );
+			}
+			else
+			{
+				SaveFile( _currentFilePath );
+			}
+		}
+
 		void SaveFile( string path )
 		{
+			// Find TextEdit directly instead of using ChildrenOfType
 			if ( _codeTextEditor == null ) return;
+
 			try
 			{
-				File.WriteAllText( path, _codeTextEditor.PlainText ); // Save current editor text
+				File.WriteAllText( path, _codeTextEditor.PlainText );
 				_currentFilePath = path;
 				_isDirty = false;
+
 				Title = $"XGUI Razor Designer - {Path.GetFileName( path )}";
-				AddRecentFile( path );
+
+				// Add to recent files
+				if ( !_recentFiles.Contains( path ) )
+				{
+					_recentFiles.Insert( 0, path );
+					if ( _recentFiles.Count > 10 )
+						_recentFiles.RemoveAt( 10 );
+
+					UpdateRecentFilesMenu();
+				}
+
 				Log.Info( $"File saved: {path}" );
 			}
-			catch ( System.Exception ex ) { Log.Error( $"Error saving file: {ex.Message}" ); }
+			catch ( System.Exception ex )
+			{
+				Log.Error( $"Error saving file: {ex.Message}" );
+			}
 		}
 
 		/// <summary>
@@ -477,9 +618,10 @@ namespace XGUI.XGUIEditor
 		private void SelectAndInspect( MarkupNode node, Panel panel )
 		{
 			_inspector.SetTarget( panel, node );
-			// TODO: Add visual highlighting in TreeView and DesignView if needed
-			// FindTreeNodeAndSelect(node);
-			// _view?.HighlightPanel(panel);
+			_view.SelectedPanel = panel; // Update selected panel in the view
+										 // TODO: Add visual highlighting in TreeView and DesignView if needed
+										 // FindTreeNodeAndSelect(node);
+										 // _view?.HighlightPanel(panel);
 		}
 
 		/// <summary>
@@ -489,6 +631,7 @@ namespace XGUI.XGUIEditor
 		{
 			// *** LOG 1: Check if the event fires at all ***
 			Log.Info( $"OnHierarchyNodeSelected Fired! Received item of type: {item?.GetType()?.FullName ?? "null"}" );
+			HierarchyTree.UpdateIfDirty();
 
 			if ( item is MarkupNode node && node.Type == NodeType.Element )
 			{
@@ -512,7 +655,7 @@ namespace XGUI.XGUIEditor
 
 		// Base element creation (no attributes/content applied here)
 		private Panel CreateElementFromTag( string tagName )
-		{
+		{/*
 			switch ( tagName.ToLowerInvariant() )
 			{
 				case "div": return new Panel();
@@ -526,7 +669,92 @@ namespace XGUI.XGUIEditor
 				default:
 					Log.Warning( $"Unsupported tag for Panel creation: {tagName}" );
 					return new Panel(); // Create generic Panel for unknown tags?
+			}*/
+
+			// use typelibrary/reflection to create the element
+
+			// If we get here, try the TypeLibrary approach with robust error handling
+			try
+			{
+				// Log to help diagnose the issue
+				Log.Info( $"Creating panel for tag '{tagName}' using TypeLibrary" );
+
+				// Only attempt TypeLibrary approach if it's available
+				if ( TypeLibrary == null )
+				{
+					Log.Warning( "TypeLibrary is null" );
+					return new Panel();
+				}
+
+				// Try direct name match first (most likely to succeed)
+				var types = TypeLibrary.GetTypes()
+					.Where( t => t != null &&
+						  t.TargetType != null &&
+						  t.TargetType.IsSubclassOf( typeof( Panel ) ) &&
+						  t.Name.Equals( tagName, StringComparison.OrdinalIgnoreCase ) )
+					.ToList();
+
+				if ( types.Count > 0 )
+				{
+					var type = types[0];
+					Log.Info( $"Found panel type by name: {type.Name}" );
+					return type.Create<Panel>();
+				}
+
+				// Try Library attribute second
+				try
+				{
+					var libraryMatches = TypeLibrary.GetTypesWithAttribute<LibraryAttribute>()
+						.Where( a => a.Type != null &&
+							   a.Attribute != null &&
+							   a.Type.TargetType.IsSubclassOf( typeof( Panel ) ) &&
+							   a.Attribute.Name.Equals( tagName, StringComparison.OrdinalIgnoreCase ) )
+						.ToList();
+
+					if ( libraryMatches.Count > 0 )
+					{
+						var type = libraryMatches[0].Type;
+						Log.Info( $"Found panel type by LibraryAttribute: {type.Name}" );
+						return type.Create<Panel>();
+					}
+				}
+				catch ( Exception ex )
+				{
+					Log.Warning( $"Error searching by LibraryAttribute: {ex.Message}" );
+				}
+
+				// Try Alias attribute last
+				try
+				{
+					var aliasTypes = TypeLibrary.GetTypesWithAttribute<AliasAttribute>()
+						.Where( a => a.Type != null &&
+							   a.Attribute != null &&
+							   a.Type.TargetType != null &&
+							   a.Type.TargetType.IsSubclassOf( typeof( Panel ) ) &&
+							   a.Attribute.Value != null &&
+							   a.Attribute.Value.Any( x => x.Equals( tagName, StringComparison.OrdinalIgnoreCase ) ) )
+						.ToList();
+
+					if ( aliasTypes.Count > 0 )
+					{
+						var type = aliasTypes[0].Type;
+						Log.Info( $"Found panel type by AliasAttribute: {type.Name}" );
+						return type.Create<Panel>();
+					}
+				}
+				catch ( Exception ex )
+				{
+					Log.Warning( $"Error searching by AliasAttribute: {ex.Message}" );
+				}
 			}
+			catch ( Exception ex )
+			{
+				Log.Error( $"Error in TypeLibrary lookup for '{tagName}': {ex.Message}" );
+			}
+
+			// If we get here, nothing worked
+			Log.Warning( $"Could not find panel type for tag '{tagName}', creating generic Panel" );
+			return new Panel();
 		}
 
 		// Apply attributes from parsed dictionary
@@ -736,6 +964,57 @@ namespace XGUI.XGUIEditor
 				return $"#{color.r:X2}{color.g:X2}{color.b:X2}{color.a:X2}";
 			else
 				return $"#{color.r:X2}{color.g:X2}{color.b:X2}";
+		}
+		void ShowDesignView()
+		{
+			_codeView.Visible = false;
+			_view.Visible = true;
+
+			Log.Info( "Switched to design view" );
+		}
+
+		void ShowCodeView()
+		{
+			_view.Visible = false;
+			_codeView.Visible = true;
+
+			Log.Info( "Switched to code view" );
+		}
+
+		void ShowSplitView()
+		{
+			_view.Visible = true;
+			_codeView.Visible = true;
+
+			Log.Info( "Switched to split view" );
+		}
+		void CutSelection()
+		{
+			if ( _codeTextEditor == null ) return;
+
+			//textEditor.Cut();
+		}
+
+		void CopySelection()
+		{
+			if ( _codeTextEditor == null ) return;
+
+			//textEditor.Copy();
+		}
+
+		void PasteSelection()
+		{
+			;
+			if ( _codeTextEditor == null ) return;
+
+			//textEditor.Paste();
+		}
+
+		void SelectAll()
+		{
+			if ( _codeTextEditor == null ) return;
+
+			_codeTextEditor.SelectAll();
 		}
 
 	}
