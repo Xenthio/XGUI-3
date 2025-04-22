@@ -551,6 +551,12 @@ namespace XGUI.XGUIEditor
 			var topEditor = positionGroup.AddFloatEditor( "top", "Top", true );
 			connectStyleEditor( topEditor );
 
+			var rightEditor = positionGroup.AddFloatEditor( "right", "Right", true );
+			connectStyleEditor( rightEditor );
+
+			var bottomEditor = positionGroup.AddFloatEditor( "bottom", "Bottom", true );
+			connectStyleEditor( bottomEditor );
+
 			var positionEditor = positionGroup.AddDropdownEditor(
 				"position", "Position", new[] { "relative", "absolute" }, true );
 			connectStyleEditor( positionEditor );
@@ -695,6 +701,8 @@ namespace XGUI.XGUIEditor
 					case "height": panel.Style.Height = ParseLength( stringValue ); break;
 					case "top": panel.Style.Top = ParseLength( stringValue ); break;
 					case "left": panel.Style.Left = ParseLength( stringValue ); break;
+					case "bottom": panel.Style.Bottom = ParseLength( stringValue ); break;
+					case "right": panel.Style.Right = ParseLength( stringValue ); break;
 					case "position": panel.Style.Position = stringValue == "absolute" ? PositionMode.Absolute : PositionMode.Relative; break;
 					case "margin-top": panel.Style.MarginTop = ParseLength( stringValue ); break;
 					case "margin-right": panel.Style.MarginRight = ParseLength( stringValue ); break;
