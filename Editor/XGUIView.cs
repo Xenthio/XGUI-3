@@ -192,7 +192,7 @@ public partial class XGUIView : SceneRenderingWidget
 			{
 				DraggingPanel.Style.Position = PositionMode.Absolute;
 				var newPosition = e.LocalPosition - dragOffset;
-				Log.Info( dragOffset );
+				//Log.Info( dragOffset );
 				newPosition -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
 
 				var node = OwnerDesigner.LookupNodeByPanel( DraggingPanel );

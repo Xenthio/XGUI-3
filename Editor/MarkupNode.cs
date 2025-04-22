@@ -40,9 +40,9 @@ namespace XGUI.XGUIEditor
 				style = $"{name}: {value};";
 			}
 
-			Log.Info( $"Original style: {style}" );
+			//Log.Info( $"Original style: {style}" );
 			Attributes["style"] = style;
-			Log.Info( $"Modified style: {style}" );
+			//Log.Info( $"Modified style: {style}" );
 		}
 	}
 }

@@ -18,20 +18,25 @@ namespace XGUI
 				{
 					_isDraggingHandle = true;
 					_activeHandle = handleIndex;
-					_dragStartPos = e.LocalPosition;
+					_dragStartPos = e.LocalPosition - WindowContent.Box.Rect.Position;
 					_originalRect = SelectedPanel.Box.Rect;
+					_originalRect.Position -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
 					e.Accepted = true;
 				}
 			}
 		}
 		private void ResizeMouseMove( MouseEvent e )
 		{
-			Log.Info( e.LocalPosition );
+			//Log.Info( e.LocalPosition );
 			if ( _isDraggingHandle && SelectedPanel != null )
 			{
-				// Calculate how much we've moved
-				var delta = e.LocalPosition - _dragStartPos;
-
+				var pos = e.LocalPosition;
+				pos -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
+														// Calculate how much we've moved
+				var delta = pos - _dragStartPos;
+				//Log.Info( pos );
+				//Log.Info( _dragStartPos );
+				//Log.Info( delta );
 				// Apply the resize based on which handle is being dragged
 				if ( ShouldOnlyHorizontalResize( SelectedPanel ) )
 				{
@@ -48,9 +53,6 @@ namespace XGUI
 		{
 			if ( _isDraggingHandle && SelectedPanel != null )
 			{
-				// Apply the final resize and update the model
-				var delta = e.LocalPosition - _dragStartPos;
-				ApplyResize( delta, true );
 
 				_isDraggingHandle = false;
 				_activeHandle = -1;

@@ -300,6 +300,10 @@ namespace XGUI.XGUIEditor
 			{
 				Log.Warning( "_view.SelectedPanel is null after UI rebuild!" );
 			}
+			else
+			{
+				_inspector.SetTarget( _view.SelectedPanel, backup, false );
+			}
 		}
 		private void UpdateCodeFromTree()
 		{
@@ -677,7 +681,7 @@ namespace XGUI.XGUIEditor
 			try
 			{
 				// Log to help diagnose the issue
-				Log.Info( $"Creating panel for tag '{tagName}' using TypeLibrary" );
+				//Log.Info( $"Creating panel for tag '{tagName}' using TypeLibrary" );
 
 				// Only attempt TypeLibrary approach if it's available
 				if ( TypeLibrary == null )
@@ -697,7 +701,7 @@ namespace XGUI.XGUIEditor
 				if ( types.Count > 0 )
 				{
 					var type = types[0];
-					Log.Info( $"Found panel type by name: {type.Name}" );
+					//Log.Info( $"Found panel type by name: {type.Name}" );
 					return type.Create<Panel>();
 				}
 
@@ -714,7 +718,7 @@ namespace XGUI.XGUIEditor
 					if ( libraryMatches.Count > 0 )
 					{
 						var type = libraryMatches[0].Type;
-						Log.Info( $"Found panel type by LibraryAttribute: {type.Name}" );
+						//Log.Info( $"Found panel type by LibraryAttribute: {type.Name}" );
 						return type.Create<Panel>();
 					}
 				}
@@ -738,7 +742,7 @@ namespace XGUI.XGUIEditor
 					if ( aliasTypes.Count > 0 )
 					{
 						var type = aliasTypes[0].Type;
-						Log.Info( $"Found panel type by AliasAttribute: {type.Name}" );
+						//Log.Info( $"Found panel type by AliasAttribute: {type.Name}" );
 						return type.Create<Panel>();
 					}
 				}
