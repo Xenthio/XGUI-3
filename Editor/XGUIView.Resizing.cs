@@ -307,20 +307,31 @@ namespace XGUI
 					var node = OwnerDesigner.LookupNodeByPanel( SelectedPanel );
 					if ( node != null )
 					{
-						// Convert rect to style attributes
-						//node.Attributes["style"] = $"width: {rect.Width}px; height: {rect.Height}px;" +
-						//						 $"left: {rect.Left}px; top: {rect.Top}px; position: absolute;";
+						// Special handling for Window panels
+						if ( SelectedPanel is XGUI.Window )
+						{
+							// Update width and height attributes directly
+							node.Attributes["width"] = $"{rect.Width}";
+							node.Attributes["height"] = $"{rect.Height}";
 
-						node.TryModifyStyle( "width", $"{rect.Width}px" );
-						node.TryModifyStyle( "height", $"{rect.Height}px" );
-						node.TryModifyStyle( "left", $"{rect.Left}px" );
-						node.TryModifyStyle( "top", $"{rect.Top}px" );
+							// Update the panel's properties directly
+							var window = SelectedPanel as XGUI.Window;
+							window.Style.Width = rect.Width;
+							window.Style.Height = rect.Height;
+						}
+						else
+						{
+							// Standard style-based updates for other panels
+							node.TryModifyStyle( "width", $"{rect.Width}px" );
+							node.TryModifyStyle( "height", $"{rect.Height}px" );
+							node.TryModifyStyle( "left", $"{rect.Left}px" );
+							node.TryModifyStyle( "top", $"{rect.Top}px" );
 
-						Panel.Style.Left = rect.Left;
-						Panel.Style.Top = rect.Top;
-						Panel.Style.Width = rect.Width;
-						Panel.Style.Height = rect.Height;
-
+							Panel.Style.Left = rect.Left;
+							Panel.Style.Top = rect.Top;
+							Panel.Style.Width = rect.Width;
+							Panel.Style.Height = rect.Height;
+						}
 
 						// Force update in the designer
 						OwnerDesigner.ForceUpdate( false );

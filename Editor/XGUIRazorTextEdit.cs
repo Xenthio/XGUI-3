@@ -32,7 +32,10 @@ public class XGUIRazorTextEdit : Editor.TextEdit
 		RegexOptions.Compiled
 	);
 	private static readonly Regex RazorCodeBlockRegex = new( @"@{.*?}", RegexOptions.Compiled | RegexOptions.Singleline );
-	private static readonly Regex RazorExpressionRegex = new( @"@(?!\s)(?:[a-zA-Z0-9_\.]+|\(.*?\))", RegexOptions.Compiled );
+	private static readonly Regex RazorExpressionRegex = new(
+		@"@(?!\s)(?:[a-zA-Z0-9_\.]+|(?<content>\(.*?\)))",
+		RegexOptions.Compiled
+	);
 
 	// Color definitions for syntax elements as CSS hex values
 	private const string CommentColor = "#669966";
@@ -88,7 +91,7 @@ public class XGUIRazorTextEdit : Editor.TextEdit
 			Clear();
 			AppendHtml( highlightedHtml );
 
-			Log.Info( $"Updated text: {text}" );
+			//Log.Info( $"Updated text: {text}" );
 
 			// Restore cursor if possible
 			if ( _lastCursor != null )
@@ -184,7 +187,31 @@ public class XGUIRazorTextEdit : Editor.TextEdit
 
 		foreach ( Match match in RazorExpressionRegex.Matches( text ) )
 		{
+			// Highlight the entire expression
 			segments.Add( (match.Index, match.Index + match.Length, $"color: {RazorExpressionColor};") );
+
+			// If this is a parenthesized expression like @(...)
+			if ( match.Groups["content"].Success )
+			{
+				var contentGroup = match.Groups["content"];
+				string expressionContent = contentGroup.Value.Substring( 1, contentGroup.Length - 2 ); // Remove ( and )
+
+				// Highlight keywords inside the expression
+				foreach ( Match keywordMatch in CSharpKeywordsRegex.Matches( expressionContent ) )
+				{
+					int keywordStart = match.Index + contentGroup.Index + 1 + keywordMatch.Index;
+					int keywordEnd = keywordStart + keywordMatch.Length;
+					segments.Add( (keywordStart, keywordEnd, $"color: {KeywordColor};") );
+				}
+
+				// Highlight string literals inside the expression
+				foreach ( Match strMatch in StringLiteralsRegex.Matches( expressionContent ) )
+				{
+					int strStart = match.Index + contentGroup.Index + 1 + strMatch.Index;
+					int strEnd = strStart + strMatch.Length;
+					segments.Add( (strStart, strEnd, $"color: {StringColor};") );
+				}
+			}
 		}
 	}
 
@@ -197,7 +224,7 @@ public class XGUIRazorTextEdit : Editor.TextEdit
 			segments.Add( (nameGroup.Index, nameGroup.Index + nameGroup.Length, $"color: {TagColor};") );
 
 			// Debug output for the tag
-			Log.Info( $"TAG: '{tagMatch.Value}', Name: '{nameGroup.Value}', Index: {nameGroup.Index}" );
+			//Log.Info( $"TAG: '{tagMatch.Value}', Name: '{nameGroup.Value}', Index: {nameGroup.Index}" );
 
 			// highlight only the attribute names
 			foreach ( Match attrMatch in HtmlAttributesRegex.Matches( tagMatch.Value ) )
@@ -207,9 +234,9 @@ public class XGUIRazorTextEdit : Editor.TextEdit
 				int attrEnd = attrStart + attrNameGroup.Length;
 
 				// Debug output for each attribute match
-				Log.Info( $"  ATTR: '{attrMatch.Value}', Name: '{attrNameGroup.Value}', " +
-						 $"Match Index: {attrMatch.Index}, Name Index: {attrNameGroup.Index}, " +
-						 $"Final Range: {attrStart}-{attrEnd}, Text: '{text.Substring( attrStart, attrEnd - attrStart )}'" );
+				//Log.Info( $"  ATTR: '{attrMatch.Value}', Name: '{attrNameGroup.Value}', " +
+				//		 $"Match Index: {attrMatch.Index}, Name Index: {attrNameGroup.Index}, " +
+				//		 $"Final Range: {attrStart}-{attrEnd}, Text: '{text.Substring( attrStart, attrEnd - attrStart )}'" );
 
 				segments.Add( (attrStart, attrEnd, $"color: {AttributeColor};") );
 			}

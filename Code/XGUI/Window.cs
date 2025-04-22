@@ -471,7 +471,7 @@ public partial class Window : Panel
 			if ( !style.FileName.EndsWith( ".razor.scss" ) && !style.FileName.EndsWith( ".cs.scss" ) )
 			{
 
-				Log.Info( style.FileName );
+				//Log.Info( style.FileName );
 				StyleSheet.Remove( style.FileName );
 			}
 		}
@@ -490,7 +490,6 @@ public partial class Window : Panel
 
 		// Force layout recalculation - traverse child hierarchy
 		ForceStyleUpdateRecursive( this );
-		Log.Info( $"Applied style '{theme}' to all {this}" );
 	}
 
 	private void ForceStyleUpdateRecursive( Panel panel )

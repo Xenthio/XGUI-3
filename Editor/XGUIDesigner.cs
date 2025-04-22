@@ -144,8 +144,8 @@ namespace XGUI.XGUIEditor
 			AddComponentButton( controlsCategory, "Text Entry", "textentry" );
 			AddComponentButton( controlsCategory, "Slider", "sliderscale", "min=\"0\" max=\"100\" step=\"1\"" ); // Ensure quotes for parser
 			AddComponentButton( containersCategory, "Group Box", "groupbox", "title=\"Group\"" );
-			// AddComponentButton(containersCategory, "Tab Control", "tabcontrol");
-			// AddComponentButton(containersCategory, "Combo Box", "combobox");
+			AddComponentButton( containersCategory, "Tab Control", "tabcontainer" );
+			AddComponentButton( containersCategory, "Combo Box", "combobox", "default=\"Select...\"" );
 		}
 
 		// Helper for Palette
@@ -248,7 +248,7 @@ namespace XGUI.XGUIEditor
 				if ( !string.IsNullOrWhiteSpace( stylePath ) )
 				{
 					CurrentTheme = stylePath;
-					Log.Info( $"Theme updated to: {CurrentTheme}" );
+					//Log.Info( $"Theme updated to: {CurrentTheme}" );
 				}
 			}
 			else
@@ -380,7 +380,6 @@ namespace XGUI.XGUIEditor
 								if ( titleLabel != null )
 									titleLabel.Text = value;
 							}
-							Log.Info( $"Window title set to: {value}" );
 						}
 						break;
 
@@ -513,8 +512,48 @@ namespace XGUI.XGUIEditor
 					_panelToMarkupNodeMap[newElement] = node;
 					_markupNodeToPanelMap[node] = newElement;
 
-					foreach ( var childNode in node.Children )
-						CreatePanelsRecursive( childNode, newElement );
+					// Special handling for tab container elements
+					bool isTabContainer = newElement is Sandbox.UI.TabContainer;
+					bool isTabElement = node.TagName.Equals( "tab", StringComparison.OrdinalIgnoreCase );
+
+					if ( isTabContainer )
+					{
+						// Process children of TabContainer - they should be tab elements
+						foreach ( var childNode in node.Children )
+						{
+							if ( childNode.Type == NodeType.Element &&
+								childNode.TagName.Equals( "tab", StringComparison.OrdinalIgnoreCase ) )
+							{
+								var tabContainer = newElement as Sandbox.UI.TabContainer;
+
+								// Create the tab content panel first
+								var tabContentPanel = new Panel();
+								tabContentPanel.ElementName = "tab";
+
+								// Extract tab attributes
+								string tabName = childNode.Attributes.TryGetValue( "tabname", out var tn ) ? tn : $"tab{tabContainer.Tabs.Count}";
+								string tabText = childNode.Attributes.TryGetValue( "tabtext", out var tt ) ? tt : tabName;
+								string tabIcon = childNode.Attributes.TryGetValue( "tabicon", out var ti ) ? ti : null;
+
+								// Add tab content children
+								foreach ( var tabChild in childNode.Children )
+									CreatePanelsRecursive( tabChild, tabContentPanel );
+
+								// Register in mapping first
+								_panelToMarkupNodeMap[tabContentPanel] = childNode;
+								_markupNodeToPanelMap[childNode] = tabContentPanel;
+
+								// Now add the tab with content to the tab container
+								var tab = tabContainer.AddTab( tabContentPanel, tabName, tabText, tabIcon );
+							}
+						}
+					}
+					else if ( !isTabElement ) // Skip recursive processing of tab elements as they're handled by the parent
+					{
+						// Normal recursive child creation
+						foreach ( var childNode in node.Children )
+							CreatePanelsRecursive( childNode, newElement );
+					}
 
 					ApplyTextContent( newElement, node );
 				}
@@ -605,7 +644,6 @@ namespace XGUI.XGUIEditor
 			button.IsDraggable = true;
 
 		}
-
 		/// <summary>
 		/// Adds a component by modifying the source code.
 		/// </summary>
@@ -633,28 +671,115 @@ namespace XGUI.XGUIEditor
 				return;
 			}
 
-			// Create the new MarkupNode for the component
-			var newNode = new MarkupNode
+			// Special handling for TabContainer - add with sample tabs
+			if ( tagName.Equals( "tabcontainer", StringComparison.OrdinalIgnoreCase ) )
 			{
-				Type = NodeType.Element,
-				TagName = tagName,
-				Attributes = SimpleMarkupParser.ParseAttributes( attributes ),
-				Children = new List<MarkupNode>()
-			};
-			// Default text for button
-			if ( tagName == "button" )
-			{
-				newNode.Children.Add( new MarkupNode { Type = NodeType.Text, TextContent = "Button" } );
-			}
+				var tabContainerNode = new MarkupNode
+				{
+					Type = NodeType.Element,
+					TagName = tagName,
+					Attributes = SimpleMarkupParser.ParseAttributes( attributes ),
+					Children = new List<MarkupNode>()
+				};
 
-			// Add to window-content node
-			windowContentNode.Children.Add( newNode );
+				// Add two sample tabs
+				var tab1 = new MarkupNode
+				{
+					Type = NodeType.Element,
+					TagName = "tab",
+					Attributes = new Dictionary<string, string>
+			{
+				{ "tabName", "tab1" },
+				{ "slot", "tab" },
+				{ "tabtext", "Tab 1" }
+			},
+					Children = new List<MarkupNode>
+			{
+				new MarkupNode
+				{
+					Type = NodeType.Element,
+					TagName = "div",
+					Attributes = new Dictionary<string, string>
+					{
+						{ "style", "width:100%; height:200px; padding:10px;" }
+					},
+					Children = new List<MarkupNode>
+					{
+						new MarkupNode
+						{
+							Type = NodeType.Text,
+							TextContent = "Tab 1 Content"
+						}
+					}
+				}
+			}
+				};
+
+				var tab2 = new MarkupNode
+				{
+					Type = NodeType.Element,
+					TagName = "tab",
+					Attributes = new Dictionary<string, string>
+			{
+				{ "tabName", "tab2" },
+				{ "slot", "tab" },
+				{ "tabtext", "Tab 2" }
+			},
+					Children = new List<MarkupNode>
+			{
+				new MarkupNode
+				{
+					Type = NodeType.Element,
+					TagName = "div",
+					Attributes = new Dictionary<string, string>
+					{
+						{ "style", "width:100%; height:200px; padding:10px;" }
+					},
+					Children = new List<MarkupNode>
+					{
+						new MarkupNode
+						{
+							Type = NodeType.Text,
+							TextContent = "Tab 2 Content"
+						}
+					}
+				}
+			}
+				};
+
+				tabContainerNode.Children.Add( tab1 );
+				tabContainerNode.Children.Add( tab2 );
+
+				// Add to window-content node
+				windowContentNode.Children.Add( tabContainerNode );
+			}
+			else
+			{
+				// Create the new MarkupNode for the component (normal case)
+				var newNode = new MarkupNode
+				{
+					Type = NodeType.Element,
+					TagName = tagName,
+					Attributes = SimpleMarkupParser.ParseAttributes( attributes ),
+					Children = new List<MarkupNode>()
+				};
+
+				// Default text for button
+				if ( tagName == "button" )
+				{
+					newNode.Children.Add( new MarkupNode { Type = NodeType.Text, TextContent = "Button" } );
+				}
+
+				// Add to window-content node
+				windowContentNode.Children.Add( newNode );
+			}
 
 			// Serialize tree back to markup and update code view/UI
 			UpdateCodeFromTree();
 			ParseAndUpdateUI( _codeTextEditor.PlainText );
 			_isDirty = true;
 		}
+
 
 
 		TreeView HierarchyTree;
@@ -771,7 +896,7 @@ namespace XGUI.XGUIEditor
 @using XGUI;
 @inherits Panel
 
-<root title=""My New XGUI Window"" width=""200"" height=""200"">
+<root title=""My New XGUI Window"" width=""320"" height=""240"">
     <div class=""window-content"">
 
     </div>
@@ -975,97 +1100,68 @@ namespace XGUI.XGUIEditor
 		//---------------------------------------------------------------------
 
 		// Base element creation (no attributes/content applied here)
+		/// <summary>
+		/// Creates a panel based on the HTML tag name, similar to how s&box internally processes tags.
+		/// For known components, returns the appropriate panel type.
+		/// For unknown tags, creates a generic Panel with the tag name applied for CSS targeting.
+		/// </summary>
 		private Panel CreateElementFromTag( string tagName )
-		{/*
-			switch ( tagName.ToLowerInvariant() )
+		{
+			if ( string.IsNullOrEmpty( tagName ) )
 			{
-				case "div": return new Panel();
-				case "button": return new Sandbox.UI.Button();
-				case "label": return new Sandbox.UI.Label();
-				case "check": return new XGUI.CheckBox();
-				case "textentry": return new Sandbox.UI.TextEntry();
-				case "sliderscale": return new XGUI.SliderScale();
-				case "groupbox": return new XGUI.GroupBox();
-				// Add other cases
-				default:
-					Log.Warning( $"Unsupported tag for Panel creation: {tagName}" );
-					return new Panel(); // Create generic Panel for unknown tags?
-			}*/
+				Log.Warning( "CreateElementFromTag: Empty tag name provided" );
+				return new Panel();
+			}
 
-			// use typelibrary/reflection to create the element
+			// Normalize tag name to lowercase for consistent lookup
+			string normalizedTagName = tagName.ToLowerInvariant();
 
-			// If we get here, try the TypeLibrary approach with robust error handling
 			try
 			{
-				// Log to help diagnose the issue
-				//Log.Info( $"Creating panel for tag '{tagName}' using TypeLibrary" );
-
-				// Only attempt TypeLibrary approach if it's available
-				if ( TypeLibrary == null )
+				// First attempt: Try the TypeLibrary to find the exact component
+				if ( TypeLibrary != null )
 				{
-					Log.Warning( "TypeLibrary is null" );
-					return new Panel();
-				}
+					// 1. Try direct name match first (most likely to succeed)
+					var typesByName = TypeLibrary.GetTypes()
+						.Where( t => t != null &&
+							  t.TargetType != null &&
+							  t.TargetType.IsSubclassOf( typeof( Panel ) ) &&
+							  t.Name.Equals( normalizedTagName, StringComparison.OrdinalIgnoreCase ) )
+						.ToList();
 
-				// Try direct name match first (most likely to succeed)
-				var types = TypeLibrary.GetTypes()
-					.Where( t => t != null &&
-						  t.TargetType != null &&
-						  t.TargetType.IsSubclassOf( typeof( Panel ) ) &&
-						  t.Name.Equals( tagName, StringComparison.OrdinalIgnoreCase ) )
-					.ToList();
+					if ( typesByName.Count > 0 )
+					{
+						// Direct name match found, create the specific component
+						return typesByName[0].Create<Panel>();
+					}
 
-				if ( types.Count > 0 )
-				{
-					var type = types[0];
-					//Log.Info( $"Found panel type by name: {type.Name}" );
-					return type.Create<Panel>();
-				}
-
-				// Try Library attribute second
-				try
-				{
+					// 2. Try Library attribute 
 					var libraryMatches = TypeLibrary.GetTypesWithAttribute<LibraryAttribute>()
 						.Where( a => a.Type != null &&
 							   a.Attribute != null &&
 							   a.Type.TargetType.IsSubclassOf( typeof( Panel ) ) &&
-							   a.Attribute.Name.Equals( tagName, StringComparison.OrdinalIgnoreCase ) )
+							   a.Attribute.Name.Equals( normalizedTagName, StringComparison.OrdinalIgnoreCase ) )
 						.ToList();
 
 					if ( libraryMatches.Count > 0 )
 					{
-						var type = libraryMatches[0].Type;
-						//Log.Info( $"Found panel type by LibraryAttribute: {type.Name}" );
-						return type.Create<Panel>();
+						return libraryMatches[0].Type.Create<Panel>();
 					}
-				}
-				catch ( Exception ex )
-				{
-					Log.Warning( $"Error searching by LibraryAttribute: {ex.Message}" );
-				}
 
-				// Try Alias attribute last
-				try
-				{
+					// 3. Try Alias attribute
 					var aliasTypes = TypeLibrary.GetTypesWithAttribute<AliasAttribute>()
 						.Where( a => a.Type != null &&
 							   a.Attribute != null &&
 							   a.Type.TargetType != null &&
 							   a.Type.TargetType.IsSubclassOf( typeof( Panel ) ) &&
 							   a.Attribute.Value != null &&
-							   a.Attribute.Value.Any( x => x.Equals( tagName, StringComparison.OrdinalIgnoreCase ) ) )
+							   a.Attribute.Value.Any( x => x.Equals( normalizedTagName, StringComparison.OrdinalIgnoreCase ) ) )
 						.ToList();
 
 					if ( aliasTypes.Count > 0 )
 					{
-						var type = aliasTypes[0].Type;
-						//Log.Info( $"Found panel type by AliasAttribute: {type.Name}" );
-						return type.Create<Panel>();
+						return aliasTypes[0].Type.Create<Panel>();
 					}
-				}
-				catch ( Exception ex )
-				{
-					Log.Warning( $"Error searching by AliasAttribute: {ex.Message}" );
 				}
 			}
 			catch ( Exception ex )
@@ -1073,12 +1169,17 @@ namespace XGUI.XGUIEditor
 				Log.Error( $"Error in TypeLibrary lookup for '{tagName}': {ex.Message}" );
 			}
 
-			// If we get here, nothing worked
-			Log.Warning( $"Could not find panel type for tag '{tagName}', creating generic Panel" );
-			return new Panel();
+			// At this point, we're dealing with an unknown tag
+			// The s&box approach is to create a generic Panel but apply special properties
+
+			Panel panel = new Panel();
+
+			// Most reliable approach: Set a data attribute AND add the tag as a class
+			panel.ElementName = normalizedTagName; // Set the element name for CSS targeting 
+
+			return panel;
 		}
 
-		// Apply attributes from parsed dictionary
 		private void ApplyAttributesToElement( Panel element, Dictionary<string, string> attributes )
 		{
 			// (Identical to previous implementation - uses switch statement)
@@ -1095,7 +1196,29 @@ namespace XGUI.XGUIEditor
 					case "min": if ( element is XGUI.SliderScale sl && float.TryParse( value, CultureInfo.InvariantCulture, out var v ) ) sl.MinValue = v; break;
 					case "max": if ( element is XGUI.SliderScale slm && float.TryParse( value, CultureInfo.InvariantCulture, out var v2 ) ) slm.MaxValue = v2; break;
 					case "checked": if ( element is XGUI.CheckBox cb ) cb.Checked = true; break; // Valueless implies true
-																								 // Add other attributes (id, src, disabled, etc.)
+					case "tabname":
+						if ( element.Parent != null && element.Parent.Parent is Sandbox.UI.TabContainer tc )
+						{
+							// For tab elements - store the tabName for later tab setup
+							element.SetAttribute( "tabname", value );
+						}
+						break;
+					case "tabtext":
+						if ( element.Parent != null && element.Parent.Parent is Sandbox.UI.TabContainer tc1 )
+						{
+							// For tab elements - store the tabText for later tab setup
+							element.SetAttribute( "tabtext", value );
+						}
+						break;
+					case "tabicon":
+						if ( element.Parent != null && element.Parent.Parent is Sandbox.UI.TabContainer tc2 )
+						{
+							// For tab elements - store the tabIcon for later tab setup
+							element.SetAttribute( "tabicon", value );
+						}
+						break;
+					case "default": if ( element is XGUI.ComboBox combob && value != null ) combob.Selected = combob.Options.Where( x => x.Value is string && (x.Value as string) == value ).FirstOrDefault(); break;
+					// Add other attributes (id, src, disabled, etc.)
 					default: /* Log unknown? Store in Tags? */ break;
 				}
 			}
