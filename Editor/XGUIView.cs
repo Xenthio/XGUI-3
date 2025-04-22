@@ -40,14 +40,9 @@ public partial class XGUIView : SceneRenderingWidget
 	public void CreateBlankWindow()
 	{
 		Window = new Window();
-		Window.StyleSheet.Load( "/XGUI/DefaultStyles/OliveGreen.scss" );
-		Window.Title = "My New Window";
-		Window.MinSize = new Vector2( 200, 200 );
 		Panel.AddChild( Window );
 
 		WindowContent = new Panel();
-		WindowContent.Style.MinHeight = 200;
-		WindowContent.Style.MinWidth = 200;
 		WindowContent.AddClass( "window-content" );
 		Window.AddChild( WindowContent );
 
@@ -103,7 +98,6 @@ public partial class XGUIView : SceneRenderingWidget
 	private Rect _originalRect;
 	public void OnOverlayDraw()
 	{
-
 		if ( SelectedPanel != null )
 		{
 			// Draw selection outline
@@ -120,8 +114,10 @@ public partial class XGUIView : SceneRenderingWidget
 			{
 				DrawResizeHandles( SelectedPanel.Box.Rect );
 			}
+			DrawSnappingGuides();
 		}
 	}
+
 
 	public Panel SelectedPanel;
 
@@ -188,12 +184,15 @@ public partial class XGUIView : SceneRenderingWidget
 			}
 
 			// 2. If absolute, update position
-			if ( DraggingPanel.ComputedStyle.Position == PositionMode.Absolute )
+			if ( DraggingPanel.ComputedStyle?.Position == PositionMode.Absolute )
 			{
 				DraggingPanel.Style.Position = PositionMode.Absolute;
 				var newPosition = e.LocalPosition - dragOffset;
 				//Log.Info( dragOffset );
 				newPosition -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
+
+				// Apply snapping to nearby elements and parent container
+				newPosition = ApplySnappingToPosition( newPosition );
 
 				var node = OwnerDesigner.LookupNodeByPanel( DraggingPanel );
 				if ( node != null )
@@ -262,7 +261,7 @@ public partial class XGUIView : SceneRenderingWidget
 					var siblings = parent.Children.OfType<Panel>().Where( p => p != DraggingPanel ).ToList();
 					Panel targetSibling = null;
 					bool insertAfter = false;
-					FlexDirection flexDirection = parent.ComputedStyle.FlexDirection ?? FlexDirection.Column; // Default to column
+					FlexDirection flexDirection = parent.ComputedStyle?.FlexDirection ?? FlexDirection.Column; // Default to column
 
 
 					foreach ( var sibling in siblings )
@@ -346,6 +345,8 @@ public partial class XGUIView : SceneRenderingWidget
 		}
 	}
 
+
+
 	// // Restore DraggingPanel after UI rebuild
 	// DraggingPanel = OwnerDesigner.LookupPanelByNode(draggedNode);
 	// if (DraggingPanel == null)
@@ -357,6 +358,9 @@ public partial class XGUIView : SceneRenderingWidget
 		base.OnMouseReleased( e );
 		isMouseDown = false;
 		ResizeMouseReleased( e );
+
+		_isSnappedX = false;
+		_isSnappedY = false;
 
 		if ( isDragging && DraggingPanel != null )
 		{

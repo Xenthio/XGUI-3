@@ -116,7 +116,8 @@ namespace XGUI.XGUIEditor
 			int start = pos;
 			while ( pos < input.Length && input[pos] != '<' )
 				pos++;
-			return input.Substring( start, pos - start );
+			var str = input.Substring( start, pos - start );
+			return str.Trim();
 		}
 
 		private static string ReadWhile( string input, ref int pos, Func<char, bool> predicate )
@@ -153,55 +154,75 @@ namespace XGUI.XGUIEditor
 				pos++;
 		}
 
-		// Serialize tree back to markup
+		// Serialize tree back to markup with formatting
 		public static string Serialize( IEnumerable<MarkupNode> nodes )
 		{
 			var sb = new StringBuilder();
 			foreach ( var node in nodes )
-				SerializeNode( node, sb );
+				SerializeNode( node, sb, 0 );
 			return sb.ToString();
 		}
 
-		private static void SerializeNode( MarkupNode node, StringBuilder sb )
+		private static void SerializeNode( MarkupNode node, StringBuilder sb, int indentLevel )
 		{
+			string indent = new string( '\t', indentLevel );
+
 			if ( node.Type == NodeType.Text )
 			{
-				sb.Append( node.TextContent );
+				// For text nodes, trim excess whitespace but preserve content
+				string trimmed = node.TextContent.Trim();
+				if ( !string.IsNullOrEmpty( trimmed ) )
+				{
+					sb.Append( indent );
+					sb.Append( trimmed );
+					sb.AppendLine();
+				}
 			}
 			else if ( node.Type == NodeType.Element )
 			{
+				// Start element tag with indentation
+				sb.Append( indent );
 				sb.Append( '<' ).Append( node.TagName );
+
+				// Add attributes
 				foreach ( var attr in node.Attributes )
 				{
 					sb.Append( ' ' ).Append( attr.Key );
 					if ( !string.IsNullOrEmpty( attr.Value ) )
 						sb.Append( "=\"" ).Append( attr.Value.Replace( "\"", "&quot;" ) ).Append( '"' );
 				}
+
 				if ( node.Children.Count == 0 )
 				{
-					sb.Append( " />" );
+					// Self-closing tag
+					sb.AppendLine( " />" );
 				}
 				else
 				{
-					sb.Append( '>' );
+					sb.AppendLine( ">" );
+
+					// Process children with increased indentation
 					foreach ( var child in node.Children )
-						SerializeNode( child, sb );
-					sb.Append( "</" ).Append( node.TagName ).Append( '>' );
+						SerializeNode( child, sb, indentLevel + 1 );
+
+					// Closing tag with proper indentation
+					sb.Append( indent );
+					sb.Append( "</" ).Append( node.TagName ).AppendLine( ">" );
 				}
 			}
 		}
-		public static Dictionary<string, string> ParseAttributes(string input)
+		public static Dictionary<string, string> ParseAttributes( string input )
 		{
-			var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-			if (string.IsNullOrWhiteSpace(input))
+			var dict = new Dictionary<string, string>( StringComparer.OrdinalIgnoreCase );
+			if ( string.IsNullOrWhiteSpace( input ) )
 				return dict;
 
 			// Regex: key="value", key='value', key=value, or key (valueless)
 			var regex = new System.Text.RegularExpressions.Regex(
 				@"(\w+)(?:\s*=\s*(?:""([^""]*)""|'([^']*)'|([^\s""']+)))?",
-				System.Text.RegularExpressions.RegexOptions.Compiled);
+				System.Text.RegularExpressions.RegexOptions.Compiled );
 
-			foreach (System.Text.RegularExpressions.Match match in regex.Matches(input))
+			foreach ( System.Text.RegularExpressions.Match match in regex.Matches( input ) )
 			{
 				var key = match.Groups[1].Value;
 				var value = match.Groups[2].Success ? match.Groups[2].Value

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace XGUI.XGUIEditor
@@ -40,6 +41,8 @@ namespace XGUI.XGUIEditor
 		// Razor Content Cache
 		private string _fullRazorContentCache = ""; // Cache of the full content for modification
 
+		public string CurrentTheme = "/XGUI/DefaultStyles/OliveGreen.scss";
+
 		// Parsed Document State
 		private List<MarkupNode> _rootMarkupNodes = new();
 		private Dictionary<Panel, MarkupNode> _panelToMarkupNodeMap = new();
@@ -57,7 +60,6 @@ namespace XGUI.XGUIEditor
 			Show();
 			New();
 		}
-
 		public void CreateUI()
 		{
 			BuildMenuBar();
@@ -119,7 +121,7 @@ namespace XGUI.XGUIEditor
 		private void CreateCodeViewInternal()
 		{
 			_codeView.Layout = Layout.Column();
-			_codeTextEditor = _codeView.Layout.Add( new TextEdit( null ), 1 );
+			_codeTextEditor = _codeView.Layout.Add( new XGUIRazorTextEdit( null ), 1 );
 			_codeTextEditor.TextChanged = OnCodeTextChanged;
 			// Configure TextEdit (e.g., font, line numbers) if needed
 		}
@@ -207,18 +209,112 @@ namespace XGUI.XGUIEditor
 
 		private void OnCodeTextChanged( string newContent )
 		{
-			ParseAndUpdateUI( newContent );
-		}
+			if ( _isUpdatingCodeFromUI ) return; // Prevent update loops
 
+			_isUpdatingUIFromCode = true;
+			try
+			{
+				// Save currently selected panel/node before updating
+				var backupNode = LookupNodeByPanel( _view.SelectedPanel );
+
+				// Parse and update the UI from the code
+				ParseAndUpdateUI( newContent );
+
+				// Restore selection after update
+				if ( backupNode != null )
+				{
+					var restoredPanel = LookupPanelByNode( backupNode );
+					if ( restoredPanel != null )
+					{
+						_view.SelectedPanel = restoredPanel;
+						_inspector.SetTarget( restoredPanel, backupNode, false );
+					}
+				}
+			}
+			finally
+			{
+				_isUpdatingUIFromCode = false;
+			}
+		}
+		private void ParseAndUpdateTheme( string fullRazorContent )
+		{
+			// Regular expression to find @attribute [StyleSheet("path")] pattern
+			var styleSheetRegex = new Regex( @"@attribute\s*\[\s*StyleSheet\s*\(\s*""([^""]+)""\s*\)\s*\]", RegexOptions.IgnoreCase | RegexOptions.Compiled );
+			var match = styleSheetRegex.Match( fullRazorContent );
+
+			if ( match.Success && match.Groups.Count > 1 )
+			{
+				string stylePath = match.Groups[1].Value;
+				if ( !string.IsNullOrWhiteSpace( stylePath ) )
+				{
+					CurrentTheme = stylePath;
+					Log.Info( $"Theme updated to: {CurrentTheme}" );
+				}
+			}
+			else
+			{
+				Log.Info( "No StyleSheet attribute found, using default theme" );
+			}
+		}
 		private void ParseAndUpdateUI( string fullRazorContent, bool rebuildMarkupTree = true )
 		{
+			ParseAndUpdateTheme( fullRazorContent );
 			_panelToMarkupNodeMap.Clear();
 			_markupNodeToPanelMap.Clear();
 			if ( rebuildMarkupTree ) _rootMarkupNodes.Clear();
 			if ( _view?.WindowContent == null )
 			{
 				_view?.CreateBlankWindow(); // Ensure base window exists
+
 			}
+
+			// run Window.SetTheme if theme changes
+			if ( _view?.Window != null )
+			{
+				_view.Window.SetTheme( CurrentTheme );
+			}
+
+			// Get or create the window node - reuse existing one if available
+			_windowNode = _windowNode ?? GetOrCreateWindowNode();
+
+			// Clear previous attributes but preserve the node instance itself
+			_windowNode.Attributes.Clear();
+
+			// Extract the <root> tag with its attributes
+			var rootTagMatch = _rootContentRegex.Match( fullRazorContent );
+			if ( rootTagMatch.Success )
+			{
+				string rootOpenTag = rootTagMatch.Groups[1].Value; // This captures <root attr1="val1" attr2="val2">
+
+				// Extract attributes from the root tag using regex
+				var attrRegex = new Regex( @"(\w+)=""([^""]*)""|(\w+)=\'([^\']*)\'", RegexOptions.Compiled );
+				var matches = attrRegex.Matches( rootOpenTag );
+
+				foreach ( Match match in matches )
+				{
+					string key = match.Groups[1].Success ? match.Groups[1].Value : match.Groups[3].Value;
+					string value = match.Groups[2].Success ? match.Groups[2].Value : match.Groups[4].Value;
+					_windowNode.Attributes[key] = value;
+				}
+
+				// Apply window attributes to the actual window if available
+				if ( _view?.Window != null )
+				{
+					ApplyWindowAttributes( _view.Window, _windowNode.Attributes );
+				}
+			}
+			else
+			{
+				// No root tag found, set default attributes
+				if ( !_windowNode.Attributes.ContainsKey( "width" ) ) _windowNode.Attributes["width"] = "240";
+				if ( !_windowNode.Attributes.ContainsKey( "height" ) ) _windowNode.Attributes["height"] = "240";
+				if ( !_windowNode.Attributes.ContainsKey( "title" ) ) _windowNode.Attributes["title"] = "My New XGUI Window";
+
+				Log.Warning( "No <root> tag found in Razor content." );
+			}
+
+
+
 			_view?.WindowContent?.DeleteChildren( true );
 
 			// Extract <root>...</root>
@@ -252,6 +348,157 @@ namespace XGUI.XGUIEditor
 			}
 
 			UpdateHierarchyPanelInternal();
+		}/// <summary>
+		 /// Apply attributes from the root tag to the actual window
+		 /// </summary>
+		private void ApplyWindowAttributes( Panel window, Dictionary<string, string> attributes )
+		{
+			if ( window == null || attributes == null || !attributes.Any() )
+				return;
+
+			var uiWindow = window as XGUI.Window;
+
+			foreach ( var attr in attributes )
+			{
+				string name = attr.Key.ToLowerInvariant();
+				string value = attr.Value;
+
+				if ( string.IsNullOrWhiteSpace( value ) )
+					continue;
+
+				switch ( name )
+				{
+					case "title":
+						if ( uiWindow != null )
+						{
+							uiWindow.Title = value;
+							// Force refresh the title bar if it exists
+							if ( uiWindow.TitleBar != null )
+							{
+								// Attempt to find and update the text label in the title bar
+								var titleLabel = uiWindow.TitleBar.Children.OfType<Sandbox.UI.Label>().FirstOrDefault();
+								if ( titleLabel != null )
+									titleLabel.Text = value;
+							}
+							Log.Info( $"Window title set to: {value}" );
+						}
+						break;
+
+					case "width":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var width ) )
+							window.Style.Width = Length.Pixels( width );
+						break;
+
+					case "height":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var height ) )
+							window.Style.Height = Length.Pixels( height );
+						break;
+
+					case "minwidth":
+					case "min-width":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var minWidth ) )
+							window.Style.MinWidth = Length.Pixels( minWidth );
+						break;
+
+					case "minheight":
+					case "min-height":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var minHeight ) )
+							window.Style.MinHeight = Length.Pixels( minHeight );
+						break;
+
+					case "maxwidth":
+					case "max-width":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var maxWidth ) )
+							window.Style.MaxWidth = Length.Pixels( maxWidth );
+						break;
+
+					case "maxheight":
+					case "max-height":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var maxHeight ) )
+							window.Style.MaxHeight = Length.Pixels( maxHeight );
+						break;
+
+					case "resizable":
+						if ( uiWindow != null && bool.TryParse( value, out var resizable ) )
+							uiWindow.IsResizable = resizable;
+						break;
+
+					case "movable":
+						//if ( uiWindow != null && bool.TryParse( value, out var movable ) )
+						//uiWindow. = movable;
+						break;
+
+					case "hasclose":
+						if ( uiWindow != null && bool.TryParse( value, out var hasclose ) )
+							uiWindow.HasClose = hasclose;
+						break;
+
+					case "hasminimise":
+						if ( uiWindow != null && bool.TryParse( value, out var hasminimise ) )
+							uiWindow.HasMinimise = hasminimise;
+						break;
+
+					case "hasmaximise":
+						if ( uiWindow != null && bool.TryParse( value, out var hasmaximise ) )
+							uiWindow.HasMaximise = hasmaximise;
+						break;
+
+					case "y":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var y ) )
+							window.Style.Top = Length.Pixels( y );
+						break;
+
+					case "x":
+						if ( float.TryParse( value, NumberStyles.Float, CultureInfo.InvariantCulture, out var x ) )
+							window.Style.Left = Length.Pixels( x );
+						break;
+
+					case "position":
+						//ApplyWindowPosition( window, value );
+						break;
+
+					case "theme":
+						//if ( uiWindow != null )
+						//uiWindow.Theme = value;
+						break;
+
+					case "backgroundcolor":
+					case "background-color":
+						try
+						{
+							window.Style.BackgroundColor = ParseColor( value );
+						}
+						catch ( Exception ex )
+						{
+							Log.Warning( $"Failed to parse window background color '{value}': {ex.Message}" );
+						}
+						break;
+
+					case "class":
+						foreach ( var cls in value.Split( ' ', StringSplitOptions.RemoveEmptyEntries ) )
+							window.AddClass( cls );
+						break;
+
+					case "style":
+						ApplyInlineStyles( window, value );
+						break;
+
+					case "icon":
+						//if ( uiWindow != null )
+						//uiWindow.Icon = value;
+						break;
+
+					default:
+						// Store unknown attributes as custom data or tags if needed
+						Log.Info( $"Unknown window attribute '{name}' with value '{value}'" );
+						break;
+				}
+			}
+
+			// Ensure all changes are applied
+			window.Style.Dirty();
+			_panelToMarkupNodeMap[_view.Window] = _windowNode;
+			_markupNodeToPanelMap[_windowNode] = _view.Window;
 		}
 
 		private void CreatePanelsRecursive( MarkupNode node, Panel parentPanel )
@@ -309,15 +556,39 @@ namespace XGUI.XGUIEditor
 		{
 			// Serialize the tree back to markup and update the code editor
 			var rootMarkup = SimpleMarkupParser.Serialize( _rootMarkupNodes );
+
+			// Add an extra level of indentation to each line
+			var indentedMarkup = new StringBuilder();
+			using ( var reader = new StringReader( rootMarkup ) )
+			{
+				string line;
+				while ( (line = reader.ReadLine()) != null )
+				{
+					// Add an extra tab at the beginning of each line
+					indentedMarkup.AppendLine( "\t" + line );
+				}
+			}
+
+			// window root attributes from GetOrCreateWindowNode 
+			var rootWindowNode = GetOrCreateWindowNode();
+			string rootAttrs = "";
+			if ( rootWindowNode != null && rootWindowNode.Attributes.Count > 0 )
+			{
+				foreach ( var attr in rootWindowNode.Attributes )
+				{
+					rootAttrs += $" {attr.Key}=\"{attr.Value}\"";
+				}
+			}
+
 			// Re-wrap in <root>...</root> and preserve directives/code blocks as needed
 			string newCode = $@"@using Sandbox;
 @using Sandbox.UI;
 @using XGUI;
-@attribute [StyleSheet( ""/XGUI/DefaultStyles/OliveGreen.scss"" )]
+@attribute [StyleSheet( ""{CurrentTheme}"" )]
 @inherits Window
 
-<root>
-{rootMarkup}
+<root{rootAttrs}>
+{indentedMarkup}
 </root>
 
 @code {{
@@ -500,9 +771,9 @@ namespace XGUI.XGUIEditor
 @using XGUI;
 @inherits Panel
 
-<root>
+<root title=""My New XGUI Window"" width=""200"" height=""200"">
     <div class=""window-content"">
-        <!-- Design your UI here -->
+
     </div>
 </root>
 
@@ -628,27 +899,73 @@ namespace XGUI.XGUIEditor
 										 // _view?.HighlightPanel(panel);
 		}
 
+
+		MarkupNode _windowNode;
+		/// <summary>
+		/// A fake node for the window root, used for inspector, you probably want to use window-content instead.
+		/// </summary>
+		/// <returns></returns>
+		private MarkupNode GetOrCreateWindowNode()
+		{
+			// create a new node for the window root, used for inspector.
+			if ( _windowNode == null )
+			{
+				_windowNode = new MarkupNode
+				{
+					Type = NodeType.Element,
+					TagName = "root",
+					Attributes = new Dictionary<string, string>(),
+					Children = new List<MarkupNode>()
+				};
+
+				// default width, height, and title
+				_windowNode.Attributes["width"] = "240";
+				_windowNode.Attributes["height"] = "240";
+				_windowNode.Attributes["title"] = "My New XGUI Window";
+
+				// insert into the markup tree mapping
+				// _rootMarkupNodes.Add(_windowNode);
+				_panelToMarkupNodeMap[_view.Window] = _windowNode;
+				_markupNodeToPanelMap[_windowNode] = _view.Window;
+			}
+			return _windowNode;
+
+		}
+
+
 		/// <summary>
 		/// Called when an item is selected in the Hierarchy TreeView.
 		/// </summary>
 		private void OnHierarchyNodeSelected( object item )
 		{
-			// *** LOG 1: Check if the event fires at all ***
-			Log.Info( $"OnHierarchyNodeSelected Fired! Received item of type: {item?.GetType()?.FullName ?? "null"}" );
+			// Update the hierarchy tree if needed
 			HierarchyTree.UpdateIfDirty();
 
 			if ( item is MarkupNode node && node.Type == NodeType.Element )
 			{
-				// *** LOG 2: Check if item is a valid MarkupNode Element ***
-				Log.Info( $"  Item is MarkupNode Element: <{node.TagName}>" );
+				// Check if this is the window-content node (root node in hierarchy)
+				bool isWindowContentNode = node.TagName.Equals( "div", StringComparison.OrdinalIgnoreCase ) &&
+										  node.Attributes.TryGetValue( "class", out var cls ) &&
+										  cls.Contains( "window-content" );
 
+				if ( isWindowContentNode )
+				{
+					// Select the parent root node (which contains window properties)
+					// This is the <root> node that wraps everything
+					var rootNode = GetOrCreateWindowNode();
+
+					// Use the window itself as the panel
+					SelectAndInspect( rootNode, _view.Window );
+					Log.Info( "Selected window root node" );
+					return;
+				}
+
+				// Normal element selection
 				_markupNodeToPanelMap.TryGetValue( node, out Panel correspondingPanel );
 				SelectAndInspect( node, correspondingPanel );
 			}
 			else
 			{
-				// *** LOG 3: Check if item is something else (or null) ***
-				Log.Info( $"  Item is NOT a MarkupNode Element (or is null). Clearing Inspector." );
 				SelectAndInspect( null, null ); // Clear selection if text node or something else selected
 			}
 		}
