@@ -99,7 +99,7 @@ namespace XGUI
 			float margin = 6f;
 
 			Vector2 panelSize = DraggingPanel.Box.Rect.Size;
-			Rect parentRect = WindowContent.Box.Rect;
+			Rect parentRect = DraggingPanel.Parent.Box.RectOuter.Shrink( WindowContent.Box.Border );
 			float viewportWidth = parentRect.Width;
 			float viewportHeight = parentRect.Height;
 
