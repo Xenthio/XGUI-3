@@ -188,7 +188,6 @@ public partial class XGUIView : SceneRenderingWidget
 			{
 				DraggingPanel.Style.Position = PositionMode.Absolute;
 				var newPosition = e.LocalPosition - dragOffset;
-				//Log.Info( dragOffset );
 				newPosition -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
 
 				// Apply snapping to nearby elements and parent container
@@ -197,59 +196,60 @@ public partial class XGUIView : SceneRenderingWidget
 				var node = OwnerDesigner.LookupNodeByPanel( DraggingPanel );
 				if ( node != null )
 				{
-					/*// add or modify left/top style properties
-					string style = node.Attributes["style"];
-					// replace left/top properties if they exist
-					if ( style != null )
+					// Get the panel's alignment settings
+					var alignment = GetPanelAlignment( DraggingPanel );
+					Log.Info( $"Alignment Left: {alignment.Left}" );
+					Log.Info( $"Alignment Top: {alignment.Top}" );
+					Log.Info( $"Alignment Right: {alignment.Right}" );
+					Log.Info( $"Alignment Bottom: {alignment.Bottom}" );
+					Log.Info( $"New Position: {newPosition}" );
+
+					// Clear any existing positioning styles first
+					if ( alignment.Left )
+						node.TryModifyStyle( "left", $"{newPosition.x}px" );
+					else
+						node.TryModifyStyle( "left", null );
+
+					if ( alignment.Top )
+						node.TryModifyStyle( "top", $"{newPosition.y}px" );
+					else
+						node.TryModifyStyle( "top", null );
+
+					if ( alignment.Right && DraggingPanel.Parent != null )
 					{
-						if ( style.Contains( "top:" ) )
-						{
-							// Replace any "top: Xpx;" or "top:Xpx;" pattern with the new value
-							style = System.Text.RegularExpressions.Regex.Replace(
-								style,
-								@"top:\s*[-\d\.]+px;",
-								$"top: {newPosition.y}px;"
-							);
-						}
-						else
-						{
-							style += $" top: {newPosition.y}px;";
-						}
-						if ( style.Contains( "left:" ) )
-						{
-							// Replace any "left: Xpx;" or "left:Xpx;" pattern with the new value
-							style = System.Text.RegularExpressions.Regex.Replace(
-								style,
-								@"left:\s*[-\d\.]+px;",
-								$"left: {newPosition.x}px;"
-							);
-						}
-						else
-						{
-							style += $" left: {newPosition.x}px;";
-						}
+						// Calculate right value as: parent_width - (left + width)
+						float parentWidth = DraggingPanel.Parent.Box.Rect.Width;
+						float panelWidth = DraggingPanel.Box.Rect.Width;
+						float rightValue = parentWidth - (newPosition.x + panelWidth);
+						node.TryModifyStyle( "right", $"{rightValue}px" );
 					}
 					else
 					{
-						style = $"left: {newPosition.x}px; top: {newPosition.y}px;";
+						node.TryModifyStyle( "right", null );
 					}
-					node.Attributes["style"] = style;*/
-					node.TryModifyStyle( "left", $"{newPosition.x}px" );
-					node.TryModifyStyle( "top", $"{newPosition.y}px" );
+
+					if ( alignment.Bottom && DraggingPanel.Parent != null )
+					{
+						// Calculate bottom value as: parent_height - (top + height)
+						float parentHeight = DraggingPanel.Parent.Box.Rect.Height;
+						float panelHeight = DraggingPanel.Box.Rect.Height;
+						float bottomValue = parentHeight - (newPosition.y + panelHeight);
+						node.TryModifyStyle( "bottom", $"{bottomValue}px" );
+					}
+					else
+					{
+						node.TryModifyStyle( "bottom", null );
+					}
+
+					OwnerDesigner.ForceUpdate( false );
+					DraggingPanel.Style.Dirty();
+					DraggingPanel = OwnerDesigner.LookupPanelByNode( node );
+					if ( DraggingPanel == null )
+					{
+						Log.Warning( "DraggingPanel is null after UI rebuild!" );
+					}
+					return;
 				}
-				else
-				{
-					DraggingPanel.Style.Left = e.LocalPosition.x - dragOffset.x;
-					DraggingPanel.Style.Top = e.LocalPosition.y - dragOffset.y;
-				}
-				OwnerDesigner.ForceUpdate( false );
-				DraggingPanel.Style.Dirty();
-				DraggingPanel = OwnerDesigner.LookupPanelByNode( node );
-				if ( DraggingPanel == null )
-				{
-					Log.Warning( "DraggingPanel is null after UI rebuild!" );
-				}
-				return;
 			}
 
 			// 3. Rearranging among siblings (auto-layout)
@@ -415,4 +415,46 @@ public partial class XGUIView : SceneRenderingWidget
 		}
 		return null;
 	}
+
+	private PanelAlignment GetPanelAlignment( Panel panel )
+	{
+		if ( panel == null )
+			return new PanelAlignment();
+
+		var node = OwnerDesigner.LookupNodeByPanel( panel );
+		if ( node == null )
+			return new PanelAlignment();
+
+		string styleAttr = node.Attributes.GetValueOrDefault( "style", "" );
+		var styles = ParseStyleAttribute( styleAttr );
+
+		return XGUIEditor.PanelAlignment.FromStyles( styles );
+	}
+
+	// Helper method to parse style strings
+	private Dictionary<string, string> ParseStyleAttribute( string styleString )
+	{
+		var styles = new Dictionary<string, string>( System.StringComparer.OrdinalIgnoreCase );
+		if ( string.IsNullOrWhiteSpace( styleString ) )
+			return styles;
+
+		var declarations = styleString.Split( ';', StringSplitOptions.RemoveEmptyEntries );
+
+		foreach ( var declaration in declarations )
+		{
+			var parts = declaration.Split( ':', 2 );
+			if ( parts.Length == 2 )
+			{
+				string property = parts[0].Trim();
+				string value = parts[1].Trim();
+
+				if ( !string.IsNullOrEmpty( property ) )
+				{
+					styles[property] = value;
+				}
+			}
+		}
+		return styles;
+	}
+
 }

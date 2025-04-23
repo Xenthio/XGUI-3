@@ -484,6 +484,7 @@ namespace XGUI.XGUIEditor
 			}
 		}
 
+		private AlignmentSelectorWidget _alignmentSelector;
 		private void RebuildStyleSection()
 		{
 			var layout = _styleSection.Layout;
@@ -558,8 +559,58 @@ namespace XGUI.XGUIEditor
 			connectStyleEditor( bottomEditor );
 
 			var positionEditor = positionGroup.AddDropdownEditor(
-				"position", "Position", new[] { "relative", "absolute" }, true );
+	"position", "Position", new[] { "relative", "absolute" }, true );
 			connectStyleEditor( positionEditor );
+
+			// Create and add our alignment selector
+			// Create and add the alignment selector after the position dropdown
+			var alignmentSelector = positionGroup.AddEditor<AlignmentSelectorWidget>( "alignment", "Alignment", true );
+			_alignmentSelector = (AlignmentSelectorWidget)alignmentSelector; // Store reference
+
+			// Hook up events
+			alignmentSelector.ValueChanged += ( value ) =>
+			{
+				if ( value is AlignmentSelectorWidget.AlignmentChangeInfo change && _targetPanel != null )
+				{
+					if ( change.Value != null )
+					{
+						// Apply the new style value
+						UpdatePanelSingleStyle( _targetPanel, change.Edge, change.Value );
+					}
+					else
+					{
+						// Remove/reset the style property
+						switch ( change.Edge )
+						{
+							case "left": _targetPanel.Style.Left = null; break;
+							case "top": _targetPanel.Style.Top = null; break;
+							case "right": _targetPanel.Style.Right = null; break;
+							case "bottom": _targetPanel.Style.Bottom = null; break;
+						}
+
+						// Mark style as dirty to refresh the visual
+						_targetPanel.Style.Dirty();
+					}
+
+					// Update the corresponding editor if it exists
+					if ( _styleEditors.TryGetValue( change.Edge, out var editor ) )
+					{
+						string newEditorValue = change.Value ?? "";
+						editor.SetValueSilently( newEditorValue );
+					}
+				}
+			};
+
+			// Initialize with current styles
+			_alignmentSelector.SetTarget( _targetPanel, _targetNode, currentStyles );
+
+			// Connect position editor to update alignment selector
+			positionEditor.ValueChanged += ( value ) =>
+			{
+				string newPositionMode = value.ToString();
+				Dictionary<string, string> updatedStyles = ParseStyleAttribute( _targetNode.Attributes.GetValueOrDefault( "style", "" ) );
+				_alignmentSelector.SetTarget( _targetPanel, _targetNode, updatedStyles );
+			};
 
 			// Create margin editors
 			var marginTopEditor = marginGroup.AddFloatEditor( "margin-top", "Top", true );
@@ -677,6 +728,11 @@ namespace XGUI.XGUIEditor
 			var currentStyles = ParseStyleAttribute( styleAttributeValue );
 
 			UpdateStyleEditors( currentStyles );
+
+			if ( _alignmentSelector != null )
+			{
+				_alignmentSelector.SetTarget( _targetPanel, _targetNode, currentStyles );
+			}
 		}
 
 		private void UpdateStyleEditors( Dictionary<string, string> styles )
@@ -850,6 +906,49 @@ namespace XGUI.XGUIEditor
 			{
 				return $"#{(int)(color.r * 255):X2}{(int)(color.g * 255):X2}{(int)(color.b * 255):X2}";
 			}
+		}
+
+	}
+
+	// Represents the alignment options for a panel
+	public class PanelAlignment
+	{
+		public bool Left { get; set; } = true;
+		public bool Top { get; set; } = true;
+		public bool Right { get; set; } = false;
+		public bool Bottom { get; set; } = false;
+
+		public PanelAlignment() { }
+
+		public PanelAlignment( bool left, bool top, bool right, bool bottom )
+		{
+			Left = left;
+			Top = top;
+			Right = right;
+			Bottom = bottom;
+		}
+
+		// Parse alignments from style properties
+		public static PanelAlignment FromStyles( Dictionary<string, string> styles )
+		{
+			var alignment = new PanelAlignment();
+
+			// Default is Left+Top if none specified
+			bool hasLeft = styles.ContainsKey( "left" );
+			bool hasTop = styles.ContainsKey( "top" );
+			bool hasRight = styles.ContainsKey( "right" );
+			bool hasBottom = styles.ContainsKey( "bottom" );
+
+			// If no positioning is specified, default to left+top
+			if ( !hasLeft && !hasTop && !hasRight && !hasBottom )
+				return alignment;
+
+			alignment.Left = hasLeft;
+			alignment.Top = hasTop;
+			alignment.Right = hasRight;
+			alignment.Bottom = hasBottom;
+
+			return alignment;
 		}
 	}
 }

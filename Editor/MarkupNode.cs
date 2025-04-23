@@ -18,31 +18,108 @@ namespace XGUI.XGUIEditor
 
 		public void TryModifyStyle( string name, string value )
 		{
-			// add or modify left/top style properties
-			string style = "";
+			// If the style attribute doesn't exist and value is null or empty,
+			// there's nothing to do
+			if ( !Attributes.ContainsKey( "style" ) && (value == null || value == "") )
+				return;
 
-			// replace left/top properties if they exist
-			if ( Attributes.ContainsKey( "style" ) )
+			// Initialize style string
+			string style = Attributes.ContainsKey( "style" ) ? Attributes["style"] : "";
+
+			// If value is null or empty, remove the property entirely
+			if ( value == null || value == "" )
 			{
-				style = Attributes["style"];
-				if ( style.Contains( $"{name}:" ) )
+				// Create a more robust pattern to catch all variations of the property
+				// This handles: name:value; or name: value; with any amount of whitespace
+				string pattern = $@"(^|\s){name}\s*:\s*[^;]*;\s*";
+				style = System.Text.RegularExpressions.Regex.Replace( style, pattern, " " );
+
+				// Clean up any double-spaces that might result from the replacement
+				while ( style.Contains( "  " ) )
+					style = style.Replace( "  ", " " );
+
+				// Remove the style attribute if it's empty after removing properties
+				style = style.Trim();
+				if ( string.IsNullOrWhiteSpace( style ) )
 				{
-					// Replace any "name: *;" or "name:*;" pattern with the new value 
-					style = System.Text.RegularExpressions.Regex.Replace( style, $"{name}:\\s*[^;]*;", $"{name}: {value};" );
-				}
-				else
-				{
-					style += $" {name}: {value};";
+					Attributes.Remove( "style" );
+					return;
 				}
 			}
 			else
 			{
-				style = $"{name}: {value};";
+				// Add or modify the style property
+				bool propertyExists = false;
+
+				// Check if the property exists using a more precise pattern
+				string pattern = $@"(^|\s){name}\s*:";
+				if ( System.Text.RegularExpressions.Regex.IsMatch( style, pattern ) )
+				{
+					// Replace the existing property with the new value
+					propertyExists = true;
+					pattern = $@"(^|\s){name}\s*:\s*[^;]*;?";
+					style = System.Text.RegularExpressions.Regex.Replace( style, pattern, $"$1{name}: {value};" );
+				}
+
+				if ( !propertyExists )
+				{
+					// Add the new property
+					if ( !string.IsNullOrWhiteSpace( style ) )
+					{
+						// Ensure the style ends with a semicolon before adding the new property
+						if ( !style.EndsWith( ";" ) )
+							style += ";";
+
+						// Add a space for readability
+						style += " ";
+					}
+
+					style += $"{name}: {value};";
+				}
 			}
 
-			//Log.Info( $"Original style: {style}" );
-			Attributes["style"] = style;
-			//Log.Info( $"Modified style: {style}" );
+			// Clean up the style string and ensure it's well-formatted
+			style = CleanupStyleString( style );
+
+			// Update or remove the style attribute
+			if ( string.IsNullOrWhiteSpace( style ) )
+				Attributes.Remove( "style" );
+			else
+				Attributes["style"] = style;
+		}
+
+		private string CleanupStyleString( string style )
+		{
+			// Handle null or empty styles
+			if ( string.IsNullOrWhiteSpace( style ) )
+				return "";
+
+			// Remove extra spaces
+			while ( style.Contains( "  " ) )
+				style = style.Replace( "  ", " " );
+
+			// Ensure proper spacing around semicolons
+			style = style.Replace( " ;", ";" );
+
+			// Keep a space after semicolons for readability
+			style = style.Replace( ";", "; " );
+
+			// Remove semicolon-space at the end if present
+			if ( style.EndsWith( "; " ) )
+				style = style.Substring( 0, style.Length - 2 );
+
+			// Ensure proper spacing around colons
+			style = style.Replace( " :", ":" );
+			style = System.Text.RegularExpressions.Regex.Replace( style, ":([^\\s])", ": $1" );
+
+			// Remove whitespace at the beginning and end
+			style = style.Trim();
+
+			// Handle the case where we might have accidentally added an extra semicolon at the end
+			if ( style.EndsWith( ";" ) )
+				style = style.Substring( 0, style.Length - 1 );
+
+			return style;
 		}
 	}
 }

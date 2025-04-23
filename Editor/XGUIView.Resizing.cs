@@ -1,6 +1,7 @@
 ﻿using Editor;
 using Sandbox;
 using Sandbox.UI;
+using System;
 using System.Linq;
 
 namespace XGUI
@@ -33,6 +34,7 @@ namespace XGUI
 				var pos = e.LocalPosition;
 				pos -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
 														// Calculate how much we've moved
+
 				var delta = pos - _dragStartPos;
 				//Log.Info( pos );
 				//Log.Info( _dragStartPos );
@@ -179,8 +181,100 @@ namespace XGUI
 					break;
 			}
 		}
-
 		private void ApplyResize( Vector2 delta, bool finalResize = false, bool verticalenabled = true, bool horizontalenabled = true, bool diagonalenabled = true )
+		{
+			if ( SelectedPanel == null || _activeHandle < 0 )
+				return;
+
+			// Calculate new rectangle based on delta
+			var oldRect = _originalRect;
+			var newRect = oldRect;
+
+			// Get the panel's alignment settings
+			var alignment = GetPanelAlignment( SelectedPanel );
+			var node = OwnerDesigner.LookupNodeByPanel( SelectedPanel );
+
+			// Determine which edges we're adjusting
+			bool isLeftEdge = (_activeHandle == 0 || _activeHandle == 7 || _activeHandle == 6) && horizontalenabled;
+			bool isRightEdge = (_activeHandle == 2 || _activeHandle == 3 || _activeHandle == 4) && horizontalenabled;
+			bool isTopEdge = (_activeHandle == 0 || _activeHandle == 1 || _activeHandle == 2) && verticalenabled;
+			bool isBottomEdge = (_activeHandle == 4 || _activeHandle == 5 || _activeHandle == 6) && verticalenabled;
+
+			// Apply changes based on which handle is being dragged
+			if ( isLeftEdge )
+			{
+				float newLeft = oldRect.Left + delta.x;
+				newRect.Left = newLeft;
+				newRect.Width = Math.Max( oldRect.Width - delta.x, 5 );
+			}
+			else if ( isRightEdge )
+			{
+				newRect.Width = Math.Max( oldRect.Width + delta.x, 5 );
+			}
+
+			if ( isTopEdge )
+			{
+				float newTop = oldRect.Top + delta.y;
+				newRect.Top = newTop;
+				newRect.Height = Math.Max( oldRect.Height - delta.y, 5 );
+			}
+			else if ( isBottomEdge )
+			{
+				newRect.Height = Math.Max( oldRect.Height + delta.y, 5 );
+			}
+
+			// Apply visual preview by temporarily updating the panel's style
+			SelectedPanel.Style.Width = newRect.Width;
+			SelectedPanel.Style.Height = newRect.Height;
+
+			// If this is the final resize, update the node's style properties
+			if ( finalResize && node != null )
+			{
+				// Always update width and height
+				node.TryModifyStyle( "width", $"{newRect.Width}px" );
+				node.TryModifyStyle( "height", $"{newRect.Height}px" );
+
+				// Update the position properties based on which handle was dragged and alignment
+				if ( SelectedPanel.ComputedStyle?.Position == PositionMode.Absolute )
+				{
+					float parentLeft = (SelectedPanel.Parent?.Box.Rect.Left ?? 0);
+					float parentTop = (SelectedPanel.Parent?.Box.Rect.Top ?? 0);
+					float parentWidth = (SelectedPanel.Parent?.Box.Rect.Width ?? 400);
+					float parentHeight = (SelectedPanel.Parent?.Box.Rect.Height ?? 300);
+
+					// When resizing from left edge, update left position
+					if ( isLeftEdge && alignment.Left )
+					{
+						node.TryModifyStyle( "left", $"{newRect.Left - parentLeft}px" );
+					}
+
+					// When resizing from top edge, update top position
+					if ( isTopEdge && alignment.Top )
+					{
+						node.TryModifyStyle( "top", $"{newRect.Top - parentTop}px" );
+					}
+
+					// When resizing, also update right/bottom if those edges are aligned
+					if ( alignment.Right )
+					{
+						float rightValue = parentWidth - (newRect.Left + newRect.Width - parentLeft);
+						node.TryModifyStyle( "right", $"{rightValue}px" );
+					}
+
+					if ( alignment.Bottom )
+					{
+						float bottomValue = parentHeight - (newRect.Top + newRect.Height - parentTop);
+						node.TryModifyStyle( "bottom", $"{bottomValue}px" );
+					}
+				}
+
+				// Force update in the designer
+				OwnerDesigner.ForceUpdate( false );
+			}
+
+			SelectedPanel.Style.Dirty();
+		}
+		/*private void ApplyResize( Vector2 delta, bool finalResize = false, bool verticalenabled = true, bool horizontalenabled = true, bool diagonalenabled = true )
 		{
 			if ( SelectedPanel == null ) return;
 
@@ -344,6 +438,6 @@ namespace XGUI
 					// We could apply temporary visual changes to the selected panel here
 				}
 			}
-		}
+		}*/
 	}
 }
