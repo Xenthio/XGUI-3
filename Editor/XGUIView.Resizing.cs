@@ -32,13 +32,13 @@ namespace XGUI
 			if ( _isDraggingHandle && SelectedPanel != null )
 			{
 				var pos = e.LocalPosition;
-				pos -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
-
 				// Calculate how much we've moved
 				var delta = pos - _dragStartPos;
 
 				// Apply snapping during resize
 				delta = ApplyResizeSnapping( delta );
+				delta -= SelectedPanel.Parent.Box.Rect.Position; // Adjust for WindowContent position
+
 
 				// Apply the resize based on which handle is being dragged
 				if ( ShouldOnlyHorizontalResize( SelectedPanel ) )
@@ -259,13 +259,13 @@ namespace XGUI
 				bool hasVerticalStretch = alignment.Top && alignment.Bottom;
 
 				// Only update width if we're not stretching horizontally
-				if ( !hasHorizontalStretch )
+				if ( !hasHorizontalStretch && (isLeftEdge || isRightEdge) )
 				{
 					node.TryModifyStyle( "width", $"{newRect.Width}px" );
 				}
 
-				// Only update height if we're not stretching vertically
-				if ( !hasVerticalStretch )
+				// Only update height if we're not stretching vertically AND the resize operation involved vertical changes
+				if ( !hasVerticalStretch && (isTopEdge || isBottomEdge) )
 				{
 					node.TryModifyStyle( "height", $"{newRect.Height}px" );
 				}

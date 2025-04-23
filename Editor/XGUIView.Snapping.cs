@@ -143,22 +143,24 @@ namespace XGUI
 			List<SnapCandidate> yCandidates = new();
 
 			// Parent Snapping
-			float parentClientLeft = margin;
-			float parentClientRight = parentBounds.Width - margin;
-			float parentClientTop = margin;
-			float parentClientBottom = parentBounds.Height - margin;
-			float parentClientCenterX = parentBounds.Width / 2f;
-			float parentClientCenterY = parentBounds.Height / 2f;
+			float parentInnerX = parentBounds.Position.x;
+			float parentInnerY = parentBounds.Position.y;
+			float parentClientLeft = parentInnerX + margin;
+			float parentClientRight = parentInnerX + parentBounds.Width - margin;
+			float parentClientTop = parentInnerY + margin;
+			float parentClientBottom = parentInnerY + parentBounds.Height - margin;
+			float parentClientCenterX = parentInnerX + parentBounds.Width / 2f;
+			float parentClientCenterY = parentInnerY + parentBounds.Height / 2f;
 
-			// X-Axis (Parent)
-			xCandidates.Add( new SnapCandidate( dragLeft, parentClientLeft, new( parentClientLeft, 0 ), new( parentClientLeft, parentBounds.Height ), parentBounds ) );
-			xCandidates.Add( new SnapCandidate( dragRight, parentClientRight, new( parentClientRight, 0 ), new( parentClientRight, parentBounds.Height ), parentBounds ) );
-			xCandidates.Add( new SnapCandidate( dragCenterX, parentClientCenterX, new( parentClientCenterX, 0 ), new( parentClientCenterX, parentBounds.Height ), parentBounds ) );
+			// X-Axis (Parent) - Use adjusted targets and define lines within inner bounds
+			xCandidates.Add( new SnapCandidate( dragLeft, parentClientLeft, new( parentClientLeft, parentInnerY ), new( parentClientLeft, parentInnerY + parentBounds.Height ), parentBounds ) );
+			xCandidates.Add( new SnapCandidate( dragRight, parentClientRight, new( parentClientRight, parentInnerY ), new( parentClientRight, parentInnerY + parentBounds.Height ), parentBounds ) );
+			xCandidates.Add( new SnapCandidate( dragCenterX, parentClientCenterX, new( parentClientCenterX, parentInnerY ), new( parentClientCenterX, parentInnerY + parentBounds.Height ), parentBounds ) );
 
-			// Y-Axis (Parent)
-			yCandidates.Add( new SnapCandidate( dragTop, parentClientTop, new( 0, parentClientTop ), new( parentBounds.Width, parentClientTop ), parentBounds ) );
-			yCandidates.Add( new SnapCandidate( dragBottom, parentClientBottom, new( 0, parentClientBottom ), new( parentBounds.Width, parentClientBottom ), parentBounds ) );
-			yCandidates.Add( new SnapCandidate( dragCenterY, parentClientCenterY, new( 0, parentClientCenterY ), new( parentBounds.Width, parentClientCenterY ), parentBounds ) );
+			// Y-Axis (Parent) - Use adjusted targets and define lines within inner bounds
+			yCandidates.Add( new SnapCandidate( dragTop, parentClientTop, new( parentInnerX, parentClientTop ), new( parentInnerX + parentBounds.Width, parentClientTop ), parentBounds ) );
+			yCandidates.Add( new SnapCandidate( dragBottom, parentClientBottom, new( parentInnerX, parentClientBottom ), new( parentInnerX + parentBounds.Width, parentClientBottom ), parentBounds ) );
+			yCandidates.Add( new SnapCandidate( dragCenterY, parentClientCenterY, new( parentInnerX, parentClientCenterY ), new( parentInnerX + parentBounds.Width, parentClientCenterY ), parentBounds ) );
 
 			// Sibling Snapping
 			foreach ( var siblingRect in siblings )
@@ -275,12 +277,15 @@ namespace XGUI
 			List<SnapCandidate> yCandidates = new();
 
 			// Parent Snapping Targets
-			float parentClientLeft = margin;
-			float parentClientRight = parentBounds.Width - margin;
-			float parentClientTop = margin;
-			float parentClientBottom = parentBounds.Height - margin;
-			float parentClientCenterX = parentBounds.Width / 2f;
-			float parentClientCenterY = parentBounds.Height / 2f;
+			float parentInnerX = parentBounds.Position.x;
+			float parentInnerY = parentBounds.Position.y;
+			float parentClientLeft = parentInnerX + margin;
+			float parentClientRight = parentInnerX + parentBounds.Width - margin;
+			float parentClientTop = parentInnerY + margin;
+			float parentClientBottom = parentInnerY + parentBounds.Height - margin;
+			float parentClientCenterX = parentInnerX + parentBounds.Width / 2f;
+			float parentClientCenterY = parentInnerY + parentBounds.Height / 2f;
+
 
 			// X-Axis Snapping (Parent & Siblings)
 			if ( isLeftEdge || isRightEdge )
