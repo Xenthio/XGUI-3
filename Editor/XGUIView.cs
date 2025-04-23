@@ -188,10 +188,10 @@ public partial class XGUIView : SceneRenderingWidget
 			{
 				DraggingPanel.Style.Position = PositionMode.Absolute;
 				var newPosition = e.LocalPosition - dragOffset;
+				newPosition = ApplySnappingToPosition( newPosition );
 				newPosition -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
 
 				// Apply snapping to nearby elements and parent container
-				newPosition = ApplySnappingToPosition( newPosition );
 
 				var node = OwnerDesigner.LookupNodeByPanel( DraggingPanel );
 				if ( node != null )

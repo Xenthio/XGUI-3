@@ -29,17 +29,17 @@ namespace XGUI
 		}
 		private void ResizeMouseMove( MouseEvent e )
 		{
-			//Log.Info( e.LocalPosition );
 			if ( _isDraggingHandle && SelectedPanel != null )
 			{
 				var pos = e.LocalPosition;
 				pos -= WindowContent.Box.Rect.Position; // Adjust for WindowContent position
-														// Calculate how much we've moved
 
+				// Calculate how much we've moved
 				var delta = pos - _dragStartPos;
-				//Log.Info( pos );
-				//Log.Info( _dragStartPos );
-				//Log.Info( delta );
+
+				// Apply snapping during resize
+				delta = ApplyResizeSnapping( delta );
+
 				// Apply the resize based on which handle is being dragged
 				if ( ShouldOnlyHorizontalResize( SelectedPanel ) )
 				{
@@ -306,170 +306,6 @@ namespace XGUI
 
 			SelectedPanel.Style.Dirty();
 		}
-		/*private void ApplyResize( Vector2 delta, bool finalResize = false, bool verticalenabled = true, bool horizontalenabled = true, bool diagonalenabled = true )
-		{
-			if ( SelectedPanel == null ) return;
 
-			var rect = _originalRect;
-			bool changed = false;
-
-			// Apply resize based on which handle is active
-			switch ( _activeHandle )
-			{
-				case 0: // Top-left
-					if ( diagonalenabled )
-					{
-						rect = new Rect(
-							rect.Left + delta.x,
-							rect.Top + delta.y,
-							rect.Width - delta.x,
-							rect.Height - delta.y
-						);
-						changed = true;
-					}
-					break;
-
-				case 1: // Top-middle
-					if ( verticalenabled )
-					{
-						rect = new Rect(
-							rect.Left,
-							rect.Top + delta.y,
-							rect.Width,
-							rect.Height - delta.y
-						);
-						changed = true;
-					}
-					break;
-
-				case 2: // Top-right
-					if ( diagonalenabled )
-					{
-						rect = new Rect(
-							rect.Left,
-							rect.Top + delta.y,
-							rect.Width + delta.x,
-							rect.Height - delta.y
-						);
-						changed = true;
-					}
-					break;
-
-				case 3: // Middle-right
-					if ( horizontalenabled )
-					{
-						rect = new Rect(
-							rect.Left,
-							rect.Top,
-							rect.Width + delta.x,
-							rect.Height
-						);
-						changed = true;
-					}
-					break;
-
-				case 4: // Bottom-right
-					if ( diagonalenabled )
-					{
-						rect = new Rect(
-							rect.Left,
-							rect.Top,
-							rect.Width + delta.x,
-							rect.Height + delta.y
-						);
-						changed = true;
-					}
-					break;
-
-				case 5: // Bottom-middle
-					if ( verticalenabled )
-					{
-						rect = new Rect(
-							rect.Left,
-							rect.Top,
-							rect.Width,
-							rect.Height + delta.y
-						);
-						changed = true;
-					}
-					break;
-
-				case 6: // Bottom-left
-					if ( diagonalenabled )
-					{
-						rect = new Rect(
-							rect.Left + delta.x,
-							rect.Top,
-							rect.Width - delta.x,
-							rect.Height + delta.y
-						);
-						changed = true;
-					}
-					break;
-
-				case 7: // Middle-left
-					if ( horizontalenabled )
-					{
-						rect = new Rect(
-							rect.Left + delta.x,
-							rect.Top,
-							rect.Width - delta.x,
-							rect.Height
-						);
-						changed = true;
-					}
-					break;
-			}
-
-			// Make sure we don't have negative dimensions
-			if ( rect.Width < 10 ) rect.Width = 10;
-			if ( rect.Height < 10 ) rect.Height = 10;
-
-			if ( changed )
-			{
-				if ( finalResize )
-				{
-					// Update the model through XGUIDesigner
-					var node = OwnerDesigner.LookupNodeByPanel( SelectedPanel );
-					if ( node != null )
-					{
-						// Special handling for Window panels
-						if ( SelectedPanel is XGUI.Window )
-						{
-							// Update width and height attributes directly
-							node.Attributes["width"] = $"{rect.Width}";
-							node.Attributes["height"] = $"{rect.Height}";
-
-							// Update the panel's properties directly
-							var window = SelectedPanel as XGUI.Window;
-							window.Style.Width = rect.Width;
-							window.Style.Height = rect.Height;
-						}
-						else
-						{
-							// Standard style-based updates for other panels
-							node.TryModifyStyle( "width", $"{rect.Width}px" );
-							node.TryModifyStyle( "height", $"{rect.Height}px" );
-							node.TryModifyStyle( "left", $"{rect.Left}px" );
-							node.TryModifyStyle( "top", $"{rect.Top}px" );
-
-							Panel.Style.Left = rect.Left;
-							Panel.Style.Top = rect.Top;
-							Panel.Style.Width = rect.Width;
-							Panel.Style.Height = rect.Height;
-						}
-
-						// Force update in the designer
-						OwnerDesigner.ForceUpdate( false );
-						OwnerDesigner.OverlayWidget.Update();
-					}
-				}
-				else
-				{
-					// Just visually update for now during drag
-					// We could apply temporary visual changes to the selected panel here
-				}
-			}
-		}*/
 	}
 }
