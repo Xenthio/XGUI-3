@@ -222,6 +222,9 @@ namespace XGUI.XGUIEditor
 			if ( _targetNode == null || _targetPanel == null || !_isAbsolutePosition )
 				return;
 
+			// Current styles for checking/updating
+			var styles = GetCurrentStyles();
+
 			if ( newState )
 			{
 				// Calculate edge position based on current box/rect values
@@ -229,14 +232,100 @@ namespace XGUI.XGUIEditor
 
 				// Apply the position to the style
 				_targetNode.TryModifyStyle( edge, cssValue );
+
+				// Special handling for horizontal and vertical stretching:
+				// If both left+right set, remove width to enable stretching
+				if ( edge == "left" || edge == "right" )
+				{
+					bool hasLeft = edge == "left" ? true : styles.ContainsKey( "left" );
+					bool hasRight = edge == "right" ? true : styles.ContainsKey( "right" );
+
+					// Both edges are now anchored, remove width to allow stretching
+					if ( hasLeft && hasRight )
+					{
+						_targetNode.TryModifyStyle( "width", null );
+					}
+				}
+
+				// Similarly for top+bottom with height
+				if ( edge == "top" || edge == "bottom" )
+				{
+					bool hasTop = edge == "top" ? true : styles.ContainsKey( "top" );
+					bool hasBottom = edge == "bottom" ? true : styles.ContainsKey( "bottom" );
+
+					// Both edges are now anchored, remove height to allow stretching
+					if ( hasTop && hasBottom )
+					{
+						_targetNode.TryModifyStyle( "height", null );
+					}
+				}
+
 				NotifyValueChanged( new AlignmentChangeInfo { Edge = edge, Value = cssValue } );
 			}
 			else
 			{
 				// Remove the style property
-				_targetNode.TryModifyStyle( edge, null ); // null will remove the property
+				_targetNode.TryModifyStyle( edge, null );
+
+				// When removing an alignment, we may need to add back width/height
+				// based on the current box size so the element doesn't collapse
+
+				// Handle horizontal case
+				if ( edge == "left" || edge == "right" )
+				{
+					bool hasLeft = edge == "left" ? false : styles.ContainsKey( "left" );
+					bool hasRight = edge == "right" ? false : styles.ContainsKey( "right" );
+
+					// We no longer have both edges anchored, so set explicit width
+					if ( !(hasLeft && hasRight) && !styles.ContainsKey( "width" ) )
+					{
+						string widthValue = $"{Math.Max( Math.Round( _targetPanel.Box.Rect.Width ), 10 )}px";
+						_targetNode.TryModifyStyle( "width", widthValue );
+					}
+				}
+
+				// Handle vertical case
+				if ( edge == "top" || edge == "bottom" )
+				{
+					bool hasTop = edge == "top" ? false : styles.ContainsKey( "top" );
+					bool hasBottom = edge == "bottom" ? false : styles.ContainsKey( "bottom" );
+
+					// We no longer have both edges anchored, so set explicit height
+					if ( !(hasTop && hasBottom) && !styles.ContainsKey( "height" ) )
+					{
+						string heightValue = $"{Math.Max( Math.Round( _targetPanel.Box.Rect.Height ), 10 )}px";
+						_targetNode.TryModifyStyle( "height", heightValue );
+					}
+				}
+
 				NotifyValueChanged( new AlignmentChangeInfo { Edge = edge, Value = null } );
 			}
+		}
+
+		/// <summary>
+		/// Helper method to get current styles as a dictionary
+		/// </summary>
+		private Dictionary<string, string> GetCurrentStyles()
+		{
+			if ( _targetNode == null || !_targetNode.Attributes.TryGetValue( "style", out var styleStr ) )
+				return new Dictionary<string, string>();
+
+			// Parse style string into dictionary
+			var styles = new Dictionary<string, string>( StringComparer.OrdinalIgnoreCase );
+			var declarations = styleStr.Split( ';', StringSplitOptions.RemoveEmptyEntries );
+
+			foreach ( var decl in declarations )
+			{
+				var parts = decl.Split( ':', 2 );
+				if ( parts.Length == 2 )
+				{
+					string property = parts[0].Trim();
+					string value = parts[1].Trim();
+					styles[property] = value;
+				}
+			}
+
+			return styles;
 		}
 
 		/// <summary>
@@ -289,3 +378,4 @@ namespace XGUI.XGUIEditor
 		}
 	}
 }
+

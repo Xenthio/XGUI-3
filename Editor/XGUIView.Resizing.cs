@@ -2,6 +2,7 @@
 using Sandbox;
 using Sandbox.UI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace XGUI
@@ -200,6 +201,12 @@ namespace XGUI
 			bool isTopEdge = (_activeHandle == 0 || _activeHandle == 1 || _activeHandle == 2) && verticalenabled;
 			bool isBottomEdge = (_activeHandle == 4 || _activeHandle == 5 || _activeHandle == 6) && verticalenabled;
 
+			// Parent dimensions for calculations
+			float parentLeft = (SelectedPanel.Parent?.Box.Rect.Left ?? 0);
+			float parentTop = (SelectedPanel.Parent?.Box.Rect.Top ?? 0);
+			float parentWidth = (SelectedPanel.Parent?.Box.Rect.Width ?? 400);
+			float parentHeight = (SelectedPanel.Parent?.Box.Rect.Height ?? 300);
+
 			// Apply changes based on which handle is being dragged
 			if ( isLeftEdge )
 			{
@@ -227,21 +234,45 @@ namespace XGUI
 			SelectedPanel.Style.Width = newRect.Width;
 			SelectedPanel.Style.Height = newRect.Height;
 
+			if ( isLeftEdge && alignment.Left )
+				SelectedPanel.Style.Left = newRect.Left - parentLeft;
+			if ( isTopEdge && alignment.Top )
+				SelectedPanel.Style.Top = newRect.Top - parentTop;
+
 			// If this is the final resize, update the node's style properties
 			if ( finalResize && node != null )
 			{
-				// Always update width and height
-				node.TryModifyStyle( "width", $"{newRect.Width}px" );
-				node.TryModifyStyle( "height", $"{newRect.Height}px" );
+				// Get current styles to check anchoring state
+				Dictionary<string, string> currentStyles = new Dictionary<string, string>();
+				if ( node.Attributes.TryGetValue( "style", out var styleString ) )
+				{
+					foreach ( var part in styleString.Split( ';', StringSplitOptions.RemoveEmptyEntries ) )
+					{
+						var kv = part.Split( ':', 2 );
+						if ( kv.Length == 2 )
+							currentStyles[kv[0].Trim()] = kv[1].Trim();
+					}
+				}
+
+				// Check if we have both horizontal anchors
+				bool hasHorizontalStretch = alignment.Left && alignment.Right;
+				bool hasVerticalStretch = alignment.Top && alignment.Bottom;
+
+				// Only update width if we're not stretching horizontally
+				if ( !hasHorizontalStretch )
+				{
+					node.TryModifyStyle( "width", $"{newRect.Width}px" );
+				}
+
+				// Only update height if we're not stretching vertically
+				if ( !hasVerticalStretch )
+				{
+					node.TryModifyStyle( "height", $"{newRect.Height}px" );
+				}
 
 				// Update the position properties based on which handle was dragged and alignment
 				if ( SelectedPanel.ComputedStyle?.Position == PositionMode.Absolute )
 				{
-					float parentLeft = (SelectedPanel.Parent?.Box.Rect.Left ?? 0);
-					float parentTop = (SelectedPanel.Parent?.Box.Rect.Top ?? 0);
-					float parentWidth = (SelectedPanel.Parent?.Box.Rect.Width ?? 400);
-					float parentHeight = (SelectedPanel.Parent?.Box.Rect.Height ?? 300);
-
 					// When resizing from left edge, update left position
 					if ( isLeftEdge && alignment.Left )
 					{
@@ -254,14 +285,15 @@ namespace XGUI
 						node.TryModifyStyle( "top", $"{newRect.Top - parentTop}px" );
 					}
 
-					// When resizing, also update right/bottom if those edges are aligned
-					if ( alignment.Right )
+					// When resizing from right edge, update right position
+					if ( isRightEdge && alignment.Right )
 					{
 						float rightValue = parentWidth - (newRect.Left + newRect.Width - parentLeft);
 						node.TryModifyStyle( "right", $"{rightValue}px" );
 					}
 
-					if ( alignment.Bottom )
+					// When resizing from bottom edge, update bottom position
+					if ( isBottomEdge && alignment.Bottom )
 					{
 						float bottomValue = parentHeight - (newRect.Top + newRect.Height - parentTop);
 						node.TryModifyStyle( "bottom", $"{bottomValue}px" );
