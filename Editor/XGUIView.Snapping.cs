@@ -207,7 +207,7 @@ namespace XGUI
 				_isSnappedX = true;
 				_snapLineStartX = bestX.LineStart;
 				_snapLineEndX = bestX.LineEnd;
-				_snappingToSiblingRectX = bestX.TargetRect == parentBounds ? null : bestX.TargetRect; // Don't highlight parent
+				_snappingToSiblingRectX = bestX.TargetRect; // Don't highlight parent
 			}
 
 			if ( yCandidates.Count > 0 )
@@ -217,7 +217,7 @@ namespace XGUI
 				_isSnappedY = true;
 				_snapLineStartY = bestY.LineStart;
 				_snapLineEndY = bestY.LineEnd;
-				_snappingToSiblingRectY = bestY.TargetRect == parentBounds ? null : bestY.TargetRect; // Don't highlight parent
+				_snappingToSiblingRectY = bestY.TargetRect; // Don't highlight parent
 			}
 
 			return snappedPosition;
@@ -350,7 +350,7 @@ namespace XGUI
 				_isSnappedX = true;
 				_snapLineStartX = bestX.LineStart;
 				_snapLineEndX = bestX.LineEnd;
-				_snappingToSiblingRectX = bestX.TargetRect == parentBounds ? null : bestX.TargetRect;
+				_snappingToSiblingRectX = bestX.TargetRect;
 			}
 
 			if ( yCandidates.Count > 0 )
@@ -361,7 +361,7 @@ namespace XGUI
 				_isSnappedY = true;
 				_snapLineStartY = bestY.LineStart;
 				_snapLineEndY = bestY.LineEnd;
-				_snappingToSiblingRectY = bestY.TargetRect == parentBounds ? null : bestY.TargetRect;
+				_snappingToSiblingRectY = bestY.TargetRect;
 			}
 
 			return adjustedDelta;
