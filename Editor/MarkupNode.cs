@@ -4,6 +4,8 @@ namespace XGUI.XGUIEditor
 {
 	public enum NodeType { Element, Text }
 
+
+	// TODO: store razor statements and code blocks
 	public class MarkupNode
 	{
 		public NodeType Type;

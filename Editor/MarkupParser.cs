@@ -4,6 +4,7 @@ using System.Text;
 
 namespace XGUI.XGUIEditor
 {
+	// TODO: store razor statements and code blocks
 	public static class SimpleMarkupParser
 	{
 		// Entry point: parses markup string into a tree of MarkupNode
