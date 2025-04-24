@@ -230,14 +230,32 @@ namespace XGUI
 				newRect.Height = Math.Max( oldRect.Height + delta.y, 5 );
 			}
 
-			// Apply visual preview by temporarily updating the panel's style
-			SelectedPanel.Style.Width = newRect.Width;
-			SelectedPanel.Style.Height = newRect.Height;
+			// Check if SelectedPanel is a Window
+			bool isWindow = SelectedPanel is Window;
 
-			if ( isLeftEdge && alignment.Left )
-				SelectedPanel.Style.Left = newRect.Left - parentLeft;
-			if ( isTopEdge && alignment.Top )
-				SelectedPanel.Style.Top = newRect.Top - parentTop;
+			// Apply visual preview - for Windows use width/height attributes, for others use style
+			if ( isWindow )
+			{
+				// For Window panels, update width/height attributes directly
+				SelectedPanel.SetAttribute( "width", $"{newRect.Width}" );
+				SelectedPanel.SetAttribute( "height", $"{newRect.Height}" );
+
+				if ( isLeftEdge && alignment.Left )
+					SelectedPanel.SetAttribute( "x", $"{newRect.Left - parentLeft}" );
+				if ( isTopEdge && alignment.Top )
+					SelectedPanel.SetAttribute( "y", $"{newRect.Top - parentTop}" );
+			}
+			else
+			{
+				// For non-Window panels, update the style as before
+				SelectedPanel.Style.Width = newRect.Width;
+				SelectedPanel.Style.Height = newRect.Height;
+
+				if ( isLeftEdge && alignment.Left )
+					SelectedPanel.Style.Left = newRect.Left - parentLeft;
+				if ( isTopEdge && alignment.Top )
+					SelectedPanel.Style.Top = newRect.Top - parentTop;
+			}
 
 			// If this is the final resize, update the node's style properties
 			if ( finalResize && node != null )
@@ -258,45 +276,72 @@ namespace XGUI
 				bool hasHorizontalStretch = alignment.Left && alignment.Right;
 				bool hasVerticalStretch = alignment.Top && alignment.Bottom;
 
-				// Only update width if we're not stretching horizontally
-				if ( !hasHorizontalStretch && (isLeftEdge || isRightEdge) )
+				if ( isWindow )
 				{
-					node.TryModifyStyle( "width", $"{newRect.Width}px" );
-				}
+					// For Window panels, update width/height attributes in the markup node
+					if ( !hasHorizontalStretch && (isLeftEdge || isRightEdge) )
+					{
+						node.Attributes["width"] = $"{newRect.Width}";
+					}
 
-				// Only update height if we're not stretching vertically AND the resize operation involved vertical changes
-				if ( !hasVerticalStretch && (isTopEdge || isBottomEdge) )
-				{
-					node.TryModifyStyle( "height", $"{newRect.Height}px" );
-				}
+					if ( !hasVerticalStretch && (isTopEdge || isBottomEdge) )
+					{
+						node.Attributes["height"] = $"{newRect.Height}";
+					}
 
-				// Update the position properties based on which handle was dragged and alignment
-				if ( SelectedPanel.ComputedStyle?.Position == PositionMode.Absolute )
-				{
-					// When resizing from left edge, update left position
+					// Update position attributes if needed
 					if ( isLeftEdge && alignment.Left )
 					{
-						node.TryModifyStyle( "left", $"{newRect.Left - parentLeft}px" );
+						node.Attributes["x"] = $"{newRect.Left - parentLeft}";
 					}
 
-					// When resizing from top edge, update top position
 					if ( isTopEdge && alignment.Top )
 					{
-						node.TryModifyStyle( "top", $"{newRect.Top - parentTop}px" );
+						node.Attributes["y"] = $"{newRect.Top - parentTop}";
+					}
+				}
+				else
+				{
+					// Only update width if we're not stretching horizontally
+					if ( !hasHorizontalStretch && (isLeftEdge || isRightEdge) )
+					{
+						node.TryModifyStyle( "width", $"{newRect.Width}px" );
 					}
 
-					// When resizing from right edge, update right position
-					if ( isRightEdge && alignment.Right )
+					// Only update height if we're not stretching vertically AND the resize operation involved vertical changes
+					if ( !hasVerticalStretch && (isTopEdge || isBottomEdge) )
 					{
-						float rightValue = parentWidth - (newRect.Left + newRect.Width - parentLeft);
-						node.TryModifyStyle( "right", $"{rightValue}px" );
+						node.TryModifyStyle( "height", $"{newRect.Height}px" );
 					}
 
-					// When resizing from bottom edge, update bottom position
-					if ( isBottomEdge && alignment.Bottom )
+					// Update the position properties based on which handle was dragged and alignment
+					if ( SelectedPanel.ComputedStyle?.Position == PositionMode.Absolute )
 					{
-						float bottomValue = parentHeight - (newRect.Top + newRect.Height - parentTop);
-						node.TryModifyStyle( "bottom", $"{bottomValue}px" );
+						// When resizing from left edge, update left position
+						if ( isLeftEdge && alignment.Left )
+						{
+							node.TryModifyStyle( "left", $"{newRect.Left - parentLeft}px" );
+						}
+
+						// When resizing from top edge, update top position
+						if ( isTopEdge && alignment.Top )
+						{
+							node.TryModifyStyle( "top", $"{newRect.Top - parentTop}px" );
+						}
+
+						// When resizing from right edge, update right position
+						if ( isRightEdge && alignment.Right )
+						{
+							float rightValue = parentWidth - (newRect.Left + newRect.Width - parentLeft);
+							node.TryModifyStyle( "right", $"{rightValue}px" );
+						}
+
+						// When resizing from bottom edge, update bottom position
+						if ( isBottomEdge && alignment.Bottom )
+						{
+							float bottomValue = parentHeight - (newRect.Top + newRect.Height - parentTop);
+							node.TryModifyStyle( "bottom", $"{bottomValue}px" );
+						}
 					}
 				}
 

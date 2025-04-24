@@ -144,6 +144,11 @@ public partial class XGUIView : SceneRenderingWidget
 		// Check if we're in nested selection mode (multiple clicks at the same position)
 		CheckNestedSelectionMode( e.LocalPosition );
 
+		TryInteractAtPosition( Window, e );
+
+		if ( e.Accepted )
+			return;
+
 		// Find the panel under the mouse (excluding WindowContent itself)
 		Panel hovered = FindPanelAtPosition( Window, e.LocalPosition, skipSelf: true, selectNested: _isNestedSelectionMode ) as Panel;
 
@@ -151,9 +156,13 @@ public partial class XGUIView : SceneRenderingWidget
 		{
 			hovered = Window;
 		}
+		Select( hovered );
+	}
 
-		SelectedPanel = hovered;
-		OnElementSelected?.Invoke( hovered );
+	private void Select( Panel panel )
+	{
+		SelectedPanel = panel;
+		OnElementSelected?.Invoke( panel );
 	}
 
 	protected override void OnMouseMove( MouseEvent e )
@@ -404,6 +413,54 @@ public partial class XGUIView : SceneRenderingWidget
 
 			isDragging = false;
 			DraggingPanel = null;
+		}
+	}
+
+
+	private void TryInteractAtPosition( Panel root, MouseEvent e )
+	{
+		var pos = e.LocalPosition;
+		// recursively look for a tab button anywhere in the root panel 
+		foreach ( var child in root.Children )
+		{
+			if ( child != null )
+			{
+				if ( child is Sandbox.UI.Button tabButton && tabButton.Parent?.Parent is TabContainer tabContainer )
+				{
+					if ( tabButton.Box.Rect.IsInside( pos ) )
+					{
+						//find the <tab> node (not the button's node) that the button belongs to
+
+						Log.Info( tabContainer );
+
+						// find tab entry in the tab container
+						var tabentry = tabContainer.Tabs.FirstOrDefault( x => x.Button == tabButton );
+
+						var page = tabentry.Page;
+						Log.Info( page );
+
+						// select, else click if already selected
+						if ( page == SelectedPanel )
+						{
+							// Click event
+							tabButton.Click();
+							e.Accepted = true;
+						}
+						else
+						{
+							// Select the owner <tab> node
+							Select( page );
+							e.Accepted = true;
+						}
+
+						return;
+					}
+				}
+				else if ( child is Panel panel )
+				{
+					TryInteractAtPosition( panel, e );
+				}
+			}
 		}
 	}
 
