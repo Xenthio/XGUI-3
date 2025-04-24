@@ -130,29 +130,40 @@ public partial class XGUIView : SceneRenderingWidget
 	protected override void OnMousePress( MouseEvent e )
 	{
 		base.OnMousePress( e );
+		if ( e.Accepted )
+			return;
 		isMouseDown = true;
 
 		ResizeMousePress( e );
+
+		if ( e.Accepted )
+			return;
 		if ( e.Button != MouseButtons.Left )
 			return;
 
-		// Find the topmost panel under the mouse (excluding WindowContent itself)
-		Panel hovered = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true );
-		if ( hovered != null )
+		// Check if we're in nested selection mode (multiple clicks at the same position)
+		CheckNestedSelectionMode( e.LocalPosition );
+
+		// Find the panel under the mouse (excluding WindowContent itself)
+		Panel hovered = FindPanelAtPosition( Window, e.LocalPosition, skipSelf: true, selectNested: _isNestedSelectionMode ) as Panel;
+
+		if ( hovered == WindowContent )
 		{
-			SelectedPanel = hovered;
-			OnElementSelected?.Invoke( hovered );
+			hovered = Window;
 		}
+
+		SelectedPanel = hovered;
+		OnElementSelected?.Invoke( hovered );
 	}
 
 	protected override void OnMouseMove( MouseEvent e )
 	{
 		base.OnMouseMove( e );
 
-
 		if ( isMouseDown && !_isDraggingHandle && !isDragging )
 		{
-			Panel hovered = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true );
+			var result = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true );
+			Panel hovered = result as Panel;
 			if ( hovered != null )
 			{
 				// Start dragging
@@ -171,7 +182,7 @@ public partial class XGUIView : SceneRenderingWidget
 		if ( isDragging && DraggingPanel != null )
 		{
 			// 1. Check for reparenting (hovering over a panel and within margin)
-			Panel dropTarget = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true, skip: DraggingPanel );
+			Panel dropTarget = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true, skip: DraggingPanel ) as Panel;
 			if ( dropTarget != null && dropTarget != DraggingPanel.Parent && dropTarget != DraggingPanel )
 			{
 				var rect = dropTarget.Box.Rect;
@@ -198,11 +209,11 @@ public partial class XGUIView : SceneRenderingWidget
 				{
 					// Get the panel's alignment settings
 					var alignment = GetPanelAlignment( DraggingPanel );
-					Log.Info( $"Alignment Left: {alignment.Left}" );
-					Log.Info( $"Alignment Top: {alignment.Top}" );
-					Log.Info( $"Alignment Right: {alignment.Right}" );
-					Log.Info( $"Alignment Bottom: {alignment.Bottom}" );
-					Log.Info( $"New Position: {newPosition}" );
+					//Log.Info( $"Alignment Left: {alignment.Left}" );
+					//Log.Info( $"Alignment Top: {alignment.Top}" );
+					//Log.Info( $"Alignment Right: {alignment.Right}" );
+					//Log.Info( $"Alignment Bottom: {alignment.Bottom}" );
+					//Log.Info( $"New Position: {newPosition}" );
 
 					// Clear any existing positioning styles first
 					if ( alignment.Left )
@@ -345,14 +356,6 @@ public partial class XGUIView : SceneRenderingWidget
 		}
 	}
 
-
-
-	// // Restore DraggingPanel after UI rebuild
-	// DraggingPanel = OwnerDesigner.LookupPanelByNode(draggedNode);
-	// if (DraggingPanel == null)
-	// {
-	// 	Log.Warning("DraggingPanel is null after UI rebuild!");
-	// }
 	protected override void OnMouseReleased( MouseEvent e )
 	{
 		base.OnMouseReleased( e );
@@ -365,7 +368,8 @@ public partial class XGUIView : SceneRenderingWidget
 		if ( isDragging && DraggingPanel != null )
 		{
 			// 1. Check for reparenting (hovering over a panel and within margin)
-			Panel dropTarget = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true, skip: DraggingPanel );
+			var result = FindPanelAtPosition( WindowContent, e.LocalPosition, skipSelf: true, skip: DraggingPanel );
+			Panel dropTarget = result as Panel;
 			if ( dropTarget != null && dropTarget != DraggingPanel.Parent && dropTarget != DraggingPanel )
 			{
 				var rect = dropTarget.Box.Rect;
@@ -403,17 +407,92 @@ public partial class XGUIView : SceneRenderingWidget
 		}
 	}
 
-	// Utility: Recursively find the topmost panel at a position
-	private Panel FindPanelAtPosition( Panel root, Vector2 pos, bool skipSelf = false, Panel skip = null )
+	// Utility: Recursively find the hovering panel at a position
+	private object FindPanelAtPosition( Panel root, Vector2 pos, bool skipSelf = false, Panel skip = null, bool selectNested = false )
 	{
 		if ( root == null || root == skip ) return null;
-		if ( !skipSelf && root.Box.Rect.IsInside( pos ) ) return root;
+
+		// Store all panels at this position that have corresponding markup nodes
+		List<Panel> panelsAtPosition = selectNested ? new List<Panel>() : null;
+		bool foundAny = false;
+
+		// First check all children (reverse order to prioritize elements on top)
 		foreach ( var child in root.Children.OfType<Panel>().Reverse() )
 		{
-			var found = FindPanelAtPosition( child, pos, skipSelf: false, skip: skip );
-			if ( found != null ) return found;
+			var found = FindPanelAtPosition( child, pos, skipSelf: false, skip: skip, selectNested: selectNested );
+
+			if ( found != null )
+			{
+				foundAny = true;
+
+				if ( selectNested )
+				{
+					if ( found is List<Panel> foundList )
+					{
+						panelsAtPosition.AddRange( foundList );
+					}
+					else if ( found is Panel foundPanel )
+					{
+						panelsAtPosition.Add( foundPanel );
+					}
+				}
+				else
+				{
+					return found; // Return the first (deepest) child found
+				}
+			}
 		}
+
+		// Then check if this panel contains the position AND has a corresponding markup node
+		if ( !skipSelf && root.Box.Rect.IsInside( pos ) )
+		{
+			// Only consider panels that have a corresponding markup node
+			bool hasMarkupNode = OwnerDesigner != null && OwnerDesigner.LookupNodeByPanel( root ) != null;
+
+			if ( hasMarkupNode )
+			{
+				if ( selectNested )
+				{
+					panelsAtPosition.Add( root );
+				}
+				else if ( !foundAny )
+				{
+					return root; // Return this panel if no children were found
+				}
+			}
+		}
+
+		// Return the list for nested selection mode, or null for normal mode
+		if ( selectNested && panelsAtPosition.Count > 0 )
+		{
+			return panelsAtPosition;
+		}
+
 		return null;
+	}
+
+	// Keep track of which nested panel we're selecting at a specific position
+	private Dictionary<Vector2, int> _panelSelectionIndices = new Dictionary<Vector2, int>();
+
+	// Helper to handle multiple clicks at the same position
+	private Vector2 _lastClickPosition;
+	private bool _isNestedSelectionMode = false;
+
+	// Add this to your OnMousePress method before calling FindPanelAtPosition
+	private void CheckNestedSelectionMode( Vector2 position )
+	{
+		// If clicking at the same spot, enable nested selection mode
+		if ( Vector2.Distance( _lastClickPosition, position ) < 1.0f )
+		{
+			_isNestedSelectionMode = true;
+		}
+		else
+		{
+			_isNestedSelectionMode = false;
+			_panelSelectionIndices.Clear();
+		}
+
+		_lastClickPosition = position;
 	}
 
 	private PanelAlignment GetPanelAlignment( Panel panel )
