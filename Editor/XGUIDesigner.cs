@@ -793,10 +793,6 @@ namespace XGUI.XGUIEditor
 				{
 					Type = NodeType.Element,
 					TagName = "div",
-					Attributes = new Dictionary<string, string>
-					{
-						{ "style", "width:100%; height:200px; padding:10px;" }
-					},
 					Children = new List<MarkupNode>
 					{
 						new MarkupNode
@@ -825,10 +821,6 @@ namespace XGUI.XGUIEditor
 				{
 					Type = NodeType.Element,
 					TagName = "div",
-					Attributes = new Dictionary<string, string>
-					{
-						{ "style", "width:100%; height:200px; padding:10px;" }
-					},
 					Children = new List<MarkupNode>
 					{
 						new MarkupNode
@@ -886,6 +878,14 @@ namespace XGUI.XGUIEditor
 		/// </summary>
 		private void UpdateHierarchyPanelInternal()
 		{
+			// save currently expanded nodes
+			/*var expandedNodes = new List<TreeNode>();
+			if ( HierarchyTree != null )
+			{
+				foreach ( var node in HierarchyTree.
+			}*/
+			// can't figure out how to get the expanded nodes :(  
+
 			// Find existing TreeView or create a new one 
 			if ( HierarchyTree == null )
 			{
@@ -908,7 +908,6 @@ namespace XGUI.XGUIEditor
 			{
 				BuildTreeForMarkupNodeRecursive( rootNode, null, HierarchyTree ); // Pass treeview for root items
 			}
-			// Don't expand all by default? User can expand.
 		}
 
 

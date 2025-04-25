@@ -481,6 +481,30 @@ namespace XGUI.XGUIEditor
 					};
 					_generalEditors["max"] = maxEditor;
 					break;
+				case "tab":
+					string tabTitleAttr = node.Attributes.GetValueOrDefault( "tabtext", "" );
+					var tabTitleEditor = contentGroup.AddEditor<TextPropertyEditor>( "tabtext", "Title" );
+					tabTitleEditor.SetValueSilently( tabTitleAttr );
+					tabTitleEditor.ValueChanged += ( value ) =>
+					{
+						string strValue = value.ToString();
+						node.Attributes["tabtext"] = strValue;
+						// find owner TabContainer and update its tab text
+						if ( panel.Parent.Parent is Sandbox.UI.TabContainer tc )
+						{
+							Log.Info( $"Found TabContainer: {tc}" );
+							var tab = tc.Tabs.FirstOrDefault( t => t.Page == panel );
+							if ( tab != null )
+							{
+								tab.TabName = strValue;
+								tab.Button.Text = strValue;
+							}
+						}
+
+						OnPropertyChanged?.Invoke( node, "tabtext", strValue );
+					};
+					_generalEditors["tabtext"] = tabTitleEditor;
+					break;
 			}
 		}
 
