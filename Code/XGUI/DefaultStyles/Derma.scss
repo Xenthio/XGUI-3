@@ -183,11 +183,44 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 }
 
 .Button {
-	border-radius:2px;
+	height: 22px;
+	border-radius: 2px;
 	color: #515151;
+	border-image: url("XGUI/Resources/gmod/button.png");
+	background: url("XGUI/Resources/gmod/button_bg.png");
+	background-size: contain;
+	background-repeat:repeat-x;
+	border-image-width-top: 2px;
+	border-image-width-left: 2px;
+	border-image-width-right: 2px;
+	border-image-width-bottom: 2px;
+	border-width: 2px; 
 }
 
 .TextEntry,
 .TextBox {
 	color: black;
+	border-image: url("XGUI/Resources/gmod/textentry.png");
+	border-image-width-top: 5px;
+	border-image-width-left: 5px;
+	border-image-width-right: 5px;
+	border-image-width-bottom: 5px;
+	border-width: 5px;
+	height: 20px;
+}
+
+
+.Selector,
+.ComboBox {
+	color: black;
+	border-image: url("XGUI/Resources/gmod/combobox.png");
+	background: url("XGUI/Resources/gmod/combobox_bg.png");
+	background-size: contain;
+	background-repeat: repeat-y;
+	border-image-width-top: 2px;
+	border-image-width-left: 2px;
+	border-image-width-right: 2px;
+	border-image-width-bottom: 2px;
+	border-width: 2px;
+	height: 20px;
 }
