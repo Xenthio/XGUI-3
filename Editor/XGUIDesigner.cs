@@ -599,6 +599,8 @@ namespace XGUI.XGUIEditor
 			string oldCode = _codeTextEditor?.PlainText ?? _fullRazorContentCache;
 			ExtractRazorCodeSections( oldCode, out var codeDirectives, out var codeBody );
 
+			UpdateStyleSheetAttribute( ref codeDirectives );
+
 			// 2. Serialize the <root> content
 			var rootMarkup = SimpleMarkupParser.Serialize( _rootMarkupNodes );
 
@@ -624,7 +626,7 @@ namespace XGUI.XGUIEditor
 				}
 			}
 
-			// 5. Rebuild the final Razor source with the directives and the code body
+			// 5. Rebuild the final Razor source
 			string newCode = $@"{codeDirectives}
 
 <root{rootAttrs}>
@@ -636,6 +638,29 @@ namespace XGUI.XGUIEditor
 }}";
 
 			SetCodeEditorText( newCode );
+		}
+
+		private void UpdateStyleSheetAttribute( ref string codeDirectives )
+		{
+			// Matches any existing @attribute [StyleSheet("...")]
+			var styleSheetRegex = new Regex(
+				@"^@attribute\s*\[\s*StyleSheet\s*\(\s*""[^""]*""\s*\)\s*\]\s*$",
+				RegexOptions.IgnoreCase | RegexOptions.Multiline
+			);
+
+			// The updated line we always want
+			string styleSheetLine = $@"@attribute [StyleSheet(""{CurrentTheme}"")]";
+
+			if ( styleSheetRegex.IsMatch( codeDirectives ) )
+			{
+				// Replace existing line if present
+				codeDirectives = styleSheetRegex.Replace( codeDirectives, styleSheetLine );
+			}
+			else
+			{
+				// Insert the line at the top of the directives
+				// codeDirectives = styleSheetLine + Environment.NewLine + codeDirectives;
+			}
 		}
 
 		/// <summary>
