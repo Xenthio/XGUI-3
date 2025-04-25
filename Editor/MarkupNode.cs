@@ -15,9 +15,42 @@ namespace XGUI.XGUIEditor
 
 		public MarkupNode Parent;
 
-		public override string ToString() => Type == NodeType.Element
-			? $"<{TagName}>"
-			: TextContent;
+		public override string ToString()
+		{
+			if ( Parent == null )
+				return "Window Content";
+
+			if ( Type == NodeType.Element )
+			{
+				return $"<{TagName}>";
+			}
+			else if ( Type == NodeType.Text )
+			{
+				return TextContent;
+			}
+			else if ( Type == NodeType.RazorBlock )
+			{
+				var codeType = "Code Block";
+				if ( TextContent.StartsWith( "@{" ) )
+					codeType = "Razor Block";
+				else if ( TextContent.StartsWith( "@if" ) )
+					codeType = "If Statement";
+				else if ( TextContent.StartsWith( "@foreach" ) )
+					codeType = "For Each Loop";
+				else if ( TextContent.StartsWith( "@for" ) )
+					codeType = "For Loop";
+				else if ( TextContent.StartsWith( "@while" ) )
+					codeType = "While Loop";
+				else if ( TextContent.StartsWith( "@switch" ) )
+					codeType = "Switch Statement";
+				else if ( TextContent.StartsWith( "@case" ) )
+					codeType = "Case Statement";
+				else if ( TextContent.StartsWith( "@default" ) )
+					codeType = "Default Statement";
+				return $"({codeType}) {TextContent}";
+			}
+			return base.ToString();
+		}
 
 		public void TryModifyStyle( string name, string value )
 		{

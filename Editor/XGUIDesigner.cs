@@ -24,7 +24,7 @@ namespace XGUI.XGUIEditor
 		// UI Elements
 		public XGUIOverlayWidget OverlayWidget; // do overlays here.
 		private XGUIView _view;
-		private Widget _heirarchy;
+		private XGUIHierarchyWidget _hierarchy;
 		private PanelInspector _inspector;
 		private Widget _componentPalette;
 		private Widget _codeView;
@@ -51,6 +51,8 @@ namespace XGUI.XGUIEditor
 		// Regex for extracting <root>...</root>
 		private static readonly Regex _rootContentRegex = new( @"(<root[^>]*>)([\s\S]*?)(</root>)", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline );
 
+		public Window Window => _view?.Window;
+
 		public XGUIDesigner()
 		{
 			DeleteOnClose = true;
@@ -73,7 +75,7 @@ namespace XGUI.XGUIEditor
 			CreateCodeViewInternal(); // Creates _codeTextEditor
 
 			// --- Panels ---
-			_heirarchy = new Widget( null ) { Layout = Layout.Column() };
+			_hierarchy = new XGUIHierarchyWidget( this, this );
 			_inspector = new PanelInspector() { OnPropertyChanged = OnInspectorPropertyChanged, OwnerDesigner = this }; // Hook up delegate
 			_componentPalette = new Widget( null ) { Layout = Layout.Column() };
 			CreateComponentPaletteInternal();
@@ -88,9 +90,9 @@ namespace XGUI.XGUIEditor
 			OverlayWidget = new XGUIOverlayWidget( _view.Parent );
 			OverlayWidget.ConnectToView( _view );
 
-			_heirarchy.WindowTitle = "Hierarchy";
-			_heirarchy.SetWindowIcon( "view_list" );
-			DockManager.AddDock( null, _heirarchy, dockArea: DockArea.Left, split: 0.10f );
+			_hierarchy.WindowTitle = "Hierarchy";
+			_hierarchy.SetWindowIcon( "view_list" );
+			DockManager.AddDock( null, _hierarchy, dockArea: DockArea.Left, split: 0.10f );
 
 			_inspector.WindowTitle = "Inspector";
 			_inspector.SetWindowIcon( "info" );
@@ -886,28 +888,30 @@ namespace XGUI.XGUIEditor
 			}*/
 			// can't figure out how to get the expanded nodes :(  
 
+			_hierarchy.UpdateHierarchy( _rootMarkupNodes );
+
 			// Find existing TreeView or create a new one 
-			if ( HierarchyTree == null )
-			{
-				// Clear any old non-TreeView widgets if necessary before adding
-				// _heirarchy.Layout.Clear(true); // Use if layout needs full reset
-				HierarchyTree = new TreeView( _heirarchy );
-				_heirarchy.Layout.Add( HierarchyTree );
-			}
-			else
-			{
-				HierarchyTree.Clear(); // Clear existing items efficiently
-			}
+			/*			if ( HierarchyTree == null )
+						{
+							// Clear any old non-TreeView widgets if necessary before adding
+							// _heirarchy.Layout.Clear(true); // Use if layout needs full reset
+							HierarchyTree = new TreeView( _heirarchy );
+							_heirarchy.Layout.Add( HierarchyTree );
+						}
+						else
+						{
+							HierarchyTree.Clear(); // Clear existing items efficiently
+						}
 
-			HierarchyTree.MultiSelect = false;
-			HierarchyTree.ExpandForSelection = true;
-			HierarchyTree.ItemSelected = OnHierarchyNodeSelected; // Use specific handler
+						HierarchyTree.MultiSelect = false;
+						HierarchyTree.ExpandForSelection = true;
+						HierarchyTree.ItemSelected = OnHierarchyNodeSelected; // Use specific handler
 
-			// Build tree from the root MarkupNodes
-			foreach ( var rootNode in _rootMarkupNodes )
-			{
-				BuildTreeForMarkupNodeRecursive( rootNode, null, HierarchyTree ); // Pass treeview for root items
-			}
+						// Build tree from the root MarkupNodes
+						foreach ( var rootNode in _rootMarkupNodes )
+						{
+							BuildTreeForMarkupNodeRecursive( rootNode, null, HierarchyTree ); // Pass treeview for root items
+						}*/
 		}
 
 
@@ -1112,13 +1116,31 @@ namespace XGUI.XGUIEditor
 		/// <summary>
 		/// Central method to update inspector and potentially highlight selection.
 		/// </summary>
-		private void SelectAndInspect( MarkupNode node, Panel panel )
+		public void SelectAndInspect( MarkupNode node, Panel panel )
 		{
 			_inspector.SetTarget( panel, node );
-			_view.SelectedPanel = panel; // Update selected panel in the view
-										 // TODO: Add visual highlighting in TreeView and DesignView if needed
-										 // FindTreeNodeAndSelect(node);
-										 // _view?.HighlightPanel(panel);
+			_view.SelectedPanel = panel;
+
+			// if node is code or textcontent node, find the text and jump to it in the code editor
+			if ( node != null && (node.Type == NodeType.RazorBlock || node.Type == NodeType.Text) )
+			{
+				// Find the text start of the node's text content in the code editor
+				var text = node.TextContent;
+				var source = _codeTextEditor?.PlainText;
+				// lookup the text in the code editor
+				if ( source != null )
+				{
+					int index = source.IndexOf( text, StringComparison.OrdinalIgnoreCase );
+					if ( index >= 0 )
+					{
+						var cursor = _codeTextEditor?.GetTextCursor();
+						cursor.Position = index;
+						_codeTextEditor.SetTextCursor( cursor );
+						_codeTextEditor.Focus();
+					}
+				}
+
+			}
 		}
 
 
@@ -1127,7 +1149,7 @@ namespace XGUI.XGUIEditor
 		/// A fake node for the window root, used for inspector, you probably want to use window-content instead.
 		/// </summary>
 		/// <returns></returns>
-		private MarkupNode GetOrCreateWindowNode()
+		internal MarkupNode GetOrCreateWindowNode()
 		{
 			// create a new node for the window root, used for inspector.
 			if ( _windowNode == null )
