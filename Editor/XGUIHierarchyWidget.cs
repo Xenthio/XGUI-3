@@ -1,4 +1,5 @@
 ﻿using Editor;
+using Sandbox;
 using Sandbox.UI;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ class XGUIHierarchyWidget : Widget
 		if ( node.Attributes.TryGetValue( "id", out var id ) && !string.IsNullOrWhiteSpace( id ) ) displayName += $" #{id}";
 
 		// Create a tree node for this markup node
-		var treeNode = new TreeNode( node ) { Name = displayName, /*ToolTip = $"Pos: {node.SourceStart}-{node.SourceEnd}",*/ Value = node };
+		var treeNode = new MarkupTreeNode() { Name = displayName, /*ToolTip = $"Pos: {node.SourceStart}-{node.SourceEnd}",*/ Value = node };
 
 		// If there's a parent node, add as child; otherwise add to the root
 		if ( parentTreeNode != null )
@@ -108,5 +109,110 @@ class XGUIHierarchyWidget : Widget
 		{
 			OwnerDesigner.SelectAndInspect( null, null ); // Clear selection if text node or something else selected
 		}
+	}
+}
+
+// we can use custom draw
+class MarkupTreeNode : TreeNode<MarkupNode>
+{
+	public override void OnPaint( VirtualWidget item )
+	{
+		PaintSelection( item );
+
+
+		var hoveredInGame = false;//Value.PseudoClass.HasFlag( Sandbox.UI.PseudoClass.Hover );
+		var a = 1.0f;//Value.IsVisible ? 1.0f : 0.5f;
+		var r = item.Rect;
+
+		void Write( Color color, string text, ref Rect r )
+		{
+			Paint.SetPen( color.WithAlphaMultiplied( a ) );
+			var size = Paint.DrawText( r, text, TextFlag.LeftCenter );
+			r.Left += size.Width;
+		}
+
+		{
+			//	Paint.SetPen( Theme.Yellow.WithAlpha( alpha ) );
+			//	Paint.DrawIcon( r, info.Icon ?? "window", 18, TextFlag.LeftCenter );
+			//r.Left += Theme.RowHeight;
+		}
+
+		var brackets = Theme.Yellow.WithAlpha( 0.7f );
+		var element = Theme.White.WithAlpha( 0.9f );
+		var keyword = Theme.White.WithAlpha( 0.7f );
+		var code = Theme.Pink.WithAlpha( 0.7f );
+
+		if ( hoveredInGame )
+		{
+			element = Theme.Green.WithAlpha( 0.9f );
+			keyword = Theme.Green.WithAlpha( 0.6f );
+		}
+
+		Paint.SetDefaultFont();
+
+		if ( Value.Parent == null )
+		{
+			Paint.SetDefaultFont( 8, 500 );
+			Write( element, "Window Content", ref r );
+			Paint.SetDefaultFont();
+		}
+		else if ( Value.Type == NodeType.Element )
+		{
+			{
+				Write( brackets, $"<", ref r );
+				Paint.SetDefaultFont( 8, 500 );
+				Write( element, $"{Value.TagName}", ref r );
+				Paint.SetDefaultFont();
+			}
+
+			if ( Value.Attributes.ContainsKey( "id" ) )
+			{
+				Write( keyword, $" id=\"", ref r );
+				Paint.SetDefaultFont( 8, 500 );
+				Write( Theme.Blue, Value?.Attributes["id"], ref r );
+				Paint.SetDefaultFont();
+				Write( keyword, $"\"", ref r );
+			}
+
+			if ( Value.Attributes.ContainsKey( "class" ) )
+			{
+				Write( keyword, $" class=\"", ref r );
+				Write( Theme.Blue, Value?.Attributes["class"], ref r );
+				Write( keyword, $"\"", ref r );
+			}
+
+			foreach ( var attribute in Value.Attributes )
+			{
+				if ( attribute.Key == "id" || attribute.Key == "class" )
+					continue;
+				Write( keyword, $" {attribute.Key}=\"", ref r );
+				Write( Theme.Blue, attribute.Value, ref r );
+				Write( keyword, $"\"", ref r );
+			}
+
+			Write( brackets, $">", ref r );
+		}
+		else if ( Value.Type == NodeType.Text )
+		{
+			Write( brackets, $"\"{Value.TextContent}\"", ref r );
+		}
+		else if ( Value.Type == NodeType.RazorBlock )
+		{
+			// only show the first 32 characters of the Razor block
+			var trimmedCode = Value.TextContent.Trim();
+			Paint.SetDefaultFont( 8, 500 );
+			Write( keyword, "Code Block ", ref r );
+			Paint.SetDefaultFont();
+			if ( trimmedCode.Length > 64 )
+				trimmedCode = trimmedCode.Substring( 0, 64 ) + "...";
+			Write( code, $"{trimmedCode}", ref r );
+		}
+		else
+		{
+			Write( element, Value.ToString(), ref r );
+		}
+
+
+
 	}
 }
