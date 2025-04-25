@@ -505,8 +505,10 @@ public partial class XGUIView : SceneRenderingWidget
 		{
 			// Only consider panels that have a corresponding markup node
 			bool hasMarkupNode = OwnerDesigner != null && OwnerDesigner.LookupNodeByPanel( root ) != null;
+			// Is visible (example, if the panel is a child of a tab that isnt selected)
+			bool isVisible = root.IsVisible;
 
-			if ( hasMarkupNode )
+			if ( hasMarkupNode && isVisible )
 			{
 				if ( selectNested )
 				{

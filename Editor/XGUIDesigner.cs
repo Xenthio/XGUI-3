@@ -272,6 +272,8 @@ namespace XGUI.XGUIEditor
 			if ( _view?.Window != null )
 			{
 				_view.Window.SetTheme( CurrentTheme );
+				_view.Window.Style.Width = Length.Auto;
+				_view.Window.Style.Height = Length.Auto;
 			}
 
 			// Get or create the window node - reuse existing one if available
@@ -593,22 +595,25 @@ namespace XGUI.XGUIEditor
 		}
 		private void UpdateCodeFromTree()
 		{
-			// Serialize the tree back to markup and update the code editor
+			// 1. Extract existing code sections from the old code
+			string oldCode = _codeTextEditor?.PlainText ?? _fullRazorContentCache;
+			ExtractRazorCodeSections( oldCode, out var codeDirectives, out var codeBody );
+
+			// 2. Serialize the <root> content
 			var rootMarkup = SimpleMarkupParser.Serialize( _rootMarkupNodes );
 
-			// Add an extra level of indentation to each line
+			// 3. Indent the <root> markup
 			var indentedMarkup = new StringBuilder();
 			using ( var reader = new StringReader( rootMarkup ) )
 			{
 				string line;
 				while ( (line = reader.ReadLine()) != null )
 				{
-					// Add an extra tab at the beginning of each line
 					indentedMarkup.AppendLine( "\t" + line );
 				}
 			}
 
-			// window root attributes from GetOrCreateWindowNode 
+			// 4. Collect the <root> tag attributes from our window node
 			var rootWindowNode = GetOrCreateWindowNode();
 			string rootAttrs = "";
 			if ( rootWindowNode != null && rootWindowNode.Attributes.Count > 0 )
@@ -619,21 +624,85 @@ namespace XGUI.XGUIEditor
 				}
 			}
 
-			// Re-wrap in <root>...</root> and preserve directives/code blocks as needed
-			string newCode = $@"@using Sandbox;
-@using Sandbox.UI;
-@using XGUI;
-@attribute [StyleSheet( ""{CurrentTheme}"" )]
-@inherits Window
+			// 5. Rebuild the final Razor source with the directives and the code body
+			string newCode = $@"{codeDirectives}
 
 <root{rootAttrs}>
 {indentedMarkup}
 </root>
 
 @code {{
-    // Add your code here
+	{codeBody}
 }}";
+
 			SetCodeEditorText( newCode );
+		}
+
+		/// <summary>
+		/// Pulls out any top-level directives (like @using, @inherits, etc.) and the code in @code { } blocks.
+		/// </summary>
+		private void ExtractRazorCodeSections( string source, out string codeDirectives, out string codeBody )
+		{
+			codeDirectives = "";
+			codeBody = "";
+
+			if ( string.IsNullOrWhiteSpace( source ) ) return;
+
+			// 1. Grab everything before <root> or @code (whichever comes first)
+			//    (You might refine these expressions for more robust parsing)
+			var rootIndex = source.IndexOf( "<root", StringComparison.OrdinalIgnoreCase );
+			var codeIndex = source.IndexOf( "@code", StringComparison.OrdinalIgnoreCase );
+
+			int endOfDirectives = -1;
+			if ( (rootIndex == -1 && codeIndex == -1) || (rootIndex == -1 && codeIndex >= 0) )
+			{
+				endOfDirectives = codeIndex; // no <root> found, just use @code as boundary
+			}
+			else if ( (rootIndex >= 0 && codeIndex == -1) || (rootIndex >= 0 && rootIndex < codeIndex) )
+			{
+				endOfDirectives = rootIndex; // <root> comes before @code
+			}
+			else if ( codeIndex >= 0 && codeIndex < rootIndex )
+			{
+				endOfDirectives = codeIndex; // @code comes before <root>
+			}
+
+			if ( endOfDirectives > 0 )
+			{
+				codeDirectives = source[..endOfDirectives].Trim();
+			}
+			else
+			{
+				// If there's no <root> or @code, treat the entire source as directives
+				codeDirectives = source.Trim();
+				return;
+			}
+
+			// 2. Grab the code body from @code { ... }. This is a quick pass using simple bracket counting.
+			var startCodeBlock = source.IndexOf( "@code", StringComparison.OrdinalIgnoreCase );
+			if ( startCodeBlock < 0 ) return;
+
+			// Move index to the first '{'
+			var openBraceIndex = source.IndexOf( '{', startCodeBlock );
+			if ( openBraceIndex < 0 ) return;
+
+			int braceCount = 1;
+			int i = openBraceIndex + 1;
+			for ( ; i < source.Length; i++ )
+			{
+				if ( source[i] == '{' ) braceCount++;
+				else if ( source[i] == '}' ) braceCount--;
+
+				if ( braceCount == 0 ) break;
+			}
+			if ( i <= openBraceIndex ) return; // malformed
+
+			// Everything between the braces is code body
+			int length = i - (openBraceIndex + 1);
+			if ( length > 0 )
+			{
+				codeBody = source.Substring( openBraceIndex + 1, length ).Trim();
+			}
 		}
 
 		// Helper for Palette
@@ -768,6 +837,10 @@ namespace XGUI.XGUIEditor
 				if ( tagName == "button" )
 				{
 					newNode.Children.Add( new MarkupNode { Type = NodeType.Text, TextContent = "Button" } );
+				}
+				if ( tagName == "label" )
+				{
+					newNode.Children.Add( new MarkupNode { Type = NodeType.Text, TextContent = "Label" } );
 				}
 
 				// Add to window-content node
@@ -1468,5 +1541,89 @@ namespace XGUI.XGUIEditor
 			_codeTextEditor.SelectAll();
 		}
 
+		private static void SerializeNode( MarkupNode node, StringBuilder sb, int indentLevel )
+		{
+			// The current indentation string
+			string indent = new string( '\t', indentLevel );
+
+			if ( node.Type == NodeType.Text )
+			{
+				// Instead of trimming everything to one line, we split on existing newline boundaries
+				// and indent each line.
+				if ( !string.IsNullOrWhiteSpace( node.TextContent ) )
+				{
+					var lines = node.TextContent
+						.Replace( "\r", "" ) // unify line endings
+						.Split( '\n', StringSplitOptions.None );
+
+					foreach ( var line in lines )
+					{
+						// If it's not empty, indent it
+						if ( !string.IsNullOrWhiteSpace( line ) )
+						{
+							sb.Append( indent ).AppendLine( line.TrimEnd() );
+						}
+						else
+						{
+							// Still preserve blank lines
+							sb.AppendLine();
+						}
+					}
+				}
+			}
+			else if ( node.Type == NodeType.Element )
+			{
+				// Element opening tag
+				sb.Append( indent ).Append( '<' ).Append( node.TagName );
+
+				// Add element attributes
+				foreach ( var attr in node.Attributes )
+				{
+					sb.Append( ' ' ).Append( attr.Key );
+					if ( !string.IsNullOrEmpty( attr.Value ) )
+					{
+						// Replace any quotes with &quot; to avoid invalid markup
+						string safeValue = attr.Value.Replace( "\"", "&quot;" );
+						sb.Append( "=\"" ).Append( safeValue ).Append( '"' );
+					}
+				}
+
+				if ( node.Children.Count == 0 )
+				{
+					// Self-closing tag
+					sb.AppendLine( " />" );
+				}
+				else
+				{
+					sb.AppendLine( ">" );
+					// Recurse into children, increasing indent
+					foreach ( var child in node.Children )
+					{
+						SerializeNode( child, sb, indentLevel + 1 );
+					}
+					// Closing tag
+					sb.Append( indent ).Append( "</" ).Append( node.TagName ).AppendLine( ">" );
+				}
+			}
+			else if ( node.Type == NodeType.RazorBlock )
+			{
+				// A block of Razor code is inserted as-is, often with newlines intact
+				var lines = node.TextContent
+					.Replace( "\r", "" )
+					.Split( '\n', StringSplitOptions.None );
+
+				foreach ( var line in lines )
+				{
+					if ( !string.IsNullOrWhiteSpace( line ) )
+					{
+						sb.Append( indent ).AppendLine( line.TrimEnd() );
+					}
+					else
+					{
+						sb.AppendLine();
+					}
+				}
+			}
+		}
 	}
 }

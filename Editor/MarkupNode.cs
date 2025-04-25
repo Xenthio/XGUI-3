@@ -2,21 +2,22 @@
 
 namespace XGUI.XGUIEditor
 {
-	public enum NodeType { Element, Text }
+	public enum NodeType { Element, Text, RazorBlock }
 
-
-	// TODO: store razor statements and code blocks
+	// Now stores Razor statements and code blocks in a RazorBlock node
 	public class MarkupNode
 	{
 		public NodeType Type;
 		public string TagName; // For elements
-		public string TextContent; // For text nodes
+		public string TextContent; // For text nodes, or for RazorBlock content
 		public Dictionary<string, string> Attributes = new();
 		public List<MarkupNode> Children = new();
 
 		public MarkupNode Parent;
 
-		public override string ToString() => Type == NodeType.Element ? $"<{TagName}>" : TextContent;
+		public override string ToString() => Type == NodeType.Element
+			? $"<{TagName}>"
+			: TextContent;
 
 		public void TryModifyStyle( string name, string value )
 		{

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace XGUI.XGUIEditor
 {
-	// TODO: store razor statements and code blocks
+	// Now parses Razor statements and code blocks into RazorBlock nodes
 	public static class SimpleMarkupParser
 	{
 		// Entry point: parses markup string into a tree of MarkupNode
@@ -22,6 +22,11 @@ namespace XGUI.XGUIEditor
 					var node = ParseElement( input, ref pos );
 					if ( node != null ) nodes.Add( node );
 				}
+				else if ( input[pos] == '@' )
+				{
+					var razorNode = ParseRazorBlock( input, ref pos );
+					if ( razorNode != null ) nodes.Add( razorNode );
+				}
 				else
 				{
 					var text = ParseText( input, ref pos );
@@ -35,12 +40,11 @@ namespace XGUI.XGUIEditor
 		private static MarkupNode ParseElement( string input, ref int pos )
 		{
 			// Assumes input[pos] == '<'
-			int start = pos;
 			pos++; // skip '<'
 			SkipWhitespace( input, ref pos );
 
-			// Read tag name
-			var tagName = ReadWhile( input, ref pos, c => char.IsLetterOrDigit( c ) || c == '-' || c == '_' );
+			// read tag names or attribute names
+			var tagName = ReadWhile( input, ref pos, c => char.IsLetterOrDigit( c ) || c == '-' || c == '_' || c == '@' );
 			if ( string.IsNullOrEmpty( tagName ) ) return null;
 
 			var node = new MarkupNode { Type = NodeType.Element, TagName = tagName };
@@ -53,7 +57,7 @@ namespace XGUI.XGUIEditor
 				if ( input[pos] == '/' || input[pos] == '>' ) break;
 
 				// Attribute name
-				var attrName = ReadWhile( input, ref pos, c => char.IsLetterOrDigit( c ) || c == '-' || c == '_' );
+				var attrName = ReadWhile( input, ref pos, c => char.IsLetterOrDigit( c ) || c == '-' || c == '_' || c == '@' );
 				if ( string.IsNullOrEmpty( attrName ) ) break;
 				SkipWhitespace( input, ref pos );
 
@@ -101,6 +105,15 @@ namespace XGUI.XGUIEditor
 							node.Children.Add( child );
 						}
 					}
+					else if ( input[pos] == '@' )
+					{
+						var razorNode = ParseRazorBlock( input, ref pos );
+						if ( razorNode != null )
+						{
+							razorNode.Parent = node;
+							node.Children.Add( razorNode );
+						}
+					}
 					else
 					{
 						var text = ParseText( input, ref pos );
@@ -112,10 +125,49 @@ namespace XGUI.XGUIEditor
 			return node;
 		}
 
+		// New method that captures entire Razor statements or code blocks as a single node
+		private static MarkupNode ParseRazorBlock( string input, ref int pos )
+		{
+			// Assumes input[pos] == '@'
+			int start = pos;
+			pos++; // skip '@'
+
+			var sb = new StringBuilder();
+			sb.Append( '@' );
+
+			// Capture any leading identifier (e.g. "foreach", "if", "code") plus spaces & parentheses 
+			while ( pos < input.Length && input[pos] != '{' && input[pos] != '<' )
+			{
+				sb.Append( input[pos] );
+				pos++;
+			}
+
+			// If we encounter '{', capture until the matching '}' (preserving whitespace/newlines)
+			if ( pos < input.Length && input[pos] == '{' )
+			{
+				sb.Append( '{' );
+				pos++;
+				int braceCount = 1;
+				while ( pos < input.Length && braceCount > 0 )
+				{
+					if ( input[pos] == '{' ) braceCount++;
+					else if ( input[pos] == '}' ) braceCount--;
+					sb.Append( input[pos] );
+					pos++;
+				}
+			}
+
+			return new MarkupNode
+			{
+				Type = NodeType.RazorBlock,
+				TextContent = sb.ToString()
+			};
+		}
+
 		private static string ParseText( string input, ref int pos )
 		{
 			int start = pos;
-			while ( pos < input.Length && input[pos] != '<' )
+			while ( pos < input.Length && input[pos] != '<' && input[pos] != '@' )
 				pos++;
 			var str = input.Substring( start, pos - start );
 			return str.Trim();
@@ -211,7 +263,14 @@ namespace XGUI.XGUIEditor
 					sb.Append( "</" ).Append( node.TagName ).AppendLine( ">" );
 				}
 			}
+			else if ( node.Type == NodeType.RazorBlock )
+			{
+				// Just output the Razor code exactly
+				sb.Append( indent );
+				sb.AppendLine( node.TextContent );
+			}
 		}
+
 		public static Dictionary<string, string> ParseAttributes( string input )
 		{
 			var dict = new Dictionary<string, string>( StringComparer.OrdinalIgnoreCase );
