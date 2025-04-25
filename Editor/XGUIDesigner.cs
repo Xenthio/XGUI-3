@@ -992,7 +992,7 @@ namespace XGUI.XGUIEditor
 			string template = @"@using Sandbox;
 @using Sandbox.UI;
 @using XGUI;
-@inherits Panel
+@inherits Window
 
 <root title=""My New XGUI Window"" width=""320"" height=""240"">
     <div class=""window-content"">
