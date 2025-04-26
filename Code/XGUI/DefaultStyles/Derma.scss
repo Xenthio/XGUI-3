@@ -89,21 +89,21 @@ $border-colour-left-outer-inset: #808080;
 $border-colour-bottom-outer-inset: #FFFFFF;
 $border-colour-right-outer-inset: #FFFFFF;
 
-$slider-track-colour: #E7EAEA;
-$slider-track-border-colour-top: #D6D6D6;
-$slider-track-border-colour-left: #D6D6D6;
-$slider-track-border-colour-bottom: #D6D6D6;
-$slider-track-border-colour-right: #D6D6D6;
+$slider-track-colour: #CDCDCD;
+$slider-track-border-colour-top: #00000000;
+$slider-track-border-colour-left: #00000000;
+$slider-track-border-colour-bottom: #FFFFFF00;
+$slider-track-border-colour-right: #FFFFFF00;
 
-$slider-step-colour: #C4C4C4;
-$slider-step-min-colour: #C4C4C4;
-$slider-step-max-colour: #C4C4C4;
+$slider-step-colour: #CDCDCD;
+$slider-step-min-colour: #CDCDCD;
+$slider-step-max-colour: #CDCDCD;
 
-$slider-thumb-colour: #0078D7;
-$slider-thumb-border-colour-top: #0078D7;
-$slider-thumb-border-colour-left: #0078D7;
-$slider-thumb-border-colour-bottom: #0078D7;
-$slider-thumb-border-colour-right: #0078D7;
+$slider-thumb-colour: #D2D2D2;
+$slider-thumb-border-colour-top: #6C6C6C;
+$slider-thumb-border-colour-left: #6C6C6C;
+$slider-thumb-border-colour-bottom: #6C6C6C;
+$slider-thumb-border-colour-right: #6C6C6C;
 
 $default-text-size: 12px;
 $default-text-font: Tahoma;
@@ -128,7 +128,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	border: 1px solid #434343;
 
 	> .TitleBar {
-		padding: 2px;
+		padding: 4px;
 		border-top-right-radius: 3px;
 		border-top-left-radius: 3px;
 		border: 1px solid #858789;
@@ -143,6 +143,10 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 			> .TitleIcon {
 				width: 0px;
 				height: 0px;
+			}
+
+			> .TitleLabel { 
+				margin-left: 2px; 
 			}
 
 			> .Control {
@@ -187,14 +191,36 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	border-radius: 2px;
 	color: #515151;
 	border-image: url("XGUI/Resources/gmod/button.png");
-	background: url("XGUI/Resources/gmod/button_bg.png");
+	background-image: url("XGUI/Resources/gmod/button_bg.png");
 	background-size: contain;
-	background-repeat:repeat-x;
+	background-repeat: repeat-x;
 	border-image-width-top: 2px;
 	border-image-width-left: 2px;
 	border-image-width-right: 2px;
 	border-image-width-bottom: 2px;
-	border-width: 2px; 
+	border-width: 2px;
+
+	&:hover {
+		background-image: url("XGUI/Resources/gmod/button_hover_bg.png");
+		border-image: url("XGUI/Resources/gmod/button_hover.png");
+		border-image-width-top: 2px;
+		border-image-width-left: 2px;
+		border-image-width-right: 2px;
+		border-image-width-bottom: 2px;
+		border-width: 2px;
+		color: #2E72B2;
+	}
+
+	&:active {
+		background-image: url("XGUI/Resources/gmod/button_active_bg.png");
+		border-image: url("XGUI/Resources/gmod/button_active.png");
+		border-image-width-top: 2px;
+		border-image-width-left: 2px;
+		border-image-width-right: 2px;
+		border-image-width-bottom: 2px;
+		border-width: 2px;
+		color: #FFFFFF;
+	}
 }
 
 .TextEntry,
@@ -214,8 +240,9 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 .ComboBox {
 	color: black;
 	border-image: url("XGUI/Resources/gmod/combobox.png");
-	background: url("XGUI/Resources/gmod/combobox_bg.png");
+	background-image: url("XGUI/Resources/gmod/combobox_bg.png");
 	background-size: contain;
+	background-size-x: cover;
 	background-repeat: repeat-y;
 	border-image-width-top: 2px;
 	border-image-width-left: 2px;
@@ -223,4 +250,165 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 	border-image-width-bottom: 2px;
 	border-width: 2px;
 	height: 20px;
+
+	> .Selector_Indicator {
+		background-color: transparent;
+		border: 0px;
+	}
+
+	&.Open {
+		border-image: url("XGUI/Resources/gmod/combobox.png");
+		background-image: url("XGUI/Resources/gmod/combobox_bg.png");
+		border-image-width-top: 2px;
+		border-image-width-left: 2px;
+		border-image-width-right: 2px;
+		border-image-width-bottom: 2px;
+		border-width: 2px;
+	}
+}
+
+.checkbox {
+	.checkpanel, iconpanel {
+		border: none;
+		background-color: transparent;
+		background-image: url("XGUI/Resources/gmod/checkbox.png");
+		width: 15px;
+		height: 15px;
+		min-width: 15px;
+		min-height: 15px;
+	}
+
+	&.checked {
+
+		> .checkpanel, .iconpanel {
+			background-image: url("XGUI/Resources/gmod/checkbox_checked.png");
+
+			.checklabel {
+				content: "";
+			}
+		}
+	}
+}
+.radiobutton {
+	.checkpanel, iconpanel {
+		border: none;
+		background-color: transparent;
+		background-image: url("XGUI/Resources/gmod/radiobutton.png");
+		width: 15px;
+		height: 15px;
+		min-width: 15px;
+		min-height: 15px;
+
+		> .label {
+			display: none;
+		}
+	}
+
+	&.checked {
+
+		> .checkpanel, .iconpanel {
+			background-image: url("XGUI/Resources/gmod/radiobutton_checked.png");
+
+			.checklabel {
+				content: "";
+			}
+		}
+	}
+}
+
+.TabContainer {
+
+	> .tabs {
+
+		> .button {
+			height: 19px;
+			border-radius: 0px;
+			background-color: transparent;
+			border-image: url("XGUI/Resources/gmod/tab.png");
+			background-image: url("XGUI/Resources/gmod/tab_bg.png");
+			background-size: cover;
+			border-image-width-top: 2px;
+			border-image-width-left: 2px;
+			border-image-width-right: 2px;
+			border-image-width-bottom: 2px;
+			border-width: 2px;
+			padding-bottom: 0px;
+			top: 3px;
+			padding-right: 8px;
+			padding-left: 8px;
+			margin-right: -2px;
+			color: #BEBEBF;
+
+			&.active {
+				background-color: transparent;
+				padding-bottom: 1px;
+				border-image: url("XGUI/Resources/gmod/tab_active.png");
+				background-image: url("XGUI/Resources/gmod/tab_active_bg.png");
+				border-image-width-top: 2px;
+				border-image-width-left: 2px;
+				border-image-width-right: 2px;
+				border-image-width-bottom: 2px;
+				border-width: 2px;
+				padding-right: 8px;
+				padding-left: 8px;
+				height: 22px;
+				top: 2px;
+				margin-left: 0px;
+
+				&:first-child {
+					margin-left: 2px;
+				}
+			}
+		}
+	}
+
+	> .sheets {
+		background-color: transparent;
+		border-image: url("XGUI/Resources/gmod/sheet.png");
+		background-color: #9da1a599;
+		background-image: linear-gradient(#9da1a5ff 0%, #9da1a599 50%, #9da1a5ff 100%);
+		background-size: contain;
+		border-image-width-top: 2px;
+		border-image-width-left: 2px;
+		border-image-width-right: 2px;
+		border-image-width-bottom: 2px;
+		border-width: 2px;
+	} 
+}
+
+
+.slider {
+	> .thumb {
+		background-color: transparent;
+		width: 11px;
+		height: 14px;
+		border: none;
+		background-image: url("XGUI/Resources/gmod/slider_thumb.png");
+
+		&:hover {
+			background-image: url("XGUI/Resources/gmod/slider_thumb_hover.png");
+		}
+
+		&:active {
+			background-image: url("XGUI/Resources/gmod/slider_thumb_active.png");
+		}
+	}
+
+	> .track {
+		height: 1px;
+		border:0px;
+	}
+}
+
+.group-box {
+	border: 1px solid #39393970;
+	background-color: transparent;
+	border-radius: 3px;
+
+	> .label {
+		color: #BEBEBF;
+		font-size: 12px;
+		font-weight: normal;
+		background-color: transparent;
+	}
 }
