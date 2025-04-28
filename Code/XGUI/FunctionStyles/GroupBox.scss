@@ -2,13 +2,13 @@
 	border: 1px solid #808080;
 	background-clip: padding-box;
 	padding: 8px;
-	width: 100%;
+	margin-top: 9px;
 	flex-direction: column;
 
 	.group-box-title {
 		position: absolute;
 		background-color: inherit;
-		top: -10px;
+		top: -9px;
 		left: 10px;
 	}
 }
