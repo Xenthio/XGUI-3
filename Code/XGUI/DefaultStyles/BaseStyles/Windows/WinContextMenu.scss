@@ -5,6 +5,8 @@
 	border-bottom: 1px solid $border-colour-bottom-window;
 	border-right: 1px solid $border-colour-right-window;
 	background-color: $base-colour;
+	padding-top: 1px;
+	padding-bottom: 1px;
 
 	.MenuItem {
 		margin: 1px;
@@ -14,12 +16,18 @@
 
 		.ItemText {
 			margin-right: 32px;
+			top: 1px;
 		}
 
 		.ItemArrow {
 			right: 0px;
-			position:absolute;
+			position: absolute;
 			font-size: 17px;
+		}
+
+		.ItemIcon {
+			margin-left: 6px;
+			margin-right: 6px;
 		}
 
 		&.open {

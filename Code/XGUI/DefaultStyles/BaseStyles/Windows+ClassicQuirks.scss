@@ -2,9 +2,16 @@
 
 
 .button {
-	padding:2px;
-	>.label:not(.iconpanel){ 
-		margin-top:2px;
+	padding: 0px;
+	padding-left: 2px;
+	padding-right: 2px;
+
+	> .label:not(.iconpanel) {
+		margin-top: 2px;
+	}
+
+	> .iconpanel {
+		margin-left: -4px;
 	}
 }
 

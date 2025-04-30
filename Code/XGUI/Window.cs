@@ -50,6 +50,7 @@ public partial class Window : Panel
 		base.OnAfterTreeRender( firstTime );
 		if ( firstTime )
 		{
+			if ( CurrentTheme == "" ) SetTheme( Scene.GetSystem<XGUISystem>().GlobalTheme );
 			// warn if we dont have a child with class window-content
 			if ( !Children.Any( x => x.HasClass( "window-content" ) ) )
 			{
@@ -468,6 +469,7 @@ public partial class Window : Panel
 
 	}
 
+	public string CurrentTheme = "";
 	public void SetTheme( string theme )
 	{
 		var parent = this.Parent;
@@ -482,6 +484,7 @@ public partial class Window : Panel
 				StyleSheet.Remove( style.FileName );
 			}
 		}
+		CurrentTheme = theme;
 		var styleToApply = Sandbox.UI.StyleSheet.FromFile( theme );
 
 		// Apply the new style

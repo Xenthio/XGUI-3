@@ -48,37 +48,13 @@ namespace XGUI
 		/// <summary>
 		/// Add a standard menu item
 		/// </summary>
-		public Panel AddMenuItem( string text, Action action = null )
+		public Panel AddMenuItem( string text, Action action = null, string iconname = "", string iconurl = "" )
 		{
 			var item = Add.Panel( "MenuItem" );
-			item.Add.Label( text, "ItemText" );
-
-			if ( action != null )
-			{
-				item.AddEventListener( "onclick", () =>
-				{
-					action?.Invoke();
-					Success();
-				} );
-			}
-			item.AddEventListener( "onmouseover", () =>
-			{
-				if ( !_openingSubmenu )
-				{
-					CloseActiveSubmenu();
-				}
-			} );
-
-			return item;
-		}
-
-		/// <summary>
-		/// Add a menu item with an icon
-		/// </summary>
-		public Panel AddMenuItem( string text, string icon, Action action = null )
-		{
-			var item = Add.Panel( "MenuItem" );
-			item.Add.Icon( icon, "ItemIcon" );
+			if ( !String.IsNullOrWhiteSpace( iconname ) )
+				item.Add.Icon( iconname, "ItemIcon" );
+			if ( !String.IsNullOrWhiteSpace( iconurl ) )
+				item.Add.Image( iconurl, "ItemIcon" );
 			item.Add.Label( text, "ItemText" );
 
 			if ( action != null )
@@ -103,9 +79,13 @@ namespace XGUI
 		/// <summary>
 		/// Add a submenu item that expands when hovered
 		/// </summary>
-		public Panel AddSubmenuItem( string text, Action<ContextMenu> populateSubmenu )
+		public Panel AddSubmenuItem( string text, Action<ContextMenu> populateSubmenu, string iconname = "", string iconurl = "" )
 		{
 			var item = Add.Panel( "MenuItem SubmenuItem" );
+			if ( !String.IsNullOrWhiteSpace( iconname ) )
+				item.Add.Icon( iconname, "ItemIcon" );
+			if ( !String.IsNullOrWhiteSpace( iconurl ) )
+				item.Add.Image( iconurl, "ItemIcon" );
 			item.Add.Label( text, "ItemText" );
 			item.Add.Icon( "arrow_right", "ItemArrow" );
 

@@ -9,6 +9,10 @@
 	background-color: $control-colour;
 	padding: 6px;
 
+	.iconpanel { 
+		margin-right: 2px; 
+	}
+
 
 	&:focus, &.focus {
 		border-top: 1px solid $control-border-colour-top-focus;
