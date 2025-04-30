@@ -2,7 +2,6 @@
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
-using System.Linq;
 namespace XGUI;
 
 public partial class Pane : Panel
@@ -41,6 +40,9 @@ public partial class Pane : Panel
 		/// To the left of the source panel, aligned to the bottom.
 		/// </summary>
 		LeftBottom,
+
+		Right,
+		RightBottom,
 
 		/// <summary>
 		/// Above the source panel, aligned to the left.
@@ -85,6 +87,8 @@ public partial class Pane : Panel
 		}
 	}
 
+	PositionMode Mode;
+
 	/// <summary>
 	/// Sets <see cref="PopupSource"/>, <see cref="Position"/> and <see cref="PopupSourceOffset"/>.
 	/// Applies relevant CSS classes.
@@ -94,11 +98,11 @@ public partial class Pane : Panel
 	/// <param name="offset">Offset away from the <paramref name="sourcePanel"/>.</param>
 	public void SetPositioning( Panel sourcePanel, PositionMode position, float offset )
 	{
-		Parent = sourcePanel.AncestorsAndSelf.OfType<Window>().FirstOrDefault();
+		Parent = sourcePanel;
 		PopupSource = sourcePanel;
 		Position = position;
 		PopupSourceOffset = offset;
-
+		Mode = position;
 		AddClass( "dropdown-panel" );
 		PositionMe();
 
@@ -246,6 +250,11 @@ public partial class Pane : Panel
 	public override void Tick()
 	{
 		base.Tick();
+		if ( !PopupSource.IsValid() )
+		{
+			Delete( true );
+			return;
+		}
 		if ( !(HasFocus || PopupSource.HasFocus) )
 		{
 			if ( PopupSource is ComboBox dp )
@@ -254,7 +263,6 @@ public partial class Pane : Panel
 			}
 		}
 		PositionMe();
-
 	}
 
 	void PositionMe()
@@ -271,9 +279,50 @@ public partial class Pane : Panel
 
 		Style.MaxHeight = Screen.Height - 50;
 
-		Style.Width = rect.Width;
-		Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
-		Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+
+
+		switch ( Position )
+		{
+			case PositionMode.Left:
+				Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Top - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				break;
+
+			case PositionMode.LeftBottom:
+				Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				break;
+			case PositionMode.Right:
+				Style.Left = ((rect.Right - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Top - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				break;
+			case PositionMode.RightBottom:
+				Style.Left = ((rect.Right - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				break;
+
+			case PositionMode.AboveLeft:
+				Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Top - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				break;
+
+			case PositionMode.BelowLeft:
+				Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				break;
+
+			case PositionMode.BelowCenter:
+				Style.Left = ((rect.Left - Parent.Box.Left - 1) + rect.Width * 0.5f) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				break;
+
+			case PositionMode.BelowStretch:
+				Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
+				Style.Width = rect.Width;
+				break;
+		}
+
 
 		Style.Dirty();
 	}

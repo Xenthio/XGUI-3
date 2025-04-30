@@ -17,6 +17,8 @@ public partial class Window : Panel
 
 	public bool HasControls = true;
 
+	public bool HasTitleBar = true;
+
 	public bool HasMinimise = false;
 	public bool HasMaximise = false;
 	public bool HasClose = true;
@@ -31,9 +33,12 @@ public partial class Window : Panel
 
 	public Window()
 	{
-		TitleBar = new TitleBar();
-		TitleBar.ParentWindow = this;
-		AddChild( TitleBar );
+		if ( HasTitleBar )
+		{
+			TitleBar = new TitleBar();
+			TitleBar.ParentWindow = this;
+			AddChild( TitleBar );
+		}
 
 		AddClass( "Panel" );
 		AddClass( "Window" );
@@ -57,7 +62,8 @@ public partial class Window : Panel
 			this.AddEventListener( "onmousemove", ResizeMove );
 			OverrideButtons();
 		}
-		SetChildIndex( TitleBar, 0 );
+		if ( TitleBar.IsValid )
+			SetChildIndex( TitleBar, 0 );
 	}
 
 	// theres no way by default to make buttons focusable so hack it in
@@ -95,6 +101,7 @@ public partial class Window : Panel
 
 	public void CreateTitleBar()
 	{
+		if ( !HasTitleBar ) return;
 		/*
 		<style>
 			Window {
@@ -518,6 +525,16 @@ public partial class Window : Panel
 			case "title":
 				{
 					Title = value;
+					return;
+				}
+			case "hastitlebar":
+				{
+					HasTitleBar = bool.Parse( value );
+					if ( !HasTitleBar )
+					{
+						TitleBar.Delete();
+					}
+					this.SetClass( "notitlebar", !HasTitleBar );
 					return;
 				}
 			case "hasminimise":

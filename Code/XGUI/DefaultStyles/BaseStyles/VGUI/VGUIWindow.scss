@@ -89,4 +89,11 @@
 		padding: 4px;
 		padding-top: 0px;
 	}
+
+	&.NoTitleBar {
+
+		.Window-Content { 
+			padding-top: 4px;
+		}
+	}
 }

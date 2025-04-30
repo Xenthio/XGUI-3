@@ -105,3 +105,8 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	border-bottom: 1px solid $control-border-colour-bottom;
 	border-right: 1px solid $control-border-colour-right;
 }
+
+
+.contextmenu {
+	box-shadow: $outer-boxshadow; 
+}

@@ -86,8 +86,39 @@ $default-text-colour: #000000;
 $default-text-colour-active: #000000;
 $default-text-colour-alt: #FFFFFF;
 
-@import "/XGUI/DefaultStyles/BaseStyles/Windows.scss";
+@import "/XGUI/DefaultStyles/BaseStyles/Windows.scss"; 
 @import "/XGUI/DefaultStyles/BaseStyles/Windows+OuterBorders.scss";
 @import "/XGUI/DefaultStyles/BaseStyles/Windows+ButtonInset.scss";
 @import "/XGUI/DefaultStyles/BaseStyles/Windows+ClassicQuirks.scss";
- 
+
+
+.TabContainer {
+	> .tabs {
+
+		> .button { 
+			min-width: 0px;
+
+			&.active {
+				//stick out and overlap other tabs
+				margin-right: -1px;
+				margin-left: -1px;
+				padding-right: 8px;
+				padding-left: 8px;
+
+				&:first-child {
+					margin-left: 1px;
+				}
+			}
+
+			&:first-child {
+				margin-left: 3px;
+			}
+
+			&:hover {
+			}
+		}
+	}
+
+	> .sheets {
+	}
+}

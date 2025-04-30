@@ -1,0 +1,35 @@
+.ContextMenu {
+	background-color: $base-colour;
+	border-top: 1px solid $border-colour-top-window;
+	border-left: 1px solid $border-colour-left-window;
+	border-bottom: 1px solid $border-colour-bottom-window;
+	border-right: 1px solid $border-colour-right-window;
+	background-color: $base-colour;
+
+	.MenuItem {
+		margin: 1px;
+		min-width: 64px;
+		height: 20px;
+		align-items: center;
+
+		.ItemText {
+			margin-right: 32px;
+		}
+
+		.ItemArrow {
+			right: 0px;
+			position:absolute;
+			font-size: 17px;
+		}
+
+		&.open {
+			background-color: $window-titlebar-colour;
+			color: $window-titlebar-text-colour;
+		}
+
+		&:hover {
+			background-color: $window-titlebar-colour;
+			color: $window-titlebar-text-colour;
+		}
+	}
+}

@@ -1,5 +1,6 @@
 // Additional optional feature for Windows based styles.
 
+
 .button {
 	padding:2px;
 	>.label:not(.iconpanel){ 
@@ -9,14 +10,16 @@
 
 .window {
 	> .titlebar {
-		> .titlelabel {
-			top: 1px;
-		}
+		> .titleelements {
+			> .titlelabel {
+				top: 1px;
+			}
 
-		> .control {
-			> .label {
-				margin-top: 0px;
-			} 
+			> .control {
+				> .label {
+					margin-top: 0px;
+				}
+			}
 		}
 	}
 }
