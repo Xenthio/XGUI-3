@@ -67,7 +67,7 @@ public partial class Pane : Panel
 
 	public Pane()
 	{
-
+		AcceptsFocus = false;
 	}
 
 	/// <inheritdoc cref="SetPositioning"/>
@@ -75,7 +75,12 @@ public partial class Pane : Panel
 	{
 		SetPositioning( sourcePanel, position, offset );
 		this.AddEventListener( "onmousedown", MouseDown );
-		AcceptsFocus = true;
+		AcceptsFocus = false;
+		if ( sourcePanel is ComboBox cb )
+		{
+
+			AcceptsFocus = true;
+		}
 		Focus();
 	}
 
