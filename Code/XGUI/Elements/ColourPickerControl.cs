@@ -30,7 +30,7 @@ public class ColourPickerControl : Panel
 	private TextEntry _bInput;
 	private TextEntry _aInput;
 
-	private Pane _dropdownPanel;
+	private XGUIPopup _dropdownPanel;
 	private bool _isDropdownOpen = false;
 
 	public ColourPickerControl()
@@ -73,7 +73,7 @@ public class ColourPickerControl : Panel
 		_colorDisplayButton.AddEventListener( "onclick", ToggleDropdown );
 
 		// Dropdown Panel (Initially Hidden)
-		_dropdownPanel = AddChild<Pane>( "colour-popup-panel" );
+		_dropdownPanel = AddChild<XGUIPopup>( "colour-popup-panel" );
 		_dropdownPanel.PopupSource = _colorDisplayButton;
 		SetupDropdownContent( _dropdownPanel ); // Populate the dropdown
 

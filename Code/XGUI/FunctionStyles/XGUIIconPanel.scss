@@ -1,0 +1,24 @@
+.xgui-icon-panel {
+	align-items: center;
+	justify-content: center;
+
+	.icon-image {
+		width: 100%;
+		height: 100%;
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+	.material-icon {
+		font-family: "Material Icons";
+		font-weight: normal;
+		font-style: normal;
+		line-height: 1;
+		text-transform: none;
+		letter-spacing: normal;
+		word-wrap: normal;
+		white-space: nowrap;
+		direction: ltr; 
+	}
+}

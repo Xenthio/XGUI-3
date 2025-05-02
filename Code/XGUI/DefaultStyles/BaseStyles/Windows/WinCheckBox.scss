@@ -1,5 +1,11 @@
-﻿.checkbox {
+﻿
+.checkbox {
 	align-items: center;
+
+	> .label {
+		text-overflow: ellipsis;
+		flex-grow: 1; 
+	}
 
 	.checkpanel, iconpanel {
 		border-top: 1px solid $border-colour-top-inset;

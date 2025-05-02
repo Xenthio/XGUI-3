@@ -68,6 +68,12 @@
 			text-align: center;
 			font-weight: $window-title-text-weight;
 			font-size: $window-title-text-size;
+
+			> .label {
+				text-overflow: ellipsis;
+				overflow: hidden;
+				flex-grow: 1;
+			}
 		}
 
 		.Control {

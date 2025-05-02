@@ -7,10 +7,16 @@
 	border-bottom: 1px solid $control-border-colour-bottom;
 	border-right: 1px solid $control-border-colour-right;
 	background-color: $control-colour;
-	padding: 6px;
+	padding: 6px; 
 
-	.iconpanel { 
-		margin-right: 2px; 
+	> .label {
+		text-overflow: ellipsis;
+		overflow:hidden;
+		flex-grow: 1;
+	}
+
+	.iconpanel {
+		margin-right: 2px;
 	}
 
 

@@ -110,3 +110,8 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 .contextmenu {
 	box-shadow: $outer-boxshadow; 
 }
+
+.file-browser-view {
+	margin: 1px;
+	box-shadow: $outer-boxshadow-inset; 
+}

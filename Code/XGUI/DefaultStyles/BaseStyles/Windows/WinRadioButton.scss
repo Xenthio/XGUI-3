@@ -43,8 +43,9 @@
 		}
 	}
 
-	.label {
-		margin-right: 10px;
+	> .label {
+		text-overflow: ellipsis;
+		flex-grow: 1;
 		bottom: 1px;
 		color: $default-text-colour;
 	}
@@ -66,8 +67,7 @@
 
 	&.checked {
 
-		> .label {
-			margin-right: 10px;
+		> .label { 
 			color: $default-text-colour-active;
 		}
 

@@ -1,0 +1,55 @@
+.file-browser-view {
+	border-top: 1px solid $border-colour-top-inset;
+	border-left: 1px solid $border-colour-left-inset;
+	border-bottom: 1px solid $border-colour-bottom-inset;
+	border-right: 1px solid $border-colour-right-inset;
+	background-color: $base-colour-inset;
+	padding: 0px;
+
+	.item-label {
+		padding-right: 2px;
+		padding-left: 2px;
+	}
+
+	.details-view {
+		.file-item {
+			&.selected {
+				.name-column {
+					.item-label {
+						background-color: $base-colour-active;
+						color: $default-text-colour-alt;
+						//border: 1px solid #FFFF7F;
+					}
+				}
+			}
+		}
+	}
+
+	.list-view {
+		.file-item {
+			&.selected {
+				.item-label {
+					background-color: $base-colour-active;
+					color: $default-text-colour-alt;
+					//border: 1px solid #FFFF7F;
+				}
+			}
+		}
+	}
+
+	.icons-view {
+		.file-item {
+			&.selected {
+				.icon-image {
+					background-tint: #7F7FBF;
+				}
+
+				.item-label {
+					background-color: $base-colour-active;
+					color: $default-text-colour-alt;
+					//border: 1px solid #FFFF7F;
+				}
+			}
+		}
+	}
+}

@@ -4,7 +4,7 @@ using Sandbox.UI.Construct;
 using System;
 namespace XGUI;
 
-public partial class Pane : Panel
+public partial class XGUIPopup : XGUIPanel
 {
 	/// <summary>
 	/// Which panel triggered this popup. Set by <see cref="SetPositioning"/> or the constructor.
@@ -65,13 +65,13 @@ public partial class Pane : Panel
 		BelowStretch
 	}
 
-	public Pane()
+	public XGUIPopup()
 	{
 		AcceptsFocus = false;
 	}
 
 	/// <inheritdoc cref="SetPositioning"/>
-	public Pane( Panel sourcePanel, PositionMode position, float offset )
+	public XGUIPopup( Panel sourcePanel, PositionMode position, float offset )
 	{
 		SetPositioning( sourcePanel, position, offset );
 		this.AddEventListener( "onmousedown", MouseDown );

@@ -1,11 +1,18 @@
-﻿.self-layout {
+﻿
+$default-margin: 6px;
+$default-padding: 6px;
+
+.self-layout {
 	&.self-layout-row {
 		flex-direction: row;
-		margin-bottom: 6px;
+		margin-bottom: $default-margin;
 	}
 }
 .margin {
-	margin: 6px;
+	margin: $default-margin;
+}
+.padding {
+	padding: $default-padding;
 }
 .row {
 	flex-direction: row;
@@ -14,15 +21,46 @@
 	flex-direction: column;
 }
 
+.padding-top {
+	padding-top: $default-padding;
+}
+.padding-bottom {
+	padding-bottom: $default-padding;
+}
+.padding-left {
+	padding-left: $default-padding;
+}
+.padding-right {
+	padding-right: $default-padding;
+}
+
 .margin-bottom {
-	margin-bottom: 6px;
+	margin-bottom: $default-margin;
 }
 .margin-top {
-	margin-top: 6px;
+	margin-top: $default-margin;
 }
 .margin-left {
-	margin-left: 6px;
+	margin-left: $default-margin;
 }
 .margin-right {
-	margin-right: 6px;
+	margin-right: $default-margin;
+}
+
+.button {
+	&.margin-bottom {
+		margin-bottom: $default-margin;
+	}
+
+	&.margin-top {
+		margin-top: $default-margin;
+	}
+
+	&.margin-left {
+		margin-left: $default-margin;
+	}
+
+	&.margin-right {
+		margin-right: $default-margin;
+	}
 }

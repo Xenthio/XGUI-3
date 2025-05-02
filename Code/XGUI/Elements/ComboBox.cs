@@ -13,7 +13,7 @@ namespace XGUI;
 public class ComboBox : Button
 {
 
-	Pane Pane;
+	XGUIPopup Pane;
 	/// <summary>
 	/// The icon of an arrow pointing down on the right of the element.
 	/// </summary>
@@ -159,7 +159,7 @@ public class ComboBox : Button
 	public void Open()
 	{
 		IsOpen = true;
-		Pane = new Pane( this, Pane.PositionMode.BelowStretch, 0.0f );
+		Pane = new XGUIPopup( this, XGUIPopup.PositionMode.BelowStretch, 0.0f );
 		Pane.Focus();
 
 		Pane.AddClass( "flat-top" );

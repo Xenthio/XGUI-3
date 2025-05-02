@@ -9,7 +9,7 @@ namespace XGUI
 	/// <summary>
 	/// A Windows 95-style expandable context menu that supports hierarchical items
 	/// </summary>
-	public class ContextMenu : Pane
+	public class ContextMenu : XGUIPopup
 	{
 		/// <summary>
 		/// The parent menu if this is a submenu

@@ -44,10 +44,10 @@ public class XGUISystem : GameObjectSystem
 	public void SetGlobalTheme( string theme )
 	{
 		GlobalTheme = theme;
-		// Find all Window type panels in the hierarchy
-		foreach ( var window in Panel.ChildrenOfType<Window>() )
+		// Find all XGUIPanel type panels in the hierarchy
+		foreach ( var xguiPanel in Panel.ChildrenOfType<XGUIPanel>() )
 		{
-			window.SetTheme( GlobalTheme );
+			xguiPanel.SetTheme( GlobalTheme );
 		}
 	}
 
