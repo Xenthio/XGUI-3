@@ -25,6 +25,7 @@ public partial class Window : XGUIPanel
 
 	public bool IsResizable = true;
 	public bool IsDraggable = true;
+	public bool AutoFocus = true;
 
 	public Button ControlsClose { get; set; } = new Button();
 	public Button ControlsMinimise { get; set; } = new Button();
@@ -61,6 +62,12 @@ public partial class Window : XGUIPanel
 			this.AddEventListener( "onmouseup", ResizeUp );
 			this.AddEventListener( "onmousemove", ResizeMove );
 			OverrideButtons();
+
+			if ( AutoFocus )
+			{
+				FocusWindow();
+				AutoFocus = false;
+			}
 		}
 		if ( TitleBar.IsValid )
 			SetChildIndex( TitleBar, 0 );
@@ -547,6 +554,11 @@ public partial class Window : XGUIPanel
 			case "minheight":
 				{
 					MinSize.y = Length.Parse( value ).Value.Value;
+					return;
+				}
+			default:
+				{
+					base.SetProperty( name, value );
 					return;
 				}
 		}

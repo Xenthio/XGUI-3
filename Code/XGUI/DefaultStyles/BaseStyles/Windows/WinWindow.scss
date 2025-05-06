@@ -1,4 +1,10 @@
 
+.xgui-panel {
+	font-size: $default-text-size;
+	font-family: $default-text-font;
+	font-smooth: $default-text-smooth;
+}
+
 .Window {
 	overflow: hidden;
 	color: $default-text-colour;

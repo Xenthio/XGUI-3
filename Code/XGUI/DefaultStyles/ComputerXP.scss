@@ -157,7 +157,6 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 .Window {
 	border: none;
 	background-color: transparent;
-	background: linear-gradient(to bottom, #00000000 6%, $base-colour 6% );
 
 	&.unfocused {
 		.TitleBar {
@@ -185,7 +184,7 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 				background-size: contain;
 			}
 
-			.TitleLabel { 
+			.TitleLabel {
 				filter: drop-shadow(1px 1px 0px 0px transparent);
 			}
 		}
@@ -281,6 +280,8 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 				background-size: cover;
 				width: 13px;
 				height: 13px;
+				background-size: 13px;
+				background-repeat: no-repeat;
 				content: "";
 			}
 		}
@@ -292,6 +293,8 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 				background-size: cover;
 				width: 13px;
 				height: 13px;
+				background-size: 13px;
+				background-repeat: no-repeat;
 				content: "";
 			}
 		}
@@ -306,6 +309,8 @@ $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0
 				background-size: cover;
 				width: 13px;
 				height: 13px;
+				background-size: 13px;
+				background-repeat: no-repeat;
 				content: "";
 			}
 

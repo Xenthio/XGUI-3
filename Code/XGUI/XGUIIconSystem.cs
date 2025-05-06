@@ -2,6 +2,7 @@
 using Sandbox.UI;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace XGUI;
 
@@ -13,7 +14,7 @@ public static class XGUIIconSystem
 	private const string DefaultThemeName = "Computer95";
 	private static string _currentThemeName = DefaultThemeName;
 
-	// Cache for icon paths - theme/type/name/size -> path
+	// Cache for icon paths - theme/type/name/size/variant -> path
 	private static Dictionary<string, string> IconPathCache = new Dictionary<string, string>();
 
 	/// <summary>
@@ -81,8 +82,9 @@ public static class XGUIIconSystem
 	/// <param name="iconName">The name of the icon</param>
 	/// <param name="iconType">The type of icon</param>
 	/// <param name="size">The desired size of the icon (16, 24, 32, 48, etc.)</param>
+	/// <param name="variant">Optional variant of the icon (e.g., "hover", "active", "disabled")</param>
 	/// <returns>The path to the icon file, or null if not found</returns>
-	public static string GetIcon( string iconName, IconType iconType = IconType.UI, int size = 16 )
+	public static string GetIcon( string iconName, IconType iconType = IconType.UI, int size = 16, string variant = null )
 	{
 		// Standardize icon name
 		if ( string.IsNullOrEmpty( iconName ) )
@@ -90,42 +92,70 @@ public static class XGUIIconSystem
 
 		iconName = iconName.ToLowerInvariant();
 
+		// Standardize variant if provided
+		if ( !string.IsNullOrEmpty( variant ) )
+		{
+			variant = variant.ToLowerInvariant();
+		}
+
 		// Check cache first
-		string cacheKey = $"{_currentThemeName}/{iconType}/{iconName}/{size}";
+		string cacheKey = $"{_currentThemeName}/{iconType}/{iconName}/{size}/{variant}";
 		if ( IconPathCache.TryGetValue( cacheKey, out string cachedPath ) )
 			return cachedPath;
 
-		// Look up icon in current theme
-		string iconPath = FindIconInTheme( _currentThemeName, iconName, iconType, size );
-
-		// If not found in current theme, try default theme
-		if ( string.IsNullOrEmpty( iconPath ) && _currentThemeName != DefaultThemeName )
+		// First, try with variant if specified
+		string iconPath = null;
+		if ( !string.IsNullOrEmpty( variant ) )
 		{
-			iconPath = FindIconInTheme( DefaultThemeName, iconName, iconType, size );
-		}
+			iconPath = FindIconInTheme( _currentThemeName, iconName, iconType, size, variant );
 
-		// If still not found, try Material Icons as fallback
-		if ( string.IsNullOrEmpty( iconPath ) )
-		{
-			// For UI icons, try to use Material Icons
-			if ( iconType == IconType.UI && IsMaterialIcon( iconName ) )
+			// If not found in current theme, try default theme with variant
+			if ( string.IsNullOrEmpty( iconPath ) && _currentThemeName != DefaultThemeName )
 			{
-				// Return the icon name with special prefix to indicate it's a material icon
-				iconPath = $"material:{iconName}";
+				iconPath = FindIconInTheme( DefaultThemeName, iconName, iconType, size, variant );
 			}
-			else
+
+			// If still not found with variant, fall back to standard icon (without variant)
+			if ( string.IsNullOrEmpty( iconPath ) )
 			{
-				// For file types, use a generic file icon
-				if ( iconType == IconType.FileType )
+				// Try again without the variant
+				return GetIcon( iconName, iconType, size );
+			}
+		}
+		else
+		{
+			// Standard lookup without variant
+			iconPath = FindIconInTheme( _currentThemeName, iconName, iconType, size );
+
+			// If not found in current theme, try default theme
+			if ( string.IsNullOrEmpty( iconPath ) && _currentThemeName != DefaultThemeName )
+			{
+				iconPath = FindIconInTheme( DefaultThemeName, iconName, iconType, size );
+			}
+
+			// If still not found, try Material Icons as fallback
+			if ( string.IsNullOrEmpty( iconPath ) )
+			{
+				// For UI icons, try to use Material Icons
+				if ( iconType == IconType.UI && IsMaterialIcon( iconName ) )
 				{
-					iconPath = FindIconInTheme( _currentThemeName, "file", iconType, size ) ??
-							   FindIconInTheme( DefaultThemeName, "file", iconType, size );
+					// Return the icon name with special prefix to indicate it's a material icon
+					iconPath = $"material:{iconName}";
 				}
-				// For folders, use a generic folder icon
-				else if ( iconType == IconType.Folder )
+				else
 				{
-					iconPath = FindIconInTheme( _currentThemeName, "folder", iconType, size ) ??
-							   FindIconInTheme( DefaultThemeName, "folder", iconType, size );
+					// For file types, use a generic file icon
+					if ( iconType == IconType.FileType )
+					{
+						iconPath = FindIconInTheme( _currentThemeName, "file", iconType, size ) ??
+								   FindIconInTheme( DefaultThemeName, "file", iconType, size );
+					}
+					// For folders, use a generic folder icon
+					else if ( iconType == IconType.Folder )
+					{
+						iconPath = FindIconInTheme( _currentThemeName, "folder", iconType, size ) ??
+								   FindIconInTheme( DefaultThemeName, "folder", iconType, size );
+					}
 				}
 			}
 		}
@@ -140,15 +170,16 @@ public static class XGUIIconSystem
 	}
 
 	/// <summary>
-	/// Get an icon for a specific file extension
+	/// Get an icon for a specific file extension with optional variant
 	/// </summary>
 	/// <param name="extension">The file extension (with or without the dot)</param>
 	/// <param name="size">The desired icon size</param>
+	/// <param name="variant">Optional variant of the icon (e.g., "hover", "active", "disabled")</param>
 	/// <returns>The path to the icon file</returns>
-	public static string GetFileIcon( string extension, int size = 16 )
+	public static string GetFileIcon( string extension, int size = 16, string variant = null )
 	{
 		if ( string.IsNullOrEmpty( extension ) )
-			return GetIcon( "file", IconType.FileType, size );
+			return GetIcon( "file", IconType.FileType, size, variant );
 
 		// Normalize extension
 		if ( extension.StartsWith( "." ) )
@@ -157,18 +188,19 @@ public static class XGUIIconSystem
 		extension = extension.ToLowerInvariant();
 
 		// Try to find an icon for this specific extension
-		return GetIcon( extension, IconType.FileType, size );
+		return GetIcon( extension, IconType.FileType, size, variant );
 	}
 
 	/// <summary>
-	/// Get a folder icon
+	/// Get a folder icon with optional variant
 	/// </summary>
 	/// <param name="folderType">The type of folder (optional)</param>
 	/// <param name="size">The desired icon size</param>
+	/// <param name="variant">Optional variant of the icon (e.g., "hover", "active", "disabled")</param>
 	/// <returns>The path to the icon file</returns>
-	public static string GetFolderIcon( string folderType = "folder", int size = 16 )
+	public static string GetFolderIcon( string folderType = "folder", int size = 16, string variant = null )
 	{
-		return GetIcon( folderType, IconType.Folder, size );
+		return GetIcon( folderType, IconType.Folder, size, variant );
 	}
 
 
@@ -176,70 +208,110 @@ public static class XGUIIconSystem
 	/// <summary>
 	/// Find an icon in a specific theme
 	/// </summary>
-	private static string FindIconInTheme( string themeName, string iconName, IconType iconType, int size )
+	private static string FindIconInTheme( string themeName, string iconName, IconType iconType, int size, string variant = null )
 	{
 		string baseDir = GetThemeIconBaseDirectory( themeName );
 		string typeDir = GetIconTypeDirectory( iconType );
 
-		// Try exact size first
-		string exactSizePath = $"{baseDir}/{typeDir}/{iconName}_{size}.png";
-		if ( FileSystem.Mounted.FileExists( exactSizePath ) )
-			return exactSizePath;
+		// Build file name pattern based on whether variant is specified
+		string fileNamePattern = !string.IsNullOrEmpty( variant ) ?
+			$"{iconName}_{size}_{variant}.png" : $"{iconName}_{size}.png";
 
-		// If not found, try to find the closest size
-		List<int> availableSizes = new List<int>();
+		// Try exact size and variant/non-variant first
+		string exactPath = $"{baseDir}/{typeDir}/{fileNamePattern}";
+		if ( FileSystem.Mounted.FileExists( exactPath ) )
+			return exactPath;
+
+		// If not found, try to find the closest size with the same variant (if specified)
+		List<(int Size, string Variant, string Path)> availableIcons = new List<(int, string, string)>();
 
 		// Try to find all available sizes for this icon
 		foreach ( var file in FileSystem.Mounted.FindFile( $"{baseDir}/{typeDir}" ) )
 		{
 			string fileName = Path.GetFileNameWithoutExtension( file );
+
+			// Skip files that don't start with our icon name
 			if ( !fileName.StartsWith( iconName + "_" ) )
 				continue;
 
-			// Extract size from filename (format: name_size.png)
-			string sizeStr = fileName.Substring( iconName.Length + 1 );
-			if ( int.TryParse( sizeStr, out int fileSize ) )
+			// Parse out size and variant from filename (format: name_size.png or name_size_variant.png)
+			string[] parts = fileName.Substring( iconName.Length + 1 ).Split( '_' );
+
+			if ( parts.Length >= 1 && int.TryParse( parts[0], out int fileSize ) )
 			{
-				availableSizes.Add( fileSize );
+				string fileVariant = parts.Length > 1 ? parts[1] : null;
+				availableIcons.Add( (fileSize, fileVariant, $"{baseDir}/{typeDir}/{fileName}.png") );
 			}
 		}
 
 		// If no sizes found, return null
-		if ( availableSizes.Count == 0 )
+		if ( availableIcons.Count == 0 )
 		{
 			Log.Warning( $"Icon not found: {iconName} in theme {themeName} of type {iconType}" );
-			Log.Info( $"Add to path: {baseDir}/{typeDir}/{iconName}_{size}.png" );
+			Log.Info( $"Add to path: {baseDir}/{typeDir}/{fileNamePattern}" );
 
 			// Return a generic file icon if this is a file type
-
 			if ( iconType == IconType.FileType && !findingDefaultIconPreventRecursion )
 			{
 				findingDefaultIconPreventRecursion = true;
-				return FindIconInTheme( themeName, "file", iconType, size ) ??
-					   FindIconInTheme( DefaultThemeName, "file", iconType, size );
+				return FindIconInTheme( themeName, "file", iconType, size, variant ) ??
+					   FindIconInTheme( DefaultThemeName, "file", iconType, size, variant );
 			}
 			findingDefaultIconPreventRecursion = false;
 
 			return null;
 		}
 
-		// Find closest size (prefer larger sizes)
-		availableSizes.Sort();
-		int closestSize = availableSizes[0];
-		foreach ( int availableSize in availableSizes )
+		// If variant is specified, try to find an exact match for the variant first
+		if ( !string.IsNullOrEmpty( variant ) )
 		{
-			if ( availableSize >= size )
-			{
-				closestSize = availableSize;
-				break;
-			}
+			// Filter for the requested variant
+			var variantMatches = availableIcons.Where( i => i.Variant == variant ).ToList();
 
-			// Keep track of the largest size smaller than requested
-			closestSize = availableSize;
+			if ( variantMatches.Count > 0 )
+			{
+				// Sort by size
+				variantMatches.Sort( ( a, b ) => a.Size.CompareTo( b.Size ) );
+
+				// Find closest size (prefer larger)
+				var closest = FindClosestSize( variantMatches, size );
+				return closest.Path;
+			}
 		}
 
-		// Return the closest size
-		return $"{baseDir}/{typeDir}/{iconName}_{closestSize}.png";
+		// Otherwise, filter for icons with no variant
+		var standardIcons = availableIcons.Where( i => i.Variant == null ).ToList();
+		if ( standardIcons.Count > 0 )
+		{
+			// Sort by size
+			standardIcons.Sort( ( a, b ) => a.Size.CompareTo( b.Size ) );
+
+			// Find closest size (prefer larger)
+			var closest = FindClosestSize( standardIcons, size );
+			return closest.Path;
+		}
+
+		// If we get here, we have icons but none with the requested variant or no variant
+		// Just return the first one as a last resort
+		return availableIcons[0].Path;
+	}
+
+	/// <summary>
+	/// Find the icon with the closest size to the requested size, preferring larger sizes
+	/// </summary>
+	private static (int Size, string Variant, string Path) FindClosestSize( List<(int Size, string Variant, string Path)> icons, int requestedSize )
+	{
+		// Find the first icon that's at least as large as the requested size
+		foreach ( var icon in icons )
+		{
+			if ( icon.Size >= requestedSize )
+			{
+				return icon;
+			}
+		}
+
+		// If no icons are large enough, return the largest available
+		return icons[icons.Count - 1];
 	}
 
 	/// <summary>
@@ -276,6 +348,7 @@ public class XGUIIconPanel : Panel
 	private string _iconName;
 	private XGUIIconSystem.IconType _iconType = XGUIIconSystem.IconType.UI;
 	private int _iconSize = 16;
+	private string _variant;
 	private Image _iconImage;
 	private Label _materialIconLabel;
 
@@ -327,6 +400,22 @@ public class XGUIIconPanel : Panel
 		}
 	}
 
+	/// <summary>
+	/// The variant of the icon (e.g., "hover", "active", "disabled")
+	/// </summary>
+	public string Variant
+	{
+		get => _variant;
+		set
+		{
+			if ( _variant != value )
+			{
+				_variant = value;
+				UpdateIcon();
+			}
+		}
+	}
+
 	public XGUIIconPanel()
 	{
 		AddClass( "xgui-icon-panel" );
@@ -342,15 +431,58 @@ public class XGUIIconPanel : Panel
 		// Hide both by default
 		_iconImage.Style.Display = DisplayMode.None;
 		_materialIconLabel.Style.Display = DisplayMode.None;
+
+		// Set up event handlers for hover state
+		//AddEventListener( "onmouseover", OnMouseEnter );
+		//AddEventListener( "onmouseout", OnMouseLeave );
+		//AddEventListener( "onmousedown", OnMouseDown );
+		//AddEventListener( "onmouseup", OnMouseUp );
 	}
 
-	public XGUIIconPanel( string iconName, XGUIIconSystem.IconType iconType = XGUIIconSystem.IconType.UI, int iconSize = 16 )
+	public XGUIIconPanel( string iconName, XGUIIconSystem.IconType iconType = XGUIIconSystem.IconType.UI, int iconSize = 16, string variant = null )
 		: this()
 	{
 		_iconName = iconName;
 		_iconType = iconType;
 		_iconSize = iconSize;
+		_variant = variant;
 		UpdateIcon();
+	}
+
+	private void OnMouseEnter( PanelEvent e )
+	{
+		// If auto-hover variants are desired, set variant to "hover"
+		if ( string.IsNullOrEmpty( _variant ) )
+		{
+			Variant = "hover";
+		}
+	}
+
+	private void OnMouseLeave( PanelEvent e )
+	{
+		// Reset variant when mouse leaves
+		if ( _variant == "hover" || _variant == "active" )
+		{
+			Variant = null;
+		}
+	}
+
+	private void OnMouseDown( PanelEvent e )
+	{
+		// Set to active when mouse is pressed
+		if ( string.IsNullOrEmpty( _variant ) || _variant == "hover" )
+		{
+			Variant = "active";
+		}
+	}
+
+	private void OnMouseUp( PanelEvent e )
+	{
+		// Return to hover state when mouse is released
+		if ( _variant == "active" )
+		{
+			Variant = HasHovered ? "hover" : null;
+		}
 	}
 
 	/// <summary>
@@ -365,7 +497,7 @@ public class XGUIIconPanel : Panel
 			return;
 		}
 
-		string iconPath = XGUIIconSystem.GetIcon( _iconName, _iconType, _iconSize );
+		string iconPath = XGUIIconSystem.GetIcon( _iconName, _iconType, _iconSize, _variant );
 
 		if ( string.IsNullOrEmpty( iconPath ) )
 		{
@@ -385,7 +517,6 @@ public class XGUIIconPanel : Panel
 			// Show image icon
 			_iconImage.Style.Display = DisplayMode.Flex;
 			_materialIconLabel.Style.Display = DisplayMode.None;
-			Log.Info( $"Loading icon from path: {iconPath}" );
 			_iconImage.Style.BackgroundImage = Texture.Load( FileSystem.Mounted, iconPath );
 			_iconImage.Style.Width = Length.Pixels( _iconSize );
 			_iconImage.Style.Height = Length.Pixels( _iconSize );
@@ -395,21 +526,23 @@ public class XGUIIconPanel : Panel
 	/// <summary>
 	/// Set the icon by name
 	/// </summary>
-	public void SetIcon( string iconName, XGUIIconSystem.IconType iconType = XGUIIconSystem.IconType.UI, int iconSize = 16 )
+	public void SetIcon( string iconName, XGUIIconSystem.IconType iconType = XGUIIconSystem.IconType.UI, int iconSize = 16, string variant = null )
 	{
 		_iconName = iconName;
 		_iconType = iconType;
 		_iconSize = iconSize;
+		_variant = variant;
 		UpdateIcon();
 	}
 
 	/// <summary>
 	/// Set the icon for a file extension
 	/// </summary>
-	public void SetFileIcon( string extension, int iconSize = 16 )
+	public void SetFileIcon( string extension, int iconSize = 16, string variant = null )
 	{
 		_iconType = XGUIIconSystem.IconType.FileType;
 		_iconSize = iconSize;
+		_variant = variant;
 
 		if ( string.IsNullOrEmpty( extension ) )
 		{
@@ -430,11 +563,12 @@ public class XGUIIconPanel : Panel
 	/// <summary>
 	/// Set the icon for a folder
 	/// </summary>
-	public void SetFolderIcon( string folderType = "folder", int iconSize = 16 )
+	public void SetFolderIcon( string folderType = "folder", int iconSize = 16, string variant = null )
 	{
 		_iconType = XGUIIconSystem.IconType.Folder;
 		_iconSize = iconSize;
 		_iconName = folderType;
+		_variant = variant;
 		UpdateIcon();
 	}
 

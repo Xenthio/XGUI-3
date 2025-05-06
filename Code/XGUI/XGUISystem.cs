@@ -10,6 +10,7 @@ public class XGUISystem : GameObjectSystem
 	public string GlobalTheme { get; internal set; } = "/XGUI/DefaultStyles/OliveGreen.scss";
 	public XGUIRootComponent Component { get; internal set; }
 	public XGUIRootPanel Panel { get; internal set; }
+	public static XGUISystem Instance => Game.ActiveScene.GetSystem<XGUISystem>();
 	public XGUISystem( Scene scene ) : base( scene )
 	{
 	}

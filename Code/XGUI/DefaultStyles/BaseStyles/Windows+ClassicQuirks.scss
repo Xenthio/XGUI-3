@@ -16,6 +16,7 @@
 }
 
 .window {
+	padding:1px;
 	> .titlebar {
 		> .titleelements {
 			> .titlelabel {
@@ -25,6 +26,7 @@
 			> .control {
 				> .label {
 					margin-top: 0px;
+					margin-left: 1px;
 				}
 			}
 		}
@@ -40,5 +42,14 @@
 				}
 			}
 		}
+	}
+}
+
+.group-box {
+	.group-box-title {
+		top: -7px;
+		left: 5px;
+		padding-right: 2px;
+		padding-left: 2px;
 	}
 }

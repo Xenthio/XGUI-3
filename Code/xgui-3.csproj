@@ -45,8 +45,8 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<Analyzer Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed\Sandbox.CodeUpgrader.dll" />
-		<Analyzer Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed\Sandbox.Generator.dll" Condition="$(DesignTimeBuild) != 'true'" />
+		<Analyzer Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed\Sandbox.CodeUpgrader.dll"/>
+		<Analyzer Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed\Sandbox.Generator.dll" Condition="$(DesignTimeBuild) != 'true'"/>
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.System.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Engine.dll" />
 		<Reference Include="E:\SteamLibrary\steamapps\common\sbox\bin\managed/Sandbox.Filesystem.dll" />
@@ -58,10 +58,6 @@
   <ItemGroup>
 		<ProjectReference Include="E:\SteamLibrary\steamapps\common\sbox\addons\base\Code\Base Library.csproj" />
 
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="XGUI\DefaultStyles\BaseStyles\Windows\Extras\" />
   </ItemGroup>
 
 </Project>

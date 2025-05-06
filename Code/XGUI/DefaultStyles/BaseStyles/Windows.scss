@@ -35,6 +35,9 @@
 // Sidebar
 //@import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUISidebar.scss";
 
+// Toolbar
+@import "/XGUI/DefaultStyles/BaseStyles/Windows/WinToolbar.scss";
+
 // Slider
 @import "/XGUI/DefaultStyles/BaseStyles/Windows/WinSlider.scss";
 
@@ -62,3 +65,29 @@
 
 // FileBrowserView
 @import "/XGUI/DefaultStyles/BaseStyles/Windows/Extras/WinFileBrowserView.scss";
+
+// MessageBox
+@import "/XGUI/DefaultStyles/BaseStyles/Windows/Extras/WinMessageBox.scss";
+
+
+LayoutBoxInset {
+	border-bottom: 1px solid $border-colour-bottom-inset;
+	border-right: 1px solid $border-colour-right-inset;
+	border-top: 1px solid $border-colour-top-inset;
+	border-left: 1px solid $border-colour-left-inset; 
+}
+
+LayoutBox {
+	background-color: $base-colour;
+	border-top: 1px solid $border-colour-top;
+	border-left: 1px solid $border-colour-left;
+	border-bottom: 1px solid $border-colour-bottom;
+	border-right: 1px solid $border-colour-right;
+}
+
+Seperator {
+	background-color: $border-colour-top-inset;
+	height: 2px;
+	width: 100%;
+	border-bottom: 1px solid $border-colour-bottom-inset;
+}

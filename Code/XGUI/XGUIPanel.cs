@@ -10,6 +10,12 @@ namespace XGUI;
 public class XGUIPanel : Panel
 {
 	public string CurrentTheme = "";
+
+	public XGUIPanel()
+	{
+		AddClass( "xgui-panel" );
+	}
+
 	protected override void OnAfterTreeRender( bool firstTime )
 	{
 		base.OnAfterTreeRender( firstTime );

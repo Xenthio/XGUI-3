@@ -23,8 +23,8 @@ public class FileBrowserView : Panel
 {
 	public BaseFileSystem CurrentFileSystem;
 	public string CurrentPath;
-	private List<FileItem> FileItems = new();
-	private Panel ItemContainer;
+	public List<FileItem> FileItems = new();
+	public Panel ItemContainer;
 	private Dictionary<string, FileItem> SelectedItems = new();
 
 	// View mode properties
@@ -51,7 +51,11 @@ public class FileBrowserView : Panel
 	// Events
 	public event Action<string> OnFileSelected;
 	public event Action<string> OnDirectorySelected;
+	public event Action<string> OnFileOpened;
+	public event Action<string> OnDirectoryOpened;
 	public event Action<string> OnNavigateTo;
+	public event Action OnPreAddFiles;
+	public event Action OnPostAddFiles;
 	public event Action<FileBrowserViewMode> OnViewModeChanged;
 
 	public FileBrowserView()
@@ -91,14 +95,26 @@ public class FileBrowserView : Panel
 		};
 	}
 
+	/// <summary>
+	/// Properly raises the NavigateTo event
+	/// </summary>
+	public void RaiseNavigateToEvent( string path )
+	{
+		// OnNavigateTo is declared in the base class, so we need to invoke it indirectly
+		if ( OnNavigateTo != null )
+		{
+			OnNavigateTo.Invoke( path );
+		}
+	}
+
 	public void NavigateTo( string path )
 	{
 		CurrentPath = path;
-		OnNavigateTo?.Invoke( path );
+		RaiseNavigateToEvent( path );
 		Refresh();
 	}
 
-	public void Refresh()
+	public virtual void Refresh()
 	{
 		ItemContainer.DeleteChildren();
 		FileItems.Clear();
@@ -156,28 +172,61 @@ public class FileBrowserView : Panel
 			directories = SortPaths( directories, true );
 			files = SortPaths( files, false );
 
+			OnPreAddFiles?.Invoke();
+
 			// Display directories first
 			foreach ( var dir in directories )
 			{
-				var dirName = System.IO.Path.GetFileName( dir );
-				var item = new FileItem( this, dir, dirName, true );
-				FileItems.Add( item );
-				ItemContainer.AddChild( item );
+				AddDirectoryToView( dir );
 			}
 
 			// Then display files
 			foreach ( var file in files )
 			{
-				var fileName = System.IO.Path.GetFileName( file );
-				var item = new FileItem( this, file, fileName, false );
-				FileItems.Add( item );
-				ItemContainer.AddChild( item );
+				AddFileToView( file );
 			}
+
+			OnPostAddFiles?.Invoke();
 		}
 		catch ( Exception ex )
 		{
 			Log.Error( $"Error accessing directory: {ex.Message}" );
 		}
+	}
+
+	public virtual void AddFileToView( string file, bool isFullPath = false, string nameOverride = "" )
+	{
+		//var fullPath = System.IO.Path.Combine( CurrentPath, file ); // the backslash causes the first letter of file names to be bugged
+		var fullPath = CurrentPath + "/" + file;
+		if ( isFullPath )
+		{
+			fullPath = file;
+		}
+		var fileName = System.IO.Path.GetFileName( file );
+		if ( !string.IsNullOrEmpty( nameOverride ) )
+		{
+			fileName = nameOverride;
+		}
+		var item = new FileItem( this, fullPath, fileName, false );
+		FileItems.Add( item );
+		ItemContainer.AddChild( item );
+	}
+
+	public virtual void AddDirectoryToView( string dir, bool isFullPath = false, string nameOverride = "" )
+	{
+		var fullPath = CurrentPath + "/" + dir;
+		if ( isFullPath )
+		{
+			fullPath = dir;
+		}
+		var dirName = System.IO.Path.GetFileName( dir );
+		if ( !string.IsNullOrEmpty( nameOverride ) )
+		{
+			dirName = nameOverride;
+		}
+		var item = new FileItem( this, fullPath, dirName, true );
+		FileItems.Add( item );
+		ItemContainer.AddChild( item );
 	}
 
 	private List<string> SortPaths( List<string> paths, bool isDirectories )
@@ -262,7 +311,7 @@ public class FileBrowserView : Panel
 		private bool IsSelected;
 
 		// UI Elements
-		private XGUIIconPanel IconPanel;
+		public XGUIIconPanel IconPanel;
 		private Label NameLabel;
 		private Label TypeLabel;
 		private Label SizeLabel;
@@ -476,11 +525,15 @@ public class FileBrowserView : Panel
 			// Handle double click
 			AddEventListener( "ondoubleclick", () =>
 			{
+				// Trigger events
 				if ( IsDirectory )
 				{
-					Parent.NavigateTo( FullPath );
+					Parent.OnDirectoryOpened?.Invoke( FullPath );
 				}
-				// Could add file opening logic here in the future
+				else
+				{
+					Parent.OnFileOpened?.Invoke( FullPath );
+				}
 			} );
 		}
 

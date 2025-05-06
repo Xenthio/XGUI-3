@@ -115,3 +115,35 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	margin: 1px;
 	box-shadow: $outer-boxshadow-inset; 
 }
+
+.toolbar {
+	&:not(:only-child) {
+		box-shadow: 0px 1px 0px 0px $border-colour-bottom-outer-inset;
+	}
+
+	margin-bottom: 1px;
+
+	&.has-drag-handle {
+		&:last-child {
+			box-shadow: none;
+		}
+	}
+}
+.toolbar-container {
+	margin: 1px;
+	margin-top: 2px;
+	box-shadow: $outer-boxshadow-line;
+
+	
+}
+
+LayoutBoxInset {
+	box-shadow: $outer-boxshadow-inset;
+}
+
+LayoutBox {
+	box-shadow: $outer-boxshadow; 
+}
+
+Seperator {
+}

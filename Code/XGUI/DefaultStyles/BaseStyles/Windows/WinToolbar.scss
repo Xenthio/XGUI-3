@@ -1,0 +1,169 @@
+.toolbar-container {
+	margin-top:1px;
+	border-top: 1px solid $border-colour-top;
+	border-left: 1px solid $border-colour-left;
+	border-bottom: 1px solid $border-colour-bottom;
+	border-right: 1px solid $border-colour-right;
+
+	> .toolbar {
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+}
+
+.toolbar {
+	padding: 0px;
+	
+	&:not(:only-child) {
+		border-bottom: 1px solid $border-colour-bottom;
+	}
+
+	&.vertical {
+		border-right: 1px solid $border-colour-right;
+		border-bottom: none;
+	}
+
+	&.has-drag-handle {
+
+		.toolbar-items {
+			margin-left: 9px;
+		}
+
+		.menu-item {
+			height: 21px;
+		}
+	}
+
+	.toolbar-drag-handle {
+		width: 3px;
+		height: 85%;
+		position: absolute;
+		left: 2px;
+		align-items: center;
+		justify-content: center;
+		background-color: $base-colour;
+		border-top: 1px solid $control-border-colour-top;
+		border-left: 1px solid $control-border-colour-left;
+		border-bottom: 1px solid $control-border-colour-bottom;
+		border-right: 1px solid $control-border-colour-right;
+		margin-right: 4px;
+	}
+
+	.menu-item {
+		margin: 1px, 0px;
+		height: 18px;
+		padding: 0px;
+		padding-left: 5px;
+		padding-right: 7px;
+		background-color: transparent;
+		border: 1px solid transparent;
+		cursor: pointer;
+		box-shadow: none;
+
+		&:hover {
+			border-top: 1px solid $control-border-colour-top;
+			border-left: 1px solid $control-border-colour-left;
+			border-bottom: 1px solid $control-border-colour-bottom;
+			border-right: 1px solid $control-border-colour-right;
+		}
+
+		&:active {
+			box-shadow: none;
+			border-top: 1px solid $border-colour-top-outer-inset;
+			border-left: 1px solid $border-colour-left-outer-inset;
+			border-bottom: 1px solid $border-colour-bottom-outer-inset;
+			border-right: 1px solid $border-colour-right-outer-inset;
+		}
+	}
+
+	.toolbar-button {
+		height: auto;
+		min-width: 54px;
+		background-color: transparent;
+		border: 1px solid transparent;
+		cursor: pointer;
+		box-shadow: none;
+		flex-direction: column;
+		margin: 0px; 
+		padding-left: 0px;
+		padding-right: 0px;
+
+		&:hover {
+			border-top: 1px solid $control-border-colour-top;
+			border-left: 1px solid $control-border-colour-left;
+			border-bottom: 1px solid $control-border-colour-bottom;
+			border-right: 1px solid $control-border-colour-right;
+		}
+
+		&:active {
+			box-shadow: none;
+			border-top: 1px solid $border-colour-top-outer-inset;
+			border-left: 1px solid $border-colour-left-outer-inset;
+			border-bottom: 1px solid $border-colour-bottom-outer-inset;
+			border-right: 1px solid $border-colour-right-outer-inset;
+		}
+
+		.xgui-icon-panel {
+			margin: 2px;
+			margin-bottom: 1px;
+		}
+
+		.label {
+			bottom: 1px;
+		}
+	}
+
+	.toolbar-separator {
+		width: 2px;
+		height: 4vh;
+		background-color: $border-colour-left;
+		border-left: 1px solid $border-colour-right;
+		margin: 2px 4px;
+	}
+
+	&.toolbar-drop-target {
+		background-color: lighten($base-colour, 5%);
+		border: 1px dashed $base-colour-active;
+	}
+}
+
+// Menu Toolbar Specific
+.menu-toolbar { 
+
+	.menu-item { 
+	}
+}
+
+// Command Toolbar Specific
+.command-toolbar {
+	.toolbar-button {
+		padding: 2px 4px;
+		margin: 0 1px;
+
+		&.view-button.active {
+			border-top: 1px solid $control-border-colour-top-active;
+			border-left: 1px solid $control-border-colour-left-active;
+			border-bottom: 1px solid $control-border-colour-bottom-active;
+			border-right: 1px solid $control-border-colour-right-active;
+			background-color: darken($base-colour, 5%);
+		}
+	}
+}
+
+// Address Toolbar Specific
+.address-toolbar {
+	.address-label {
+		padding: 0 4px;
+		display: flex;
+		align-items: center;
+		color: $default-text-colour;
+		font-size: $default-text-size;
+		font-family: $default-text-font;
+	}
+
+	.go-button {
+		width: 30px;
+		margin-left: 2px;
+	}
+}
