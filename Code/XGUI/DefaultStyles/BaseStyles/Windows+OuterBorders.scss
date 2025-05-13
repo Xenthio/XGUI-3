@@ -137,6 +137,11 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	
 }
 
+.selectlist {
+	margin: 1px;
+	box-shadow: $outer-boxshadow-inset;
+}
+
 LayoutBoxInset {
 	box-shadow: $outer-boxshadow-inset;
 }

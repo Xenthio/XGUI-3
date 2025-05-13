@@ -4,7 +4,11 @@ namespace XGUI;
 
 public class SelectList : Panel
 {
-	ListOption SelectedOption;
+	public ListOption SelectedOption;
+	public SelectList()
+	{
+		SetClass( "selectlist", true );
+	}
 	protected override void OnChildAdded( Panel child )
 	{
 		base.OnChildAdded( child );

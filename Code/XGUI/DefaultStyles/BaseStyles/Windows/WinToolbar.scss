@@ -14,7 +14,11 @@
 
 .toolbar {
 	padding: 0px;
-	
+
+	.toolbar-items {
+		height: 100%;
+	}
+
 	&:not(:only-child) {
 		border-bottom: 1px solid $border-colour-bottom;
 	}
@@ -85,7 +89,7 @@
 		cursor: pointer;
 		box-shadow: none;
 		flex-direction: column;
-		margin: 0px; 
+		margin: 0px;
 		padding-left: 0px;
 		padding-right: 0px;
 
@@ -116,7 +120,7 @@
 
 	.toolbar-separator {
 		width: 2px;
-		height: 4vh;
+		height: 88%;
 		background-color: $border-colour-left;
 		border-left: 1px solid $border-colour-right;
 		margin: 2px 4px;
@@ -136,9 +140,9 @@
 }
 
 // Command Toolbar Specific
-.command-toolbar {
+.command-toolbar { 
 	.toolbar-button {
-		padding: 2px 4px;
+		padding: 0px 4px;
 		margin: 0 1px;
 
 		&.view-button.active {

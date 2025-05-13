@@ -88,6 +88,8 @@ namespace XGUI
 				item.Add.Icon( iconname, "ItemIcon" );
 			if ( !String.IsNullOrWhiteSpace( iconurl ) )
 				item.Add.Image( iconurl, "ItemIcon" );
+			else
+				item.Add.Image( "", "ItemIcon" );
 			item.Add.Label( text, "ItemText" );
 			item.Add.Icon( "arrow_right", "ItemArrow" );
 

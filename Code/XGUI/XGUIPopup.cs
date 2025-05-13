@@ -62,7 +62,12 @@ public partial class XGUIPopup : XGUIPanel
 		/// <summary>
 		/// Below the source panel, stretch to the width of the <see cref="Popup.PopupSource"/>.
 		/// </summary>
-		BelowStretch
+		BelowStretch,
+
+		/// <summary>
+		/// Position where the mouse cursor is currently
+		/// </summary>
+		UnderMouse
 	}
 
 	public XGUIPopup()
@@ -270,6 +275,9 @@ public partial class XGUIPopup : XGUIPanel
 		PositionMe();
 	}
 
+	float _initialMouseX = -1;
+	float _initialMouseY = -1;
+
 	void PositionMe()
 	{
 		//copy stylesheet from source panel
@@ -325,6 +333,16 @@ public partial class XGUIPopup : XGUIPanel
 				Style.Left = ((rect.Left - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
 				Style.Top = ((rect.Bottom - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
 				Style.Width = rect.Width;
+				break;
+
+			case PositionMode.UnderMouse:
+				if ( _initialMouseX == -1 || _initialMouseY == -1 )
+				{
+					_initialMouseX = Mouse.Position.x;
+					_initialMouseY = Mouse.Position.y;
+				}
+				Style.Left = ((_initialMouseX - Parent.Box.Left - 1)) * PopupSource.ScaleFromScreen;
+				Style.Top = ((_initialMouseY - Parent.Box.Top - 1) + PopupSourceOffset) * PopupSource.ScaleFromScreen;
 				break;
 		}
 

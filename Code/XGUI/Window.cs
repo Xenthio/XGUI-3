@@ -1,5 +1,6 @@
 using Sandbox;
 using Sandbox.UI;
+using System;
 using System.Linq;
 namespace XGUI;
 
@@ -9,7 +10,7 @@ public partial class Window : XGUIPanel
 	public TitleBar TitleBar { get; set; }
 
 
-	public Vector2 Position;
+	public Vector2 Position = new Vector2( 22, 22 );
 	public Vector2 Size;
 	public Vector2 MinSize = new Vector2();
 
@@ -229,9 +230,13 @@ public partial class Window : XGUIPanel
 	{
 		Log.Info( "close" );
 		OnClose();
+		OnCloseAction?.Invoke();
 		Delete();
 	}
 
+
+	// onclose action too
+	public Action OnCloseAction;
 	public virtual void OnClose()
 	{
 		// Override this to do something when the window closes
