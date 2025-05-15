@@ -163,12 +163,15 @@ public partial class Window : XGUIPanel
 
 	}
 
-	bool Minimised = false;
+	public static event Action<Window> OnMinimised;
+	public static event Action<Window> OnRestored;
+
+	public bool IsMinimised = false;
 	Vector2 PreMinimisedSize;
 	Vector2 PreMinimisedPos;
 	public void Minimise()
 	{
-		if ( !Minimised )
+		if ( !IsMinimised )
 		{
 			PreMinimisedSize = Box.Rect.Size;
 
@@ -179,7 +182,7 @@ public partial class Window : XGUIPanel
 			// offset x for other minimised windows
 			foreach ( Window window in Parent.Children.OfType<Window>() )
 			{
-				if ( window.Minimised )
+				if ( window.IsMinimised )
 				{
 					offset += 180;
 				}
@@ -193,25 +196,27 @@ public partial class Window : XGUIPanel
 
 			Style.Height = newheight;
 			Style.Width = 180;
-			Minimised = true;
+			IsMinimised = true;
+			OnMinimised?.Invoke( this );
 		}
 		else
 		{
-			Minimised = false;
+			IsMinimised = false;
 			Style.Width = PreMinimisedSize.x;
 			Style.Height = PreMinimisedSize.y;
 
 			Position = PreMinimisedPos;
+			OnRestored?.Invoke( this );
 		}
 		Log.Info( "minimise" );
 	}
 
-	bool Maximised = false;
+	public bool IsMaximised = false;
 	Vector2 PreMaximisedSize;
 	Vector2 PreMaximisedPos;
 	public void Maximise()
 	{
-		if ( !Maximised )
+		if ( !IsMaximised )
 		{
 			PreMaximisedSize = Box.Rect.Size;
 
@@ -221,11 +226,11 @@ public partial class Window : XGUIPanel
 
 			Style.Height = Parent.Box.Rect.Size.y;
 			Style.Width = Parent.Box.Rect.Size.x;
-			Maximised = true;
+			IsMaximised = true;
 		}
 		else
 		{
-			Maximised = false;
+			IsMaximised = false;
 			Style.Width = PreMaximisedSize.x;
 			Style.Height = PreMaximisedSize.y;
 
@@ -273,8 +278,8 @@ public partial class Window : XGUIPanel
 
 		Style.ZIndex = (Parent.ChildrenCount - Parent.GetChildIndex( this )) * 10;
 
-		SetClass( "minimised", this.Minimised );
-		SetClass( "maximised", this.Maximised );
+		SetClass( "minimised", this.IsMinimised );
+		SetClass( "maximised", this.IsMaximised );
 		SetClass( "unfocused", !this.HasFocus );
 		FocusUpdate();
 	}
