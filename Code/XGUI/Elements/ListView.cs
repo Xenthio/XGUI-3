@@ -32,6 +32,7 @@ public class ListView : Panel
 		public bool IsSelected { get; private set; }
 		private List<Panel> Cells { get; } = new();
 		public XGUIIconPanel IconPanel;
+		private TextEntry _renameEntry;
 
 		public ListViewItem( ListView parent, object data, List<string> subItems )
 		{
@@ -123,6 +124,44 @@ public class ListView : Panel
 		{
 			IsSelected = selected;
 			SetClass( "selected", selected );
+		}
+
+		public void BeginRename( Action<string> onRenameComplete )
+		{
+			// Remove existing label(s)
+			foreach ( var child in Children.ToList() )
+			{
+				if ( child is Label )
+					child.Delete();
+			}
+
+			// Create and add TextEntry
+			_renameEntry = new TextEntry
+			{
+				Text = (SubItems != null && SubItems.Count > 0) ? SubItems[0] : "",
+				Style = { Width = Length.Percent( 100 ) }
+			};
+			AddChild( _renameEntry );
+			_renameEntry.Focus();
+
+			//_renameEntry.OnBlur += () => EndRename( onRenameComplete );
+			//_renameEntry.OnEnterPressed += () => EndRename( onRenameComplete );
+			_renameEntry.AddEventListener( "onblur", () => EndRename( onRenameComplete ) );
+			_renameEntry.AddEventListener( "onsubmit", () => EndRename( onRenameComplete ) );
+		}
+
+		private void EndRename( Action<string> onRenameComplete )
+		{
+			if ( _renameEntry == null ) return;
+			string newName = _renameEntry.Text;
+			_renameEntry.Delete();
+			_renameEntry = null;
+
+			// Restore label
+			string text = newName;
+			AddChild( new Label { Text = text } );
+
+			onRenameComplete?.Invoke( newName );
 		}
 	}
 

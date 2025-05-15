@@ -503,6 +503,17 @@ public class XGUIIconPanel : Panel
 			return;
 		}
 
+		if ( _iconName.StartsWith( "url:" ) )
+		{
+			var imagePath = IconName.Substring( 4 ); // Remove "url:" prefix
+			_iconImage.Style.Display = DisplayMode.Flex;
+			_materialIconLabel.Style.Display = DisplayMode.None;
+			_iconImage.Style.SetBackgroundImage( imagePath );
+			_iconImage.Style.Width = Length.Pixels( _iconSize );
+			_iconImage.Style.Height = Length.Pixels( _iconSize );
+			return;
+		}
+
 		string iconPath = XGUIIconSystem.GetIcon( _iconName, _iconType, _iconSize, _variant );
 
 		if ( string.IsNullOrEmpty( iconPath ) )
