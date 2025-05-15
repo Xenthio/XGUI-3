@@ -69,11 +69,13 @@
 			.TextEntry {
 				border: 1px solid black;
 				box-shadow: none;
-				height:auto;
-				overflow:scroll;
+				height: auto;
+				overflow: scroll;
+				flex-shrink: 1;
 
-				.label {  
-					text-overflow:unset;
+				.label {
+					flex-grow:0;
+					text-overflow: unset;
 				}
 			}
 		}
