@@ -8,6 +8,12 @@
 		}
 	}
 
+	&.forceinset {
+		> * {
+			transform: translate(1px, 1px);
+		}
+	}
+
 	&.no-inset {
 		> * {
 			transform: translate(0px, 0px);

@@ -16,9 +16,14 @@
 }
 
 .window {
-	padding:1px;
+	padding: 1px;
+
 	> .titlebar {
 		> .titleelements {
+			> .titleicon {
+				margin-left: -0px;
+			}
+
 			> .titlelabel {
 				top: 0px;
 			}

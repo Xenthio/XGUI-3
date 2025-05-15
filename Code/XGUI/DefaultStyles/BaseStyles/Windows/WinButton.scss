@@ -7,7 +7,7 @@
 	border-bottom: 1px solid $control-border-colour-bottom;
 	border-right: 1px solid $control-border-colour-right;
 	background-color: $control-colour;
-	padding: 6px; 
+	padding: 6px;
 
 	> .label {
 		//text-overflow: ellipsis;
@@ -37,6 +37,18 @@
 	}
 
 	&:active {
+		border-top: 1px solid $control-border-colour-top-active;
+		border-left: 1px solid $control-border-colour-left-active;
+		border-bottom: 1px solid $control-border-colour-bottom-active;
+		border-right: 1px solid $control-border-colour-right-active;
+		background-color: $control-colour-active;
+
+		&:focus, &.focus {
+		}
+	}
+
+
+	&.forceinset {
 		border-top: 1px solid $control-border-colour-top-active;
 		border-left: 1px solid $control-border-colour-left-active;
 		border-bottom: 1px solid $control-border-colour-bottom-active;

@@ -35,7 +35,12 @@ public static class XGUIIconSystem
 		/// <summary>
 		/// Icons for folders
 		/// </summary>
-		Folder
+		Folder,
+
+		/// <summary>
+		/// Miscellaneous icons (other types)
+		/// </summary>
+		Misc
 	}
 
 	/// <summary>
@@ -72,6 +77,7 @@ public static class XGUIIconSystem
 			IconType.UI => "UI",
 			IconType.FileType => "FileTypes",
 			IconType.Folder => "Folders",
+			IconType.Misc => "Misc",
 			_ => string.Empty
 		};
 	}

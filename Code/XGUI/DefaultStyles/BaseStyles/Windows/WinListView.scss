@@ -1,0 +1,69 @@
+.listview {
+	border-top: 1px solid $border-colour-top-inset;
+	border-left: 1px solid $border-colour-left-inset;
+	border-bottom: 1px solid $border-colour-bottom-inset;
+	border-right: 1px solid $border-colour-right-inset;
+	background-color: $base-colour-inset;
+
+	.listview-header {
+		border-bottom: 1px solid $border-colour-bottom-outer;
+		background-color: $border-colour-bottom-outer;
+
+		.listview-header-column {
+			background-color: $base-colour;
+			border-top: 1px solid $border-colour-top-outer;
+			border-left: 1px solid $border-colour-left-outer;
+			border-bottom: 1px solid $border-colour-bottom;
+			border-right: 1px solid $border-colour-right;
+
+			.label {
+				padding-top: 1px;
+			}
+
+			&:not(:last-child) {
+				margin-right: 1px;
+			}
+
+			&.selected {
+				background-color: $base-colour-active;
+				color: $default-text-colour-alt;
+			}
+		}
+	}
+
+	.listview-item {
+
+		&.listview-row {
+			.listview-icon {
+				margin-left: 1px;
+			}
+
+			.label {
+				margin-left: 1px;
+				padding: 2px;
+			}
+		}
+
+
+		&.selected {
+			.listview-icon {
+				.icon-image {
+					background-tint: #7F7FBF;
+				}
+			}
+
+			// Likely the name of the item
+			:nth-child(2) {
+				.label {
+					background-color: $base-colour-active;
+					color: $default-text-colour-alt;
+				}
+			}
+
+			> .label {
+				background-color: $base-colour-active;
+				color: $default-text-colour-alt;
+			}
+		}
+	}
+}

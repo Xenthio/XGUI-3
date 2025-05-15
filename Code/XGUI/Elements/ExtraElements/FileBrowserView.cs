@@ -24,8 +24,7 @@ public class FileBrowserView : Panel
 	public BaseFileSystem CurrentFileSystem;
 	public string CurrentPath;
 	public List<FileItem> FileItems = new();
-	public Panel ItemContainer;
-	private Dictionary<string, FileItem> SelectedItems = new();
+	protected ListView ListView;
 
 	// View mode properties
 	private FileBrowserViewMode _viewMode = FileBrowserViewMode.Icons;
@@ -44,10 +43,6 @@ public class FileBrowserView : Panel
 		}
 	}
 
-	// Sort properties
-	private string _sortField = "Name";
-	private bool _sortAscending = true;
-
 	// Events
 	public event Action<string> OnFileSelected;
 	public event Action<string> OnDirectorySelected;
@@ -62,20 +57,65 @@ public class FileBrowserView : Panel
 	{
 		AddClass( "file-browser-view" );
 
-		// Create item container
-		ItemContainer = new Panel();
-		ItemContainer.AddClass( "item-container" );
-		AddChild( ItemContainer );
+		// Create the ListView component
+		ListView = AddChild<ListView>();
+		ListView.AddClass( "file-browser-listview" );
+
+		// Add standard columns for details view
+		ListView.AddColumn( "Name", "name", 300 );
+		ListView.AddColumn( "Type", "type", 150 );
+		ListView.AddColumn( "Size", "size", 100 );
+
+		// Connect ListView events to FileBrowserView events
+		ListView.OnItemSelected += OnListViewItemSelected;
+		ListView.OnItemActivated += OnListViewItemActivated;
 
 		// Initialize with Icons view
 		UpdateViewMode();
 	}
 
-	private void UpdateViewMode()
+	protected void OnListViewItemSelected( ListView.ListViewItem item )
 	{
-		ItemContainer.SetClass( "icons-view", ViewMode == FileBrowserViewMode.Icons );
-		ItemContainer.SetClass( "list-view", ViewMode == FileBrowserViewMode.List );
-		ItemContainer.SetClass( "details-view", ViewMode == FileBrowserViewMode.Details );
+		var fileItem = item.Data as FileItem;
+		if ( fileItem != null )
+		{
+			if ( fileItem.IsDirectory )
+			{
+				OnDirectorySelected?.Invoke( fileItem.FullPath );
+			}
+			else
+			{
+				OnFileSelected?.Invoke( fileItem.FullPath );
+			}
+		}
+	}
+
+	protected void OnListViewItemActivated( ListView.ListViewItem item )
+	{
+		var fileItem = item.Data as FileItem;
+		if ( fileItem != null )
+		{
+			if ( fileItem.IsDirectory )
+			{
+				OnDirectoryOpened?.Invoke( fileItem.FullPath );
+			}
+			else
+			{
+				OnFileOpened?.Invoke( fileItem.FullPath );
+			}
+		}
+	}
+
+	public void UpdateViewMode()
+	{
+		// Map FileBrowserViewMode to ListView.ListViewMode
+		ListView.ViewMode = ViewMode switch
+		{
+			FileBrowserViewMode.Icons => ListView.ListViewMode.Icons,
+			FileBrowserViewMode.List => ListView.ListViewMode.List,
+			FileBrowserViewMode.Details => ListView.ListViewMode.Details,
+			_ => ListView.ListViewMode.Icons
+		};
 
 		// Notify about view mode change
 		OnViewModeChanged?.Invoke( ViewMode );
@@ -100,11 +140,7 @@ public class FileBrowserView : Panel
 	/// </summary>
 	public void RaiseNavigateToEvent( string path )
 	{
-		// OnNavigateTo is declared in the base class, so we need to invoke it indirectly
-		if ( OnNavigateTo != null )
-		{
-			OnNavigateTo.Invoke( path );
-		}
+		OnNavigateTo?.Invoke( path );
 	}
 
 	public void NavigateTo( string path )
@@ -114,51 +150,25 @@ public class FileBrowserView : Panel
 		Refresh();
 	}
 
+	public virtual void SetupHeader()
+	{
+		// Not needed anymore as ListView handles its own header
+	}
+
 	public virtual void Refresh()
 	{
-		ItemContainer.DeleteChildren();
 		FileItems.Clear();
-		SelectedItems.Clear();
+		ListView.Items.Clear();
+
+		// Important: Update the ListView UI
+		ListView.DeleteChildren();
+		ListView.InitializeHeader();
 
 		if ( string.IsNullOrEmpty( CurrentPath ) || CurrentFileSystem == null )
 			return;
 
 		if ( !CurrentFileSystem.DirectoryExists( CurrentPath ) )
 			return;
-
-		// Create header row for details view
-		if ( ViewMode == FileBrowserViewMode.Details )
-		{
-			var header = new Panel();
-			header.AddClass( "details-header" );
-
-			// Create column headers
-			var nameHeader = new Panel();
-			nameHeader.AddClass( "column-header" );
-			nameHeader.AddClass( "name-column" );
-			nameHeader.AddEventListener( "onclick", () => SortItems( "Name" ) );
-			nameHeader.AddChild( new Label { Text = "Name" } );
-
-			var typeHeader = new Panel();
-			typeHeader.AddClass( "column-header" );
-			typeHeader.AddClass( "type-column" );
-			typeHeader.AddEventListener( "onclick", () => SortItems( "Type" ) );
-			typeHeader.AddChild( new Label { Text = "Type" } );
-
-			var sizeHeader = new Panel();
-			sizeHeader.AddClass( "column-header" );
-			sizeHeader.AddClass( "size-column" );
-			sizeHeader.AddEventListener( "onclick", () => SortItems( "Size" ) );
-			sizeHeader.AddChild( new Label { Text = "Size" } );
-
-			// Add column headers to header row
-			header.AddChild( nameHeader );
-			header.AddChild( typeHeader );
-			header.AddChild( sizeHeader );
-
-			// Add header to container
-			ItemContainer.AddChild( header );
-		}
 
 		try
 		{
@@ -168,9 +178,9 @@ public class FileBrowserView : Panel
 			// Get files
 			List<string> files = CurrentFileSystem.FindFile( CurrentPath ).ToList();
 
-			// Sort directories and files
-			directories = SortPaths( directories, true );
-			files = SortPaths( files, false );
+			// Sort directories and files (default sort is by name)
+			directories.Sort( ( a, b ) => string.Compare( System.IO.Path.GetFileName( a ), System.IO.Path.GetFileName( b ) ) );
+			files.Sort( ( a, b ) => string.Compare( System.IO.Path.GetFileName( a ), System.IO.Path.GetFileName( b ) ) );
 
 			OnPreAddFiles?.Invoke();
 
@@ -196,7 +206,6 @@ public class FileBrowserView : Panel
 
 	public virtual void AddFileToView( string file, bool isFullPath = false, string nameOverride = "" )
 	{
-		//var fullPath = System.IO.Path.Combine( CurrentPath, file ); // the backslash causes the first letter of file names to be bugged
 		var fullPath = CurrentPath + "/" + file;
 		if ( isFullPath )
 		{
@@ -207,9 +216,35 @@ public class FileBrowserView : Panel
 		{
 			fileName = nameOverride;
 		}
-		var item = new FileItem( this, fullPath, fileName, false );
-		FileItems.Add( item );
-		ItemContainer.AddChild( item );
+
+		// Create the file item data object
+		var fileItem = new FileItem
+		{
+			Name = fileName,
+			FullPath = fullPath,
+			IsDirectory = false
+		};
+		FileItems.Add( fileItem );
+
+		// Create subItems for ListView
+		var subItems = new List<string>
+		{
+			fileName,
+			GetFileType( fileName, false ),
+			GetFileSize( false )
+		};
+
+		// Add to ListView
+		ListView.AddItem( fileItem, subItems );
+
+		// Configure icon for the newly added item
+		var listViewItem = ListView.Items.LastOrDefault();
+		if ( listViewItem?.IconPanel != null )
+		{
+			string extension = System.IO.Path.GetExtension( fileName );
+			int iconSize = ViewMode == FileBrowserViewMode.Icons ? 32 : 16;
+			listViewItem.IconPanel.SetFileIcon( extension, iconSize );
+		}
 	}
 
 	public virtual void AddDirectoryToView( string dir, bool isFullPath = false, string nameOverride = "" )
@@ -224,323 +259,85 @@ public class FileBrowserView : Panel
 		{
 			dirName = nameOverride;
 		}
-		var item = new FileItem( this, fullPath, dirName, true );
-		FileItems.Add( item );
-		ItemContainer.AddChild( item );
+
+		// Create the directory item data object
+		var dirItem = new FileItem
+		{
+			Name = dirName,
+			FullPath = fullPath,
+			IsDirectory = true
+		};
+		FileItems.Add( dirItem );
+
+		// Create subItems for ListView
+		var subItems = new List<string>
+		{
+			dirName,
+			GetFileType( dirName, true ),
+			GetFileSize( true )
+		};
+
+		// Add to ListView
+		ListView.AddItem( dirItem, subItems );
+
+		// Configure icon for the newly added item
+		var listViewItem = ListView.Items.LastOrDefault();
+		if ( listViewItem?.IconPanel != null )
+		{
+			int iconSize = ViewMode == FileBrowserViewMode.Icons ? 32 : 16;
+			listViewItem.IconPanel.SetFolderIcon( "folder", iconSize );
+		}
 	}
 
-	private List<string> SortPaths( List<string> paths, bool isDirectories )
+	private string GetFileType( string name, bool isDirectory )
 	{
-		if ( _sortField == "Name" )
-		{
-			return _sortAscending
-				? paths.OrderBy( p => System.IO.Path.GetFileName( p ) ).ToList()
-				: paths.OrderByDescending( p => System.IO.Path.GetFileName( p ) ).ToList();
-		}
-		else if ( _sortField == "Type" && !isDirectories )
-		{
-			return _sortAscending
-				? paths.OrderBy( p => System.IO.Path.GetExtension( p ) ).ToList()
-				: paths.OrderByDescending( p => System.IO.Path.GetExtension( p ) ).ToList();
-		}
+		if ( isDirectory )
+			return "File Folder";
 
-		// Default sort by name
-		return _sortAscending
-			? paths.OrderBy( p => System.IO.Path.GetFileName( p ) ).ToList()
-			: paths.OrderByDescending( p => System.IO.Path.GetFileName( p ) ).ToList();
+		string extension = System.IO.Path.GetExtension( name ).ToLower();
+		return !string.IsNullOrEmpty( extension ) ? extension.Substring( 1 ).ToUpper() + " File" : "File";
 	}
 
-	private void SortItems( string field )
+	private string GetFileSize( bool isDirectory )
 	{
-		// If clicking the same field, toggle sort direction
-		if ( _sortField == field )
-		{
-			_sortAscending = !_sortAscending;
-		}
-		else
-		{
-			_sortField = field;
-			_sortAscending = true;
-		}
-
-		// Refresh to apply new sorting
-		Refresh();
+		return isDirectory ? "" : "";  // Could implement file size calculation if needed
 	}
 
-	public void SelectItem( FileItem item, bool multiSelect = false )
+	public void SelectItem( FileItem item )
 	{
-		// Clear previous selections if not multiselect
-		if ( !multiSelect )
+		// Find the ListView item that corresponds to this FileItem
+		foreach ( var listViewItem in ListView.Items )
 		{
-			foreach ( var selected in SelectedItems.Values )
+			if ( listViewItem.Data == item )
 			{
-				selected.SetSelected( false );
+				ListView.SelectItem( listViewItem );
+				break;
 			}
-			SelectedItems.Clear();
-		}
-
-		// Toggle selection state for this item
-		bool isSelected = SelectedItems.ContainsKey( item.FullPath );
-		if ( isSelected )
-		{
-			item.SetSelected( false );
-			SelectedItems.Remove( item.FullPath );
-		}
-		else
-		{
-			item.SetSelected( true );
-			SelectedItems[item.FullPath] = item;
 		}
 	}
 
 	public void UnselectAll()
 	{
-		foreach ( var selected in SelectedItems.Values )
+		// ListView doesn't have explicit UnselectAll, so we'll just clear our tracking
+		foreach ( var item in ListView.Items )
 		{
-			selected.SetSelected( false );
+			item.SetSelected( false );
 		}
-		SelectedItems.Clear();
 	}
 
-	public class FileItem : Panel
+	protected override void OnRightClick( MousePanelEvent e )
 	{
-		public FileBrowserView Parent;
-		public string Name;
-		public string FullPath;
-		public bool IsDirectory;
-		private bool IsSelected;
+		base.OnRightClick( e );
+		// Right-click handling is implemented in derived classes
+	}
 
-		// UI Elements
-		public XGUIIconPanel IconPanel;
-		private Label NameLabel;
-		private Label TypeLabel;
-		private Label SizeLabel;
-
-		public FileItem( FileBrowserView parent, string path, string name, bool isDirectory )
-		{
-			Parent = parent;
-			Name = name;
-			FullPath = path;
-			IsDirectory = isDirectory;
-			IsSelected = false;
-
-			SetupUI();
-			AddEventListeners();
-		}
-
-		private void SetupUI()
-		{
-			// Add classes based on view mode
-			AddClass( "file-item" );
-			AddClass( IsDirectory ? "directory-item" : "file-item" );
-
-			// Create UI elements based on view mode
-			if ( Parent.ViewMode == FileBrowserViewMode.Icons )
-			{
-				SetupIconsView();
-			}
-			else if ( Parent.ViewMode == FileBrowserViewMode.List )
-			{
-				SetupListView();
-			}
-			else if ( Parent.ViewMode == FileBrowserViewMode.Details )
-			{
-				SetupDetailsView();
-			}
-		}
-
-		private void SetupIconsView()
-		{
-			AddClass( "icons-view-item" );
-
-			// Create icon using XGUIIconSystem
-			IconPanel = new XGUIIconPanel();
-			IconPanel.AddClass( "item-icon" );
-
-			if ( IsDirectory )
-			{
-				IconPanel.SetFolderIcon( "folder", 32 );
-			}
-			else
-			{
-				string extension = System.IO.Path.GetExtension( Name );
-				IconPanel.SetFileIcon( extension, 32 );
-			}
-
-			AddChild( IconPanel );
-
-			// Create label
-			NameLabel = new Label();
-			NameLabel.Text = Name;
-			NameLabel.AddClass( "item-label" );
-			AddChild( NameLabel );
-		}
-
-
-		private void SetupListView()
-		{
-			AddClass( "list-view-item" );
-
-			// Create a horizontal layout
-			Style.FlexDirection = FlexDirection.Row;
-			Style.AlignItems = Align.Center;
-
-			// Create small icon
-			IconPanel = new XGUIIconPanel();
-			IconPanel.AddClass( "item-icon" );
-			IconPanel.AddClass( "small-icon" );
-
-			if ( IsDirectory )
-			{
-				IconPanel.SetFolderIcon( "folder", 16 );
-			}
-			else
-			{
-				string extension = System.IO.Path.GetExtension( Name );
-				IconPanel.SetFileIcon( extension, 16 );
-			}
-
-			AddChild( IconPanel );
-
-			// Create label
-			NameLabel = new Label();
-			NameLabel.Text = Name;
-			NameLabel.AddClass( "item-label" );
-			AddChild( NameLabel );
-		}
-
-		private void SetupDetailsView()
-		{
-			AddClass( "details-view-item" );
-
-			// Create a row with columns
-			Style.FlexDirection = FlexDirection.Row;
-
-			// Name column (includes icon and name)
-			var nameColumn = new Panel();
-			nameColumn.AddClass( "column" );
-			nameColumn.AddClass( "name-column" );
-			nameColumn.Style.FlexDirection = FlexDirection.Row;
-			nameColumn.Style.AlignItems = Align.Center;
-
-			// Create small icon
-			IconPanel = new XGUIIconPanel();
-			IconPanel.AddClass( "item-icon" );
-			IconPanel.AddClass( "tiny-icon" );
-
-			if ( IsDirectory )
-			{
-				IconPanel.SetFolderIcon( "folder", 16 );
-			}
-			else
-			{
-				string extension = System.IO.Path.GetExtension( Name );
-				IconPanel.SetFileIcon( extension, 16 );
-			}
-
-			nameColumn.AddChild( IconPanel );
-
-			// Create name label
-			NameLabel = new Label();
-			NameLabel.Text = Name;
-			NameLabel.AddClass( "item-label" );
-			nameColumn.AddChild( NameLabel );
-
-			AddChild( nameColumn );
-
-			// Type column
-			var typeColumn = new Panel();
-			typeColumn.AddClass( "column" );
-			typeColumn.AddClass( "type-column" );
-
-			// Create type label
-			TypeLabel = new Label();
-			TypeLabel.Text = GetFileType();
-			TypeLabel.AddClass( "item-label" );
-			typeColumn.AddChild( TypeLabel );
-
-			AddChild( typeColumn );
-
-			// Size column
-			var sizeColumn = new Panel();
-			sizeColumn.AddClass( "column" );
-			sizeColumn.AddClass( "size-column" );
-
-			// Create size label
-			SizeLabel = new Label();
-			SizeLabel.Text = GetFileSize();
-			SizeLabel.AddClass( "item-label" );
-			sizeColumn.AddChild( SizeLabel );
-
-			AddChild( sizeColumn );
-		}
-
-		private string GetFileType()
-		{
-			if ( IsDirectory )
-				return "File Folder";
-
-			string extension = System.IO.Path.GetExtension( Name ).ToLower();
-			return !string.IsNullOrEmpty( extension ) ? extension.Substring( 1 ).ToUpper() + " File" : "File";
-		}
-
-		private string GetFileSize()
-		{
-			if ( IsDirectory )
-				return "";
-
-			try
-			{
-				// TODO: Get actual file size if possible with BaseFileSystem
-				return ""; // For now, return empty for files too
-			}
-			catch
-			{
-				return "";
-			}
-		}
-
-		private void AddEventListeners()
-		{
-			// Handle single click
-			AddEventListener( "onclick", ( e ) =>
-			{
-				// Check if ctrl is pressed for multi-select
-				bool multiSelect = Input.Keyboard.Down( "control" );
-
-				// Select this item
-				Parent.SelectItem( this, multiSelect );
-
-				// Trigger appropriate event
-				if ( IsDirectory )
-				{
-					Parent.OnDirectorySelected?.Invoke( FullPath );
-				}
-				else
-				{
-					Parent.OnFileSelected?.Invoke( FullPath );
-				}
-			} );
-
-			// Handle double click
-			AddEventListener( "ondoubleclick", () =>
-			{
-				// Trigger events
-				if ( IsDirectory )
-				{
-					Parent.OnDirectoryOpened?.Invoke( FullPath );
-				}
-				else
-				{
-					Parent.OnFileOpened?.Invoke( FullPath );
-				}
-			} );
-		}
-
-		public void SetSelected( bool selected )
-		{
-			IsSelected = selected;
-			SetClass( "selected", selected );
-		}
+	/// <summary>
+	/// Data class representing a file or directory item
+	/// </summary>
+	public class FileItem
+	{
+		public string Name { get; set; }
+		public string FullPath { get; set; }
+		public bool IsDirectory { get; set; }
 	}
 }

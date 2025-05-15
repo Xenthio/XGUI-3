@@ -1,7 +1,7 @@
 .toolbar-container {
-	margin-top:1px;
-	border-top: 1px solid $border-colour-top;
-	border-left: 1px solid $border-colour-left;
+	margin-top: 1px;
+	border-top: 1px solid $border-colour-top-outer;
+	border-left: 1px solid $border-colour-left-outer;
 	border-bottom: 1px solid $border-colour-bottom;
 	border-right: 1px solid $border-colour-right;
 
@@ -10,6 +10,21 @@
 			border-bottom: none;
 		}
 	}
+}
+
+.toolbar-drag-handle {
+	width: 3px;
+	height: 85%;
+	position: absolute;
+	left: 2px;
+	align-items: center;
+	justify-content: center;
+	background-color: $base-colour;
+	border-top: 1px solid $control-border-colour-top-outer;
+	border-left: 1px solid $control-border-colour-left-outer;
+	border-bottom: 1px solid $control-border-colour-bottom;
+	border-right: 1px solid $control-border-colour-right;
+	margin-right: 4px;
 }
 
 .toolbar {
@@ -35,24 +50,11 @@
 		}
 
 		.menu-item {
-			height: 21px;
+			height: 20px;
 		}
 	}
 
-	.toolbar-drag-handle {
-		width: 3px;
-		height: 85%;
-		position: absolute;
-		left: 2px;
-		align-items: center;
-		justify-content: center;
-		background-color: $base-colour;
-		border-top: 1px solid $control-border-colour-top;
-		border-left: 1px solid $control-border-colour-left;
-		border-bottom: 1px solid $control-border-colour-bottom;
-		border-right: 1px solid $control-border-colour-right;
-		margin-right: 4px;
-	}
+
 
 	.menu-item {
 		margin: 1px, 0px;

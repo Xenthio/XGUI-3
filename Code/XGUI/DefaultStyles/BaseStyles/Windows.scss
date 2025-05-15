@@ -62,6 +62,9 @@
 // SelectList
 @import "/XGUI/DefaultStyles/BaseStyles/Windows/WinSelectList.scss";
 
+// ListView
+@import "/XGUI/DefaultStyles/BaseStyles/Windows/WinListView.scss";
+
 /// ------------------
 /// Extra Elements
 /// ------------------
@@ -89,8 +92,15 @@ LayoutBox {
 }
 
 Seperator {
-	background-color: $border-colour-bottom-inset;
+	background-color: $border-colour-bottom-outer-inset;
 	height: 2px;
 	width: 100%;
-	border-top: 1px solid $border-colour-top-inset;
+	border-top: 1px solid $border-colour-top-outer-inset;
+}
+
+SeperatorVertical {
+	background-color: $border-colour-bottom-outer-inset;
+	width: 2px;
+	height: 100%;
+	border-left: 1px solid $border-colour-top-outer-inset;
 }

@@ -69,6 +69,13 @@ public partial class Window : XGUIPanel
 				FocusWindow();
 				AutoFocus = false;
 			}
+
+			// If size is set, set the width and height
+			if ( Size != Vector2.Zero )
+			{
+				Style.Width = Size.x;
+				Style.Height = Size.y;
+			}
 		}
 		if ( TitleBar.IsValid )
 			SetChildIndex( TitleBar, 0 );
