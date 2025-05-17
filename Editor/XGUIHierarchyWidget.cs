@@ -138,8 +138,8 @@ class MarkupTreeNode : TreeNode<MarkupNode>
 		}
 
 		var brackets = Theme.Yellow.WithAlpha( 0.7f );
-		var element = Theme.White.WithAlpha( 0.9f );
-		var keyword = Theme.White.WithAlpha( 0.7f );
+		var element = Color.White.WithAlpha( 0.9f );
+		var keyword = Color.White.WithAlpha( 0.7f );
 		var code = Theme.Pink.WithAlpha( 0.7f );
 
 		if ( hoveredInGame )

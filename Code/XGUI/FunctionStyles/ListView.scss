@@ -1,5 +1,6 @@
 listview {
 	flex-direction: column;
+	overflow:scroll;
 
 	.listview-header {
 		.listview-header-column {
