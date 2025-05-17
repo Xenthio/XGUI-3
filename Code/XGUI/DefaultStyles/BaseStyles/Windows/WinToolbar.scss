@@ -1,9 +1,9 @@
 .toolbar-container {
 	margin-top: 1px;
-	border-top: 1px solid $border-colour-top-outer;
-	border-left: 1px solid $border-colour-left-outer;
-	border-bottom: 1px solid $border-colour-bottom;
-	border-right: 1px solid $border-colour-right;
+	border-top: 1px solid $border-colour-top;
+	border-left: 1px solid $border-colour-left;
+	border-bottom: 1px solid $border-colour-bottom-inner;
+	border-right: 1px solid $border-colour-right-inner;
 
 	.toolbar {
 		border-bottom: 1px solid $border-colour-bottom;

@@ -6,15 +6,15 @@
 	background-color: $base-colour-inset;
 
 	.listview-header {
-		border-bottom: 1px solid $border-colour-bottom-outer;
-		background-color: $border-colour-bottom-outer;
+		border-bottom: 1px solid $border-colour-bottom;
+		background-color: $border-colour-bottom;
 
 		.listview-header-column {
 			background-color: $base-colour;
-			border-top: 1px solid $border-colour-top-outer;
-			border-left: 1px solid $border-colour-left-outer;
-			border-bottom: 1px solid $border-colour-bottom;
-			border-right: 1px solid $border-colour-right;
+			border-top: 1px solid $border-colour-top;
+			border-left: 1px solid $border-colour-left;
+			border-bottom: 1px solid $border-colour-bottom-inner;
+			border-right: 1px solid $border-colour-right-inner;
 
 			.label {
 				padding-top: 1px;

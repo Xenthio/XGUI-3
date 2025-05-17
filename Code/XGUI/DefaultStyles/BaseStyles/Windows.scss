@@ -98,8 +98,8 @@ Seperator {
 }
 
 SeperatorVertical {
-	background-color: $border-colour-bottom-inset;
+	background-color: $border-colour-right-inset;
 	width: 2px;
 	height: 100%;
-	border-left: 1px solid $border-colour-top-outer-inset;
+	border-left: 1px solid $border-colour-left-inset;
 }
