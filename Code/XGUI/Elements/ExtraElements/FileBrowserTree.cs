@@ -104,7 +104,8 @@ public class FileBrowserTree : Panel
 			return;
 		}
 
-		string[] pathParts = relativePath.Split( '/', '\\' ).Where( p => !string.IsNullOrEmpty( p ) ).ToArray();
+		string[] pathParts = relativePath.Split( '/' ).Where( p => !string.IsNullOrEmpty( p ) ).ToArray();
+		//string[] pathParts = relativePath.Split( '/', '\\' ).Where( p => !string.IsNullOrEmpty( p ) ).ToArray();
 
 		// Expand each part of the path
 		foreach ( string part in pathParts )
