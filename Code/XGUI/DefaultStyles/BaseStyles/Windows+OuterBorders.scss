@@ -41,6 +41,8 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 .TabContainer {
 	> .tabs {
 		> .button {
+			border-top-left-radius: 2px;
+			border-top-right-radius: 2px;
 			border-bottom: 1px solid $border-colour-top-outer;
 			box-shadow: $outer-boxshadow-tab;
 			margin-bottom: 3px;

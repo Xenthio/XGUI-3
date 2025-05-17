@@ -92,14 +92,13 @@ LayoutBox {
 }
 
 Seperator {
-	background-color: $border-colour-bottom-outer-inset;
-	height: 2px;
-	width: 100%;
-	border-top: 1px solid $border-colour-top-outer-inset;
+	background-color: $border-colour-bottom-inset;
+	height: 1px;
+	width: 100%; 
 }
 
 SeperatorVertical {
-	background-color: $border-colour-bottom-outer-inset;
+	background-color: $border-colour-bottom-inset;
 	width: 2px;
 	height: 100%;
 	border-left: 1px solid $border-colour-top-outer-inset;

@@ -5,7 +5,9 @@
 	border-bottom: 1px solid $border-colour-bottom;
 	border-right: 1px solid $border-colour-right;
 
-	> .toolbar {
+	.toolbar {
+		border-bottom: 1px solid $border-colour-bottom;
+
 		&:last-child {
 			border-bottom: none;
 		}
@@ -20,10 +22,10 @@
 	align-items: center;
 	justify-content: center;
 	background-color: $base-colour;
-	border-top: 1px solid $control-border-colour-top-outer;
-	border-left: 1px solid $control-border-colour-left-outer;
-	border-bottom: 1px solid $control-border-colour-bottom;
-	border-right: 1px solid $control-border-colour-right;
+	border-top: 1px solid $border-colour-top;
+	border-left: 1px solid $border-colour-left;
+	border-bottom: 1px solid $border-colour-bottom-inner;
+	border-right: 1px solid $border-colour-right-inner;
 	margin-right: 4px;
 }
 
@@ -32,10 +34,6 @@
 
 	.toolbar-items {
 		height: 100%;
-	}
-
-	&:not(:only-child) {
-		border-bottom: 1px solid $border-colour-bottom;
 	}
 
 	&.vertical {
@@ -65,21 +63,19 @@
 		background-color: transparent;
 		border: 1px solid transparent;
 		cursor: pointer;
-		box-shadow: none;
 
 		&:hover {
-			border-top: 1px solid $control-border-colour-top;
-			border-left: 1px solid $control-border-colour-left;
-			border-bottom: 1px solid $control-border-colour-bottom;
-			border-right: 1px solid $control-border-colour-right;
+			border-top: 1px solid $border-colour-top-inner;
+			border-left: 1px solid $border-colour-left-inner;
+			border-bottom: 1px solid $border-colour-bottom-inner;
+			border-right: 1px solid $border-colour-right-inner;
 		}
 
 		&:active {
-			box-shadow: none;
-			border-top: 1px solid $border-colour-top-outer-inset;
-			border-left: 1px solid $border-colour-left-outer-inset;
-			border-bottom: 1px solid $border-colour-bottom-outer-inset;
-			border-right: 1px solid $border-colour-right-outer-inset;
+			border-top: 1px solid $border-colour-top-inset;
+			border-left: 1px solid $border-colour-left-inset;
+			border-bottom: 1px solid $border-colour-bottom-inset;
+			border-right: 1px solid $border-colour-right-inset;
 		}
 	}
 
@@ -89,25 +85,23 @@
 		background-color: transparent;
 		border: 1px solid transparent;
 		cursor: pointer;
-		box-shadow: none;
 		flex-direction: column;
 		margin: 0px;
 		padding-left: 0px;
 		padding-right: 0px;
 
 		&:hover {
-			border-top: 1px solid $control-border-colour-top;
-			border-left: 1px solid $control-border-colour-left;
-			border-bottom: 1px solid $control-border-colour-bottom;
-			border-right: 1px solid $control-border-colour-right;
+			border-top: 1px solid $border-colour-bottom-inset;
+			border-left: 1px solid $border-colour-right-inset;
+			border-bottom: 1px solid $border-colour-top-inset;
+			border-right: 1px solid $border-colour-left-inset;
 		}
 
 		&:active {
-			box-shadow: none;
-			border-top: 1px solid $border-colour-top-outer-inset;
-			border-left: 1px solid $border-colour-left-outer-inset;
-			border-bottom: 1px solid $border-colour-bottom-outer-inset;
-			border-right: 1px solid $border-colour-right-outer-inset;
+			border-top: 1px solid $border-colour-top-inset;
+			border-left: 1px solid $border-colour-left-inset;
+			border-bottom: 1px solid $border-colour-bottom-inset;
+			border-right: 1px solid $border-colour-right-inset;
 		}
 
 		.xgui-icon-panel {
@@ -121,11 +115,10 @@
 	}
 
 	.toolbar-separator {
-		width: 2px;
+		width: 1px;
 		height: 88%;
 		background-color: $border-colour-left;
-		border-left: 1px solid $border-colour-right;
-		margin: 2px 4px;
+		margin: 2px 2px;
 	}
 
 	&.toolbar-drop-target {
@@ -144,8 +137,7 @@
 // Command Toolbar Specific
 .command-toolbar { 
 	.toolbar-button {
-		padding: 0px 4px;
-		margin: 0 1px;
+		padding: 0px 4px; 
 
 		&.view-button.active {
 			border-top: 1px solid $control-border-colour-top-active;

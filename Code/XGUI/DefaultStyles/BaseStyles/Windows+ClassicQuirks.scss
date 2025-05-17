@@ -16,7 +16,11 @@
 }
 
 .window {
-	padding: 1px;
+	padding: 2px;
+
+	& .window1 {
+		padding: 3px;
+	}
 
 	> .titlebar {
 		> .titleelements {
@@ -37,6 +41,7 @@
 		}
 	}
 }
+
 
 .TabContainer {
 	> .tabs {

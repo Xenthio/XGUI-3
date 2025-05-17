@@ -68,13 +68,17 @@
 
 			.TextEntry {
 				border: 1px solid black;
-				box-shadow: none;
+
+				> &::before {
+					border: 0px;
+				}
+
 				height: auto;
 				overflow: scroll;
 				flex-shrink: 1;
 
 				.label {
-					flex-grow:0;
+					flex-grow: 0;
 					text-overflow: unset;
 				}
 			}
