@@ -69,7 +69,7 @@
 			.TextEntry {
 				border: 1px solid black;
 
-				> &::before {
+				&::before {
 					border: 0px;
 				}
 

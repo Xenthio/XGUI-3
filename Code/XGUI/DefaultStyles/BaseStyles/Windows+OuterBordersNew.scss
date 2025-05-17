@@ -16,7 +16,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 .window {
 	padding: 2px;
 
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -30,7 +30,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 }
 
 .button {
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -43,7 +43,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	}
 
 	&:active {
-		> &::before {
+		&::before {
 			border-top: 1px solid $border-colour-top-inner-inset;
 			border-left: 1px solid $border-colour-left-inner-inset;
 			border-bottom: 1px solid $border-colour-bottom-inner-inset;
@@ -52,7 +52,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	}
 
 	&.forceinset {
-		> &::before {
+		&::before {
 			border-top: 1px solid $border-colour-top-inner-inset;
 			border-left: 1px solid $border-colour-left-inner-inset;
 			border-bottom: 1px solid $border-colour-bottom-inner-inset;
@@ -63,13 +63,13 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 
 .toolbar {
 	.menu-item {
-		> &::before {
+		&::before {
 			border: 0px;
 		}
 	}
 
 	.toolbar-button {
-		> &::before {
+		&::before {
 			border: 0px;
 		}
 	}
@@ -81,7 +81,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			right: 1px;
 			overflow: hidden;
 
-			> &::before {
+			&::before {
 				border-top-left-radius: 1px;
 				border-top-right-radius: 1px;
 				border-bottom: 0px;
@@ -90,7 +90,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			border-bottom: 1px solid $border-colour-top;
 
 			&.active {
-				> &::before {
+				&::before {
 					border-bottom: 0px;
 				}
 
@@ -101,7 +101,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	}
 
 	> .sheets {
-		> &::before {
+		&::before {
 			position: absolute;
 			top: 0px;
 			left: 0px;
@@ -116,7 +116,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 }
 
 .selector {
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -134,7 +134,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		height: 17px;
 		margin-right: 1px;
 
-		> &::before {
+		&::before {
 			position: absolute;
 			top: 0px;
 			left: 0px;
@@ -150,7 +150,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 
 .textentry {
 
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -165,7 +165,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 
 .dropdown-panel {
 	.button {
-		> &::before {
+		&::before {
 			border: 0px;
 		}
 	}
@@ -176,7 +176,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		width: 13px;
 		height: 13px;
 
-		> &::before {
+		&::before {
 			position: absolute;
 			top: 0px;
 			left: 0px;
@@ -194,7 +194,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 
 	> .thumb {
 
-		> &::before {
+		&::before {
 			position: absolute;
 			top: 0px;
 			left: 0px;
@@ -215,7 +215,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	border-bottom: 2px solid $border-colour-top;
 	border-right: 2px solid $border-colour-left;
 
-	> &::before {
+	&::before {
 		position: absolute;
 		top: -2px;
 		left: -2px;
@@ -230,7 +230,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 
 
 .contextmenu {
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -255,7 +255,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 .toolbar-throbber {
 	border-left: 1px solid $border-colour-left-inset;
 
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -271,7 +271,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 	border-bottom: 2px solid $border-colour-top;
 	border-right: 2px solid $border-colour-left;
 
-	> &::before {
+	&::before {
 		position: absolute;
 		top: -2px;
 		left: -2px;
@@ -287,7 +287,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		padding-bottom: 1px;
 		border-bottom: 1px solid $border-colour-bottom-inset;
 
-		> &::before {
+		&::before {
 			position: absolute;
 			top: 0px;
 			left: 0px;
@@ -300,7 +300,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			// Prevent stupid flickering bug for now
 			margin-bottom: 1px;
 
-			> &::before {
+			&::before {
 				border-bottom: 1px solid transparent;
 			}
 		}
@@ -312,7 +312,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 }
 
 .listview {
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -331,7 +331,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 }
 
 LayoutBoxInset {
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -345,7 +345,7 @@ LayoutBoxInset {
 }
 
 LayoutBox {
-	> &::before {
+	&::before {
 		position: absolute;
 		top: 0px;
 		left: 0px;
