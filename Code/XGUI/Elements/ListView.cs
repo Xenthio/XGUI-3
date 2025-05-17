@@ -54,6 +54,7 @@ public class ListView : Panel
 		{
 			// Clear existing cells
 			DeleteChildren();
+
 			Cells.Clear();
 
 			// Update classes for the view mode
@@ -370,17 +371,23 @@ public class ListView : Panel
 		}
 	}
 
+	public void ClearList()
+	{
+		foreach ( var child in Children.ToList() )
+		{
+			Log.Info( child.ElementName );
+			if ( child.ElementName == "element" ) continue;
+			child.Parent = null;
+		}
+	}
+
 	/// <summary>
 	/// Updates all items to match the current view mode.
 	/// </summary>
 	public void UpdateItems()
 	{
+		ClearList();
 		// Clear all children first
-		foreach ( var child in Children.ToList() )
-		{
-			child.Parent = null;
-		}
-
 		// Re-add the header for details mode
 		InitializeHeader();
 
