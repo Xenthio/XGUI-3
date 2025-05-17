@@ -375,7 +375,6 @@ public class ListView : Panel
 	{
 		foreach ( var child in Children.ToList() )
 		{
-			Log.Info( child.ElementName );
 			if ( child.ElementName == "element" ) continue;
 			child.Parent = null;
 		}
