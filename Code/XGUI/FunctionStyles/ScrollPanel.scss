@@ -1,0 +1,41 @@
+.scrollpanel {
+	flex-direction: column;
+
+	.scrollpanel_canvas {
+		flex-grow: 1;
+		flex-direction: column;
+		overflow: scroll;
+
+		> * {
+			flex-shrink: 0;
+		}
+	}
+
+	.scrollbar_vertical {
+		height: 100%;
+		width: 16px;
+		flex-direction: column;
+		position: relative;
+
+		.scrollbar_button_up {
+			width: 16px;
+			height: 16px;
+			align-self: flex-start;
+		}
+
+		.scrollbar_thumb {
+			background-color: #444444;
+		}
+
+		.scrollbar_track {
+			flex-direction: column;
+			flex-grow: 1;
+		}
+
+		.scrollbar_button_down {
+			width: 16px;
+			height: 16px;
+			align-self: flex-end;
+		}
+	}
+}
