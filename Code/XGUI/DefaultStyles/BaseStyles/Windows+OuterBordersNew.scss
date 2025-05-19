@@ -312,6 +312,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 }
 
 .listview {
+	padding:1px;
 	&::before {
 		position: absolute;
 		top: 0px;
@@ -322,12 +323,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-left-inner-inset;
 		border-bottom: 1px solid $border-colour-bottom-inner-inset;
 		border-right: 1px solid $border-colour-right-inner-inset;
-	}
-
-	.listview-header {
-		padding: 1px;
-		padding-bottom: 0px;
-	}
+	} 
 }
 
 LayoutBoxInset {

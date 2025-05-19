@@ -166,8 +166,7 @@ public class ListView : Panel
 		}
 	}
 
-	// Container panel for items when in Icons view
-	private Panel IconContainer { get; set; }
+	private Panel ItemContainer { get; set; }
 
 	public List<ListViewColumn> Columns { get; } = new();
 	public List<ListViewItem> Items { get; } = new();
@@ -218,13 +217,13 @@ public class ListView : Panel
 		else
 		{
 			// Add to the correct container based on view mode
-			if ( ViewMode == ListViewMode.Icons && IconContainer != null )
+			if ( ViewMode == ListViewMode.Icons && ItemContainer != null )
 			{
-				IconContainer.AddChild( item );
+				ItemContainer.AddChild( item );
 			}
 			else
 			{
-				AddChild( item );
+				ItemContainer.AddChild( item );
 			}
 		}
 	}
@@ -393,24 +392,28 @@ public class ListView : Panel
 		// Special handling for Icons view - use a container for grid layout
 		if ( ViewMode == ListViewMode.Icons )
 		{
-			IconContainer = new Panel();
-			IconContainer.AddClass( "listview-icon-container" );
-			AddChild( IconContainer );
+			ItemContainer = new Panel();
+			ItemContainer.AddClass( "listview-container" );
+			ItemContainer.AddClass( "listview-icon-container" );
+			AddChild( ItemContainer );
 
 			// Update all items and add them to the container
 			foreach ( var item in Items )
 			{
 				item.UpdateViewMode( ViewMode );
-				IconContainer.AddChild( item );
+				ItemContainer.AddChild( item );
 			}
 		}
 		else
 		{
+			ItemContainer = new Panel();
+			ItemContainer.AddClass( "listview-container" );
+			AddChild( ItemContainer );
 			// For other views, add items directly to the ListView
 			foreach ( var item in Items )
 			{
 				item.UpdateViewMode( ViewMode );
-				AddChild( item );
+				ItemContainer.AddChild( item );
 			}
 		}
 	}

@@ -312,7 +312,7 @@ public class Toolbar : Panel
 	/// <summary>
 	/// Close all open context menus in the application
 	/// </summary>
-	private void CloseAllMenus()
+	public void CloseAllMenus()
 	{
 		// Find and remove active class from all menu items
 		foreach ( var menuItem in ToolbarItems.Children.OfType<Button>()
