@@ -55,6 +55,7 @@
 
 
 	.menu-item {
+		flex-shrink: 0;
 		margin: 1px, 0px;
 		height: 18px;
 		padding: 0px;
@@ -89,6 +90,7 @@
 		margin: 0px;
 		padding-left: 0px;
 		padding-right: 0px;
+		flex-shrink: 0;
 
 		&:hover {
 			border-top: 1px solid $border-colour-bottom-inset;
@@ -115,6 +117,7 @@
 	}
 
 	.toolbar-separator {
+		flex-shrink: 0;
 		width: 1px;
 		height: 88%;
 		background-color: $border-colour-left;
@@ -122,8 +125,8 @@
 	}
 
 	&.toolbar-drop-target {
-		background-color: lighten($base-colour, 5%);
-		border: 1px dashed $base-colour-active;
+		background-color: $base-colour;
+		filter: brightness(150%);
 	}
 }
 

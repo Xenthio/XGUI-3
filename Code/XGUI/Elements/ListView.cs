@@ -193,6 +193,8 @@ public class ListView : Panel
 
 	public ListView()
 	{
+		ItemContainer = new Panel();
+		ItemContainer.AddClass( "listview-container" );
 		AddClass( "listview" );
 		InitializeHeader();
 	}

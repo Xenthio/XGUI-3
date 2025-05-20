@@ -21,6 +21,14 @@
 			top: 3px;
 			margin-right: 1px;
 
+			&:active {
+
+
+				> * {
+					transform: translate(0px, 0px);
+				}
+			}
+
 			&.active {
 				padding-top: 4px;
 				color: $default-text-colour-active;
