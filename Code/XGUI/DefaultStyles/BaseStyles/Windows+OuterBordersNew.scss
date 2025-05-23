@@ -26,6 +26,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-left-inner-window;
 		border-bottom: 1px solid $border-colour-bottom-inner-window;
 		border-right: 1px solid $border-colour-right-inner-window;
+		pointer-events:none;
 	}
 }
 
@@ -40,6 +41,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-left-inner;
 		border-bottom: 1px solid $border-colour-bottom-inner;
 		border-right: 1px solid $border-colour-right-inner;
+		pointer-events: none;
 	}
 
 	&:active {
@@ -81,6 +83,14 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			right: 1px;
 			overflow: hidden;
 
+			&:active {
+				&::before {
+					border-top: 1px solid $border-colour-top-inner;
+					border-left: 1px solid $border-colour-left-inner;
+					border-right: 1px solid $border-colour-right-inner;
+				}
+			}
+
 			&::before {
 				border-top-left-radius: 1px;
 				border-top-right-radius: 1px;
@@ -88,6 +98,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			}
 
 			border-bottom: 1px solid $border-colour-top;
+
 
 			&.active {
 				&::before {
@@ -111,6 +122,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			border-left: 1px solid $border-colour-left-inner;
 			border-bottom: 1px solid $border-colour-bottom-inner;
 			border-right: 1px solid $border-colour-right-inner;
+			pointer-events: none;
 		}
 	}
 }
@@ -126,6 +138,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-left-inner-inset;
 		border-bottom: 1px solid $border-colour-bottom-inner-inset;
 		border-right: 1px solid $border-colour-right-inner-inset;
+		pointer-events: none;
 	}
 
 	> .selector_indicator {
@@ -160,6 +173,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-left-inner-inset;
 		border-bottom: 1px solid $border-colour-bottom-inner-inset;
 		border-right: 1px solid $border-colour-right-inner-inset;
+		pointer-events: none;
 	}
 }
 
@@ -186,6 +200,13 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			border-left: 1px solid $border-colour-left-inner-inset;
 			border-bottom: 1px solid $border-colour-bottom-inner-inset;
 			border-right: 1px solid $border-colour-right-inner-inset;
+			pointer-events: none;
+		}
+	}
+
+	&.disabled {
+		> label {
+			filter-drop-shadow: 1px 1px 0px $border-colour-bottom-inset;
 		}
 	}
 }
@@ -204,6 +225,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			border-left: 1px solid $border-colour-left-inner;
 			border-bottom: 1px solid $border-colour-bottom-inner;
 			border-right: 1px solid $border-colour-right-inner;
+			pointer-events: none;
 		}
 	}
 }
@@ -225,6 +247,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-right-inner;
 		border-bottom: 1px solid $border-colour-bottom-inner;
 		border-right: 1px solid $border-colour-right-inner;
+		pointer-events: none;
 	}
 }
 
@@ -240,6 +263,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-left-inner-window;
 		border-bottom: 1px solid $border-colour-bottom-inner-window;
 		border-right: 1px solid $border-colour-right-inner-window;
+		pointer-events: none;
 	}
 }
 
@@ -260,8 +284,9 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		top: 0px;
 		left: 0px;
 		right: 0px;
-		bottom: -1px; 
-		border-left: 1px solid $border-colour-right-inset; 
+		bottom: -1px;
+		border-left: 1px solid $border-colour-right-inset;
+		pointer-events: none;
 	}
 }
 
@@ -281,6 +306,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-right-inner;
 		border-bottom: 1px solid $border-colour-bottom-inner;
 		border-right: 1px solid $border-colour-right-inner;
+		pointer-events: none;
 	}
 
 	.toolbar {
@@ -294,6 +320,7 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			right: 0px;
 			bottom: 0px;
 			border-bottom: 1px solid $border-colour-top-inset;
+			pointer-events: none;
 		}
 
 		&:last-child {
@@ -312,7 +339,8 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 }
 
 .listview {
-	padding:1px;
+	padding: 1px;
+
 	&::before {
 		position: absolute;
 		top: 0px;
@@ -323,7 +351,8 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		border-left: 1px solid $border-colour-left-inner-inset;
 		border-bottom: 1px solid $border-colour-bottom-inner-inset;
 		border-right: 1px solid $border-colour-right-inner-inset;
-	} 
+		pointer-events: none;
+	}
 }
 
 LayoutBoxInset {
@@ -337,6 +366,7 @@ LayoutBoxInset {
 		border-left: 1px solid $border-colour-left-inner-inset;
 		border-bottom: 1px solid $border-colour-bottom-inner-inset;
 		border-right: 1px solid $border-colour-right-inner-inset;
+		pointer-events: none;
 	}
 }
 
@@ -351,6 +381,7 @@ LayoutBox {
 		border-left: 1px solid $border-colour-left-inner-inset;
 		border-bottom: 1px solid $border-colour-bottom-inner-inset;
 		border-right: 1px solid $border-colour-right-inner-inset;
+		pointer-events: none;
 	}
 }
 

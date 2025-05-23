@@ -4,7 +4,7 @@
 
 	> .label {
 		text-overflow: ellipsis;
-		flex-grow: 1; 
+		flex-grow: 1;
 	}
 
 	.checkpanel, iconpanel {
@@ -37,6 +37,17 @@
 			//color: $primary-alt;
 			color: white;
 			background-color: transparent;
+		}
+	}
+
+	&.disabled {
+		pointer-events:none;
+		> .checkpanel, .iconpanel {
+			background-color: $base-colour;
+		}
+
+		> label {
+			color: $default-text-colour-disabled;
 		}
 	}
 }

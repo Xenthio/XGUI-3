@@ -32,6 +32,9 @@ public partial class Window : XGUIPanel
 	public Button ControlsMinimise { get; set; } = new Button();
 	public Button ControlsMaximise { get; set; } = new Button();
 
+	public Panel WindowContent;
+	public Vector2? InitalInnerSize = null;
+
 
 	public Window()
 	{
@@ -47,13 +50,19 @@ public partial class Window : XGUIPanel
 		Style.Position = PositionMode.Absolute;
 		Style.FlexDirection = FlexDirection.Column;
 	}
+
+	bool hasInitInnerSize = false;
 	protected override void OnAfterTreeRender( bool firstTime )
 	{
 		base.OnAfterTreeRender( firstTime );
 		if ( firstTime )
 		{
 			// warn if we dont have a child with class window-content
-			if ( !Children.Any( x => x.HasClass( "window-content" ) ) )
+			if ( Children.Where( x => x.HasClass( "window-content" ) ).FirstOrDefault() is Panel contentpnl )
+			{
+				WindowContent = contentpnl;
+			}
+			else
 			{
 				Log.Warning( $"The window {this} does not have a child with class window-content, this is standard practice as of XGUI-3" );
 			}
@@ -77,9 +86,49 @@ public partial class Window : XGUIPanel
 				Style.Height = Size.y;
 			}
 		}
+
 		if ( TitleBar.IsValid )
 			SetChildIndex( TitleBar, 0 );
 	}
+
+
+	private void TryInitInnerSize()
+	{
+		if ( hasInitInnerSize ) return;
+		if ( InitalInnerSize.HasValue )
+		{
+			float currentWindowWidth = Box.Rect.Width;
+			float currentWindowHeight = Box.Rect.Height;
+
+			float currentWindowContentWidth = WindowContent.Box.Rect.Width;
+			float currentWindowContentHeight = WindowContent.Box.Rect.Height;
+
+			if ( currentWindowContentHeight == 0 && currentWindowContentWidth == 0 )
+			{
+				Log.Info( $"hi {currentWindowContentHeight}" );
+				return;
+			}
+
+			float chromeWidth = currentWindowWidth - currentWindowContentWidth;
+			float chromeHeight = currentWindowHeight - currentWindowContentHeight;
+
+			Log.Info( $"Window: {this} - Size: {Box.Rect} - WindowContentSize {WindowContent.Box.Rect} - Chrome: {chromeWidth}, {chromeHeight}" );
+
+			Size = new Vector2( InitalInnerSize.Value.x + chromeWidth, InitalInnerSize.Value.y + chromeHeight );
+
+			Style.Width = Size.x;
+			Style.Height = Size.y;
+			hasInitInnerSize = true;
+		}
+	}
+
+	public Panel CreateWindowContentPanel()
+	{
+		// Create a new panel to hold the window content
+		var contentPanel = AddChild<Panel>( "window-content" );
+		return contentPanel;
+	}
+
 
 	// theres no way by default to make buttons focusable so hack it in
 	public void OverrideButtons()
@@ -257,7 +306,7 @@ public partial class Window : XGUIPanel
 	public override void Tick()
 	{
 		base.Tick();
-
+		TryInitInnerSize();
 		// Todo - use something nicer that doesn't rely on this being named Attack1
 		if ( Input.Released( "Attack1" ) )
 		{
