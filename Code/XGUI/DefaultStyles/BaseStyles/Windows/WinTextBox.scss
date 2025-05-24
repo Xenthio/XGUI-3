@@ -1,9 +1,9 @@
 .textentry {
-	border-top: 1px solid $border-colour-top-inset;
-	border-left: 1px solid $border-colour-left-inset;
-	border-bottom: 1px solid $border-colour-bottom-inset;
-	border-right: 1px solid $border-colour-right-inset;
-	background-color: $base-colour-inset;
+	border-top: 1px solid $button-shadow;
+	border-left: 1px solid $button-shadow;
+	border-bottom: 1px solid $button-highlight;
+	border-right: 1px solid $button-highlight;
+	background-color: $window;
 	padding: 0px;
 	height: 22px;
 

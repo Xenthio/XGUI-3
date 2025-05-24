@@ -8,24 +8,24 @@
 	margin-right: 8px;
 
 	> .thumb {
-		background-color: $slider-thumb-colour;
-		border-top: 1px solid $slider-thumb-border-colour-top;
-		border-left: 1px solid $slider-thumb-border-colour-left;
-		border-bottom: 1px solid $slider-thumb-border-colour-bottom;
-		border-right: 1px solid $slider-thumb-border-colour-right;
+		background-color: $button-face;
+		border-top: 1px solid $button-highlight;
+		border-left: 1px solid $button-highlight;
+		border-bottom: 1px solid $button-dark-shadow;
+		border-right: 1px solid $button-dark-shadow;
 		width: 11px;
 		height: 19px;
 	}
 
 	> .scalestepmin {
-		color: $slider-step-min-colour;
+		color: $grey-text;
 		font-size: 9px;
 		top: 25px;
 	}
 
 	> .scalestepmax {
 		font-size: 9px;
-		color: $slider-step-max-colour;
+		color: $grey-text;
 		top: 25px;
 		right: 0px;
 	}
@@ -34,7 +34,7 @@
 		top: 17px;
 
 		> .step {
-			background-color: $slider-step-colour;
+			background-color: $grey-text;
 			width: 1px;
 			height: 3px;
 		}
@@ -50,11 +50,11 @@
 
 	> .track {
 		height: 4px;
-		border-top: 1px solid $slider-track-border-colour-top;
-		border-left: 1px solid $slider-track-border-colour-left;
-		border-bottom: 1px solid $slider-track-border-colour-bottom;
-		border-right: 1px solid $slider-track-border-colour-right;
-		background-color: $slider-track-colour;
+		border-top: 1px solid $button-shadow;
+		border-left: 1px solid $button-shadow;
+		border-bottom: 1px solid $button-highlight;
+		border-right: 1px solid $button-highlight;
+		background-color: $window;
 	}
 }
 

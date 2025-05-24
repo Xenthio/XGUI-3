@@ -1,15 +1,15 @@
 .selectlist {
-	background-color: $base-colour-inset;
-	border-top: 1px solid $border-colour-top-inset;
-	border-left: 1px solid $border-colour-left-inset;
-	border-bottom: 1px solid $border-colour-bottom-inset;
-	border-right: 1px solid $border-colour-right-inset;
+	background-color: $window;
+	border-top: 1px solid $button-shadow;
+	border-left: 1px solid $button-shadow;
+	border-bottom: 1px solid $button-highlight;
+	border-right: 1px solid $button-highlight;
 
 
 	.listoption {
 		&.selected {
-			background-color: $base-colour-active;
-			color: $default-text-colour-alt;
+			background-color: $highlight;
+			color: $highlight-text;
 		}
 	}
 }

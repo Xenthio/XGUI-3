@@ -503,6 +503,30 @@ public class XGUIIconPanel : Panel
 			return;
 		}
 
+		if ( _iconName.StartsWith( "url:data:" ) )
+		{
+			var imagePath = IconName.Substring( 9 ); // Remove "url:data:" prefix
+			_iconImage.Style.Display = DisplayMode.Flex;
+			_materialIconLabel.Style.Display = DisplayMode.None;
+
+			var tex = Texture.Load( FileSystem.Data, imagePath );
+
+			_iconImage.Style.SetBackgroundImage( tex );
+			_iconImage.Style.Width = Length.Pixels( _iconSize );
+			_iconImage.Style.Height = Length.Pixels( _iconSize );
+			return;
+		}
+		if ( _iconName.StartsWith( "url:vtex:" ) )
+		{
+			var imagePath = IconName.Substring( 9 ); // Remove "url:vtex:" prefix
+			_iconImage.Style.Display = DisplayMode.Flex;
+			_materialIconLabel.Style.Display = DisplayMode.None;
+			var tex = Texture.Find( imagePath );
+			_iconImage.Style.SetBackgroundImage( tex );
+			_iconImage.Style.Width = Length.Pixels( _iconSize );
+			_iconImage.Style.Height = Length.Pixels( _iconSize );
+			return;
+		}
 		if ( _iconName.StartsWith( "url:" ) )
 		{
 			var imagePath = IconName.Substring( 4 ); // Remove "url:" prefix

@@ -1,14 +1,19 @@
 // Additional optional feature for Windows based styles.
 
 
+.window {
+	border-radius: 0px;
+}
+
 .button {
+	border-radius: 0px;
 	padding: 0px;
 	padding-left: 2px;
 	padding-right: 2px;
 
 	> .label:not(.iconpanel) {
 		margin-top: 2px;
-	} 
+	}
 }
 
 .selector { 
@@ -61,5 +66,13 @@
 		left: 5px;
 		padding-right: 2px;
 		padding-left: 2px;
+	}
+}
+
+.ContextMenu {
+	.MenuItem {
+		.ItemText {
+			top: 1px;
+		}
 	}
 }

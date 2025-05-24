@@ -7,12 +7,12 @@
 
 .Window {
 	overflow: hidden;
-	color: $window-text;
-	border-top: 1px solid $button-light;
-	border-left: 1px solid $button-light;
-	border-bottom: 1px solid $button-dark-shadow;
-	border-right: 1px solid $button-dark-shadow;
-	background-color: $button-face;
+	color: $default-text-colour;
+	border-top: 1px solid $border-colour-top-window;
+	border-left: 1px solid $border-colour-left-window;
+	border-bottom: 1px solid $border-colour-bottom-window;
+	border-right: 1px solid $border-colour-right-window;
+	background-color: $base-colour;
 	font-size: $default-text-size;
 	font-family: $default-text-font;
 	font-smooth: $default-text-smooth;
@@ -23,8 +23,8 @@
 
 	&.unfocused {
 		.TitleBar {
-			background-color: $inactive-title;
-			color: $inactive-title-text;
+			background-color: $window-titlebar-colour-inactive;
+			color: $window-titlebar-text-colour-inactive;
 		}
 	}
 
@@ -52,8 +52,8 @@
 		align-items: center;
 		padding: 2px;
 		height: 18px;
-		background-color: $active-title;
-		color: $title-text;
+		background-color: $window-titlebar-colour;
+		color: $window-titlebar-text-colour;
 		flex-shrink: 0;
 
 		.TitleElements {
@@ -89,18 +89,19 @@
 			justify-content: center;
 			width: 16px;
 			height: 14px;
-			border-top: 1px solid $button-highlight;
-			border-left: 1px solid $button-highlight;
-			border-bottom: 1px solid $button-dark-shadow;
-			border-right: 1px solid $button-dark-shadow;
+			color: $default-text-colour;
+			border-top: 1px solid $border-colour-top;
+			border-left: 1px solid $border-colour-left;
+			border-bottom: 1px solid $border-colour-bottom;
+			border-right: 1px solid $border-colour-right;
 			font-family: Marlett;
 			font-size: 10px;
 
 			&:active {
-				border-top: 1px solid $button-dark-shadow;
-				border-left: 1px solid $button-dark-shadow;
-				border-bottom: 1px solid $button-highlight;
-				border-right: 1px solid $button-highlight;
+				border-top: 1px solid $border-colour-top-inset;
+				border-left: 1px solid $border-colour-left-inset;
+				border-bottom: 1px solid $border-colour-bottom-inset;
+				border-right: 1px solid $border-colour-right-inset;
 
 				&:focus, &.focus {
 					border: 0px;

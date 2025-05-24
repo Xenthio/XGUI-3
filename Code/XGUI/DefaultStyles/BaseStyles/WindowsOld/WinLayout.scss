@@ -66,8 +66,8 @@ $default-padding: 6px;
 }
 
 .layout-inset {
-	border-top: 1px solid $button-shadow;
-	border-left: 1px solid $button-shadow;
-	border-bottom: 1px solid $button-highlight;
-	border-right: 1px solid $button-highlight;
+	border-top: 1px solid $border-colour-top-inset;
+	border-left: 1px solid $border-colour-left-inset;
+	border-bottom: 1px solid $border-colour-bottom-inset;
+	border-right: 1px solid $border-colour-right-inset;
 }

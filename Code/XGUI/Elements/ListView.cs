@@ -81,7 +81,6 @@ public class ListView : Panel
 				};
 			}
 			IconPanel.SetClass( "listview-icon", true );
-			AddChild( IconPanel );
 
 			if ( viewMode == ListViewMode.Details )
 			{
@@ -89,6 +88,10 @@ public class ListView : Panel
 				for ( int i = 0; i < Parent.Columns.Count; i++ )
 				{
 					var cell = new Panel();
+					if ( i == 0 )
+					{
+						cell.AddChild( IconPanel );
+					}
 					cell.AddClass( "listview-cell" );
 					cell.Style.Width = Parent.Columns[i].Width;
 
@@ -102,6 +105,7 @@ public class ListView : Panel
 			else if ( viewMode == ListViewMode.List || viewMode == ListViewMode.Icons )
 			{
 				// Just show the first column
+				AddChild( IconPanel );
 				string text = (SubItems != null && SubItems.Count > 0) ? SubItems[0] : "";
 				AddChild( new Label { Text = text } );
 			}
@@ -356,6 +360,7 @@ public class ListView : Panel
 						}
 					};
 					sortIndicator.AddClass( "sort-indicator" );
+					sortIndicator.AddClass( _sortAscending ? "sort-up" : "sort-down" );
 					headerRow.AddChild( sortIndicator );
 				}
 

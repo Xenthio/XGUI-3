@@ -119,7 +119,7 @@ $outer-boxshadow-window: 1px 0px 0px 0px $border-colour-right-outer-window, 1px 
 $outer-boxshadow-tab: 1px 0px 0px 0px $border-colour-right-outer, -1px 0px 0px 0px $border-colour-left-outer, 0px -1px 0px 0px $border-colour-top-outer;
 
 
-@import "/XGUI/DefaultStyles/BaseStyles/Windows.scss";
+@import "/XGUI/DefaultStyles/BaseStyles/WindowsOld.scss";
 @import "/XGUI/DefaultStyles/BaseStyles/Windows+VisualStyleQuirks.scss";
 
 .button:not(.selector) {

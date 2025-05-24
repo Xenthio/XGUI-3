@@ -1,20 +1,20 @@
 .listview {
-	border-top: 1px solid $border-colour-top-inset;
-	border-left: 1px solid $border-colour-left-inset;
-	border-bottom: 1px solid $border-colour-bottom-inset;
-	border-right: 1px solid $border-colour-right-inset;
-	background-color: $base-colour-inset;
+	border-top: 1px solid $button-shadow;
+	border-left: 1px solid $button-shadow;
+	border-bottom: 1px solid $button-highlight;
+	border-right: 1px solid $button-highlight;
+	background-color: $window;
 
 	.listview-header {
-		border-bottom: 1px solid $border-colour-bottom;
-		background-color: $border-colour-bottom;
+		border-bottom: 1px solid $button-dark-shadow;
+		background-color: $button-dark-shadow;
 
 		.listview-header-column {
-			background-color: $base-colour;
-			border-top: 1px solid $border-colour-top;
-			border-left: 1px solid $border-colour-left;
-			border-bottom: 1px solid $border-colour-bottom-inner;
-			border-right: 1px solid $border-colour-right-inner;
+			background-color: $button-face;
+			border-top: 1px solid $button-highlight;
+			border-left: 1px solid $button-highlight;
+			border-bottom: 1px solid $button-shadow;
+			border-right: 1px solid $button-shadow;
 
 			.label {
 				padding-top: 1px;
@@ -25,8 +25,8 @@
 			}
 
 			&.selected {
-				background-color: $base-colour-active;
-				color: $default-text-colour-alt;
+				background-color: $highlight;
+				color: $highlight-text;
 			}
 		}
 	}
@@ -51,22 +51,22 @@
 		&.selected {
 			.listview-icon {
 				.icon-image {
-					background-tint: #7F7FBF;
+					background-tint: $highlight-tint;
 				}
 			}
 			// Likely the name of the item
-			:nth-child(2) {
+			:first-child {
 				&:not(.TextEntry) {
 					.label {
-						background-color: $base-colour-active;
-						color: $default-text-colour-alt;
+						background-color: $highlight;
+						color: $highlight-text;
 					}
 				}
 			}
 
 			> .label {
-				background-color: $base-colour-active;
-				color: $default-text-colour-alt;
+				background-color: $highlight;
+				color: $highlight-text;
 			}
 
 			.TextEntry {

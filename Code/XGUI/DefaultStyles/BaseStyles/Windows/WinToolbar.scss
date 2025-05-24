@@ -1,12 +1,12 @@
 .toolbar-container {
 	margin-top: 1px;
-	border-top: 1px solid $border-colour-top;
-	border-left: 1px solid $border-colour-left;
-	border-bottom: 1px solid $border-colour-bottom-inner;
-	border-right: 1px solid $border-colour-right-inner;
+	border-top: 1px solid $button-highlight;
+	border-left: 1px solid $button-highlight;
+	border-bottom: 1px solid $button-shadow;
+	border-right: 1px solid $button-shadow;
 
 	.toolbar {
-		border-bottom: 1px solid $border-colour-bottom;
+		border-bottom: 1px solid $button-dark-shadow;
 
 		&:last-child {
 			border-bottom: none;
@@ -21,11 +21,11 @@
 	left: 2px;
 	align-items: center;
 	justify-content: center;
-	background-color: $base-colour;
-	border-top: 1px solid $border-colour-top;
-	border-left: 1px solid $border-colour-left;
-	border-bottom: 1px solid $border-colour-bottom-inner;
-	border-right: 1px solid $border-colour-right-inner;
+	background-color: $button-face;
+	border-top: 1px solid $button-highlight;
+	border-left: 1px solid $button-highlight;
+	border-bottom: 1px solid $button-shadow;
+	border-right: 1px solid $button-shadow;
 	margin-right: 4px;
 }
 
@@ -37,7 +37,7 @@
 	}
 
 	&.vertical {
-		border-right: 1px solid $border-colour-right;
+		border-right: 1px solid $button-dark-shadow;
 		border-bottom: none;
 	}
 
@@ -66,17 +66,17 @@
 		cursor: pointer;
 
 		&:hover {
-			border-top: 1px solid $border-colour-top-inner;
-			border-left: 1px solid $border-colour-left-inner;
-			border-bottom: 1px solid $border-colour-bottom-inner;
-			border-right: 1px solid $border-colour-right-inner;
+			border-top: 1px solid $button-light;
+			border-left: 1px solid $button-light;
+			border-bottom: 1px solid $button-shadow;
+			border-right: 1px solid $button-shadow;
 		}
 
 		&:active {
-			border-top: 1px solid $border-colour-top-inset;
-			border-left: 1px solid $border-colour-left-inset;
-			border-bottom: 1px solid $border-colour-bottom-inset;
-			border-right: 1px solid $border-colour-right-inset;
+			border-top: 1px solid $button-shadow;
+			border-left: 1px solid $button-shadow;
+			border-bottom: 1px solid $button-light;
+			border-right: 1px solid $button-light;
 		}
 	}
 
@@ -93,17 +93,17 @@
 		flex-shrink: 0;
 
 		&:hover {
-			border-top: 1px solid $border-colour-bottom-inset;
-			border-left: 1px solid $border-colour-right-inset;
-			border-bottom: 1px solid $border-colour-top-inset;
-			border-right: 1px solid $border-colour-left-inset;
+			border-top: 1px solid $button-highlight;
+			border-left: 1px solid $button-highlight;
+			border-bottom: 1px solid $button-shadow;
+			border-right: 1px solid $button-shadow;
 		}
 
 		&:active {
-			border-top: 1px solid $border-colour-top-inset;
-			border-left: 1px solid $border-colour-left-inset;
-			border-bottom: 1px solid $border-colour-bottom-inset;
-			border-right: 1px solid $border-colour-right-inset;
+			border-top: 1px solid $button-shadow;
+			border-left: 1px solid $button-shadow;
+			border-bottom: 1px solid $button-highlight;
+			border-right: 1px solid $button-highlight;
 		}
 
 		.xgui-icon-panel {
@@ -120,12 +120,12 @@
 		flex-shrink: 0;
 		width: 1px;
 		height: 88%;
-		background-color: $border-colour-left;
+		background-color: $button-shadow;
 		margin: 2px 2px;
 	}
 
 	&.toolbar-drop-target {
-		background-color: $base-colour;
+		background-color: $button-face;
 		filter: brightness(150%);
 	}
 }
@@ -138,16 +138,16 @@
 }
 
 // Command Toolbar Specific
-.command-toolbar { 
+.command-toolbar {
 	.toolbar-button {
-		padding: 0px 4px; 
+		padding: 0px 4px;
 
 		&.view-button.active {
-			border-top: 1px solid $control-border-colour-top-active;
-			border-left: 1px solid $control-border-colour-left-active;
-			border-bottom: 1px solid $control-border-colour-bottom-active;
-			border-right: 1px solid $control-border-colour-right-active;
-			background-color: darken($base-colour, 5%);
+			border-top: 1px solid $button-shadow;
+			border-left: 1px solid $button-shadow;
+			border-bottom: 1px solid $button-highlight;
+			border-right: 1px solid $button-highlight;
+			background-color: darken($button-face, 5%);
 		}
 	}
 }
@@ -158,9 +158,6 @@
 		padding: 0 4px;
 		display: flex;
 		align-items: center;
-		color: $default-text-colour;
-		font-size: $default-text-size;
-		font-family: $default-text-font;
 	}
 
 	.go-button {

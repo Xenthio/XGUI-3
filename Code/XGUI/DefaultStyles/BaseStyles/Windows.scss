@@ -3,16 +3,15 @@
 @import "/XGUI/FunctionStyles/FunctionStyles.scss";
 
 .Panel {
-	color: $default-text-colour;
 	font-size: $default-text-size;
 	font-family: $default-text-font;
 	font-smooth: $default-text-smooth;
 
-	border-top: 1px solid $border-colour-top;
-	border-left: 1px solid $border-colour-left;
-	border-bottom: 1px solid $border-colour-bottom;
-	border-right: 1px solid $border-colour-right;
-	background-color: $base-colour;
+	border-top: 1px solid $button-highlight;
+	border-left: 1px solid $button-highlight;
+	border-bottom: 1px solid $button-dark-shadow;
+	border-right: 1px solid $button-dark-shadow;
+	background-color: $button-face;
 }
  
 
@@ -77,29 +76,29 @@
 
 
 LayoutBoxInset {
-	border-bottom: 1px solid $border-colour-bottom-inset;
-	border-right: 1px solid $border-colour-right-inset;
-	border-top: 1px solid $border-colour-top-inset;
-	border-left: 1px solid $border-colour-left-inset; 
+	border-bottom: 1px solid $button-highlight;
+	border-right: 1px solid $button-highlight;
+	border-top: 1px solid $button-shadow;
+	border-left: 1px solid $button-shadow;
 }
 
 LayoutBox {
-	background-color: $base-colour;
-	border-top: 1px solid $border-colour-top;
-	border-left: 1px solid $border-colour-left;
-	border-bottom: 1px solid $border-colour-bottom;
-	border-right: 1px solid $border-colour-right;
+	background-color: $button-face;
+	border-top: 1px solid $button-highlight;
+	border-left: 1px solid $button-highlight;
+	border-bottom: 1px solid $button-dark-shadow;
+	border-right: 1px solid $button-dark-shadow;
 }
 
 Seperator {
-	background-color: $border-colour-bottom-inset;
+	background-color: $button-highlight;
 	height: 1px;
-	width: 100%; 
+	width: 100%;
 }
 
 SeperatorVertical {
-	background-color: $border-colour-right-inset;
+	background-color: $button-highlight;
 	width: 2px;
 	height: 100%;
-	border-left: 1px solid $border-colour-left-inset;
+	border-left: 1px solid $button-shadow;
 }

@@ -9,25 +9,26 @@ $base-colour-active: #00047C;
 $border-colour: #808080;
 
 $border-colour-control-pushed: #808080;
-$border-colour-top: #DFDFDF;
-$border-colour-left: #DFDFDF;
-$border-colour-bottom: #808080;
-$border-colour-right: #808080;
 
-$border-colour-top-outer: #FFFFFF;
-$border-colour-left-outer: #FFFFFF;
-$border-colour-bottom-outer: #000000;
-$border-colour-right-outer: #000000;
+$border-colour-top: #FFFFFF;
+$border-colour-left: #FFFFFF;
+$border-colour-bottom: #000000;
+$border-colour-right: #000000;
 
-$border-colour-top-inset: #000000;
-$border-colour-left-inset: #000000;
-$border-colour-bottom-inset: #DFDFDF;
-$border-colour-right-inset: #DFDFDF;
+$border-colour-top-inner: #DFDFDF;
+$border-colour-left-inner: #DFDFDF;
+$border-colour-bottom-inner: #808080;
+$border-colour-right-inner: #808080;
 
-$border-colour-top-outer-inset: #808080;
-$border-colour-left-outer-inset: #808080;
-$border-colour-bottom-outer-inset: #FFFFFF;
-$border-colour-right-outer-inset: #FFFFFF;
+$border-colour-top-inner-inset: #000000;
+$border-colour-left-inner-inset: #000000;
+$border-colour-bottom-inner-inset: #DFDFDF;
+$border-colour-right-inner-inset: #DFDFDF;
+
+$border-colour-top-inset: #808080;
+$border-colour-left-inset: #808080;
+$border-colour-bottom-inset: #FFFFFF;
+$border-colour-right-inset: #FFFFFF;
 
 $control-colour: $base-colour;
 $control-border-colour-top: $border-colour-top;
@@ -61,15 +62,15 @@ $slider-track-border-colour-right: $border-colour-right-inset;
 
 $groupbox-border-colour: #808080;
 
-$border-colour-top-window: #FFFFFF;
-$border-colour-left-window: #FFFFFF;
-$border-colour-bottom-window: #808080;
-$border-colour-right-window: #808080;
+$border-colour-top-inner-window: #FFFFFF;
+$border-colour-left-inner-window: #FFFFFF;
+$border-colour-bottom-inner-window: #808080;
+$border-colour-right-inner-window: #808080;
 
-$border-colour-top-outer-window: #DFDFDF;
-$border-colour-left-outer-window: #DFDFDF;
-$border-colour-bottom-outer-window: #000000;
-$border-colour-right-outer-window: #000000;
+$border-colour-top-window: #DFDFDF;
+$border-colour-left-window: #DFDFDF;
+$border-colour-bottom-window: #000000;
+$border-colour-right-window: #000000;
 
 $window-titlebar-colour: #000080;
 $window-titlebar-colour-inactive: #808080;
@@ -84,10 +85,11 @@ $default-text-smooth: never;
 
 $default-text-colour: #000000;
 $default-text-colour-active: #000000;
+$default-text-colour-disabled: #808080;
 $default-text-colour-alt: #FFFFFF;
 
-@import "/XGUI/DefaultStyles/BaseStyles/Windows.scss"; 
-@import "/XGUI/DefaultStyles/BaseStyles/Windows+OuterBorders.scss";
+@import "/XGUI/DefaultStyles/BaseStyles/WindowsOld.scss"; 
+@import "/XGUI/DefaultStyles/BaseStyles/WindowsOld+OuterBordersNew.scss";
 @import "/XGUI/DefaultStyles/BaseStyles/Windows+ButtonInset.scss";
 @import "/XGUI/DefaultStyles/BaseStyles/Windows+ClassicQuirks.scss";
 
@@ -95,23 +97,23 @@ $default-text-colour-alt: #FFFFFF;
 .TabContainer {
 	> .tabs {
 
-		> .button { 
+		> .button {
 			min-width: 0px;
 
 			&.active {
 				//stick out and overlap other tabs
-				margin-right: -1px;
-				margin-left: -1px;
+				margin-right: -2px;
+				margin-left: -2px;
 				padding-right: 8px;
 				padding-left: 8px;
 
 				&:first-child {
-					margin-left: 1px;
+					margin-left: 0px;
 				}
 			}
 
 			&:first-child {
-				margin-left: 3px;
+				margin-left: 2px;
 			}
 
 			&:hover {

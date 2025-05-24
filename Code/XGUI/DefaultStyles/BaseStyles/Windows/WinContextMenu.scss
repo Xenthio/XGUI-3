@@ -1,10 +1,10 @@
 .ContextMenu {
-	background-color: $base-colour;
-	border-top: 1px solid $border-colour-top-window;
-	border-left: 1px solid $border-colour-left-window;
-	border-bottom: 1px solid $border-colour-bottom-window;
-	border-right: 1px solid $border-colour-right-window;
-	background-color: $base-colour;
+	background-color: $button-face;
+	border-top: 1px solid $button-light;
+	border-left: 1px solid $button-light;
+	border-bottom: 1px solid $button-dark-shadow;
+	border-right: 1px solid $button-dark-shadow;
+	background-color: $button-face;
 	padding: 2px;
 
 	.MenuItem {
@@ -14,7 +14,6 @@
 
 		.ItemText {
 			margin-right: 16px;
-			top: 1px;
 		}
 
 		.ItemArrow {
@@ -31,24 +30,24 @@
 		}
 
 		&.open {
-			background-color: $window-titlebar-colour;
-			color: $window-titlebar-text-colour;
+			background-color: $highlight;
+			color: $highlight-text;
 		}
 
 		&:hover {
-			background-color: $window-titlebar-colour;
-			color: $window-titlebar-text-colour;
+			background-color: $highlight;
+			color: $highlight-text;
 		}
 	}
 
 	.Menu-Separator {
-		background-color: $border-colour-bottom-inner-inset;
-		height: 2px; 
-		align-self:center;
-		width: 100%; 
-		border-top: 1px solid $border-colour-top-inset;
-		margin-top:3px;
-		margin-bottom:4px;
+		background-color: $button-light;
+		height: 2px;
+		align-self: center;
+		width: 100%;
+		border-top: 1px solid $button-shadow;
+		margin-top: 3px;
+		margin-bottom: 4px;
 	}
 
 	&.Large {

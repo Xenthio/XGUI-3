@@ -22,7 +22,7 @@
 			position: absolute;
 			font-family: Marlett;
 			font-size: 12px;
-			color: $button-shadow;
+			color: $border-colour-top-inset;
 			content: "j";
 		}
 
@@ -30,7 +30,7 @@
 			position: absolute;
 			font-family: Marlett;
 			font-size: 12px;
-			color: $button-highlight;
+			color: $border-colour-bottom-inset;
 			content: "k";
 		}
 
@@ -38,7 +38,7 @@
 			position: absolute;
 			font-family: Marlett;
 			font-size: 12px;
-			color: $window;
+			color: $base-colour-inset;
 			content: "n";
 		}
 	}
@@ -47,6 +47,7 @@
 		text-overflow: ellipsis;
 		flex-grow: 1;
 		bottom: 1px;
+		color: $default-text-colour;
 	}
 
 	> .checkmark {
@@ -66,13 +67,17 @@
 
 	&.checked {
 
+		> .label { 
+			color: $default-text-colour-active;
+		}
+
 		> .checkpanel, .iconpanel {
 			.checklabel {
 				position: absolute;
 				z-index: 100;
 				font-family: Marlett;
 				font-size: 12px;
-				color: $button-text;
+				color: $default-text-colour-active;
 				content: "h";
 			}
 		}
@@ -82,6 +87,11 @@
 			color: white;
 			background-color: transparent;
 		}
+	}
+
+	&:active {
+		color: gray;
+		transform: scale(1);
 	}
 
 	&:hover {

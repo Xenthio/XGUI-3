@@ -8,11 +8,11 @@
 	}
 
 	.checkpanel, iconpanel {
-		border-top: 1px solid $button-shadow;
-		border-left: 1px solid $button-shadow;
-		border-bottom: 1px solid $button-highlight;
-		border-right: 1px solid $button-highlight;
-		background-color: $window;
+		border-top: 1px solid $border-colour-top-inset;
+		border-left: 1px solid $border-colour-left-inset;
+		border-bottom: 1px solid $border-colour-bottom-inset;
+		border-right: 1px solid $border-colour-right-inset;
+		background-color: $base-colour-inset;
 		width: 11px;
 		height: 11px;
 		margin-right: 6px;
@@ -24,8 +24,6 @@
 	&.checked {
 
 		> .checkpanel, .iconpanel {
-			background-color: $window;
-
 			.checklabel {
 				font-family: Marlett;
 				font-size: 16px;
@@ -43,14 +41,13 @@
 	}
 
 	&.disabled {
-		pointer-events: none;
-
+		pointer-events:none;
 		> .checkpanel, .iconpanel {
-			background-color: $button-face;
+			background-color: $base-colour;
 		}
 
 		> label {
-			color: $grey-text;
+			color: $default-text-colour-disabled;
 		}
 	}
 }
