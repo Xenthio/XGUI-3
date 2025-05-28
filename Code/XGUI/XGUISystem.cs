@@ -1,13 +1,30 @@
 ﻿using Sandbox;
+using System.Linq;
 
 namespace XGUI;
 
 public class XGUISystem : GameObjectSystem
 {
+	private string _globalTheme = "/XGUI/DefaultStyles/OliveGreen.scss";
+
 	/// <summary>
 	/// The Default theme that windows will use if not manually set by the window.
 	/// </summary>
-	public string GlobalTheme { get; internal set; } = "/XGUI/DefaultStyles/OliveGreen.scss";
+	public string GlobalTheme
+	{
+		get => _globalTheme;
+		set
+		{
+			if ( _globalTheme != value )
+			{
+				_globalTheme = value;
+
+				// Get the name of theme without the path and extension
+				var themeName = value.Split( '/' ).Last().Replace( ".scss", "" );
+				XGUIIconSystem.CurrentTheme = themeName;
+			}
+		}
+	}
 	public XGUIRootComponent Component { get; internal set; }
 	public XGUIRootPanel Panel { get; internal set; }
 	public static XGUISystem Instance => Game.ActiveScene.GetSystem<XGUISystem>();

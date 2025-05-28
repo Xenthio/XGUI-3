@@ -874,7 +874,7 @@ namespace XGUI.XGUIEditor
 
 
 
-		TreeView HierarchyTree;
+		Editor.TreeView HierarchyTree;
 		/// <summary>
 		/// Updates the Hierarchy TreeView based on the _rootMarkupNodes.
 		/// </summary>
@@ -918,7 +918,7 @@ namespace XGUI.XGUIEditor
 		/// <summary>
 		/// Recursively builds the TreeView structure from MarkupNodes.
 		/// </summary>
-		private void BuildTreeForMarkupNodeRecursive( MarkupNode node, TreeNode parentTreeNode, TreeView treeView )
+		private void BuildTreeForMarkupNodeRecursive( MarkupNode node, TreeNode parentTreeNode, Editor.TreeView treeView )
 		{
 			// (Identical to previous implementation)
 			if ( node.Type == NodeType.Element )

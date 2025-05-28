@@ -269,6 +269,66 @@ public class Toolbar : Panel
 		return button;
 	}
 
+	public Panel AddDropdownButton(
+		string text,
+		string icon = null,
+		Action onClick = null,
+		Action<ContextMenu> dropdownMenuPopulator = null
+	)
+	{
+		// Create a container panel for the split button
+		var splitPanel = new Panel();
+		splitPanel.AddClass( "toolbar-split-button" );
+
+		// Main button
+		var mainButton = new ToolbarButton( text, icon, split: true );
+		if ( onClick != null )
+			mainButton.AddEventListener( "onclick", () => onClick() );
+		mainButton.AddClass( "toolbar-split-main" );
+		splitPanel.AddChild( mainButton );
+
+		// Dropdown arrow button
+		var dropdownButton = new ToolbarButton( split: true );
+		dropdownButton.AddClass( "toolbar-split-dropdown" );
+		dropdownButton.AddClass( "toolbar-button" );
+		dropdownButton.AddEventListener( "onclick", e =>
+		{
+			if ( dropdownMenuPopulator != null )
+			{
+				var menu = new ContextMenu( splitPanel, ContextMenu.PositionMode.BelowLeft, 0 );
+				dropdownMenuPopulator( menu );
+			}
+			e.StopPropagation();
+		} );
+
+		// Hover events to color the main icon
+		splitPanel.AddEventListener( "onmouseover", e =>
+		{
+			if ( mainButton.ToolbarIcon != null )
+				mainButton.ToolbarIcon.Variant = null; // colored
+		} );
+		splitPanel.AddEventListener( "onmouseout", e =>
+		{
+
+			// if mouse still within the split button, don't reset icon
+			if ( splitPanel.HasHovered )
+				return;
+
+			if ( mainButton.ToolbarIcon != null )
+				mainButton.ToolbarIcon.Variant = "greyscale";
+		} );
+
+		// Add a down arrow icon
+		var arrowIcon = new Label { Text = "▼" };
+		arrowIcon.AddClass( "toolbar-split-arrow-icon" );
+		dropdownButton.AddChild( arrowIcon );
+
+		splitPanel.AddChild( dropdownButton );
+
+		ToolbarItems.AddChild( splitPanel );
+		return splitPanel;
+	}
+
 	/// <summary>
 	/// Adds a separator to the toolbar.
 	/// </summary>
@@ -357,8 +417,8 @@ public class ToolbarContainer : Panel
 
 public class ToolbarButton : Button
 {
-	XGUIIconPanel ToolbarIcon;
-	public ToolbarButton( string text = null, string icon = "" )
+	public XGUIIconPanel ToolbarIcon;
+	public ToolbarButton( string text = null, string icon = "", bool split = false )
 	{
 		AddClass( "toolbar-button" );
 
@@ -372,6 +432,8 @@ public class ToolbarButton : Button
 		if ( !string.IsNullOrEmpty( text ) )
 			AddChild( new Label() { Text = text } );
 
+		if ( split )
+			return;
 		AddEventListener( "onmouseover", OnMouseEnter );
 		AddEventListener( "onmouseout", OnMouseLeave );
 	}
@@ -383,6 +445,7 @@ public class ToolbarButton : Button
 	}
 	private void OnMouseLeave( PanelEvent e )
 	{
+
 		if ( ToolbarIcon != null && !HasHovered )
 			ToolbarIcon.Variant = "greyscale";
 	}

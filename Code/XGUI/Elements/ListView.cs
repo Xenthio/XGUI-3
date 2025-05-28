@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,12 +43,108 @@ public class ListView : Panel
 
 			AddClass( "listview-item" );
 
-			// Add event handlers
-			AddEventListener( "onclick", OnItemClicked );
-			AddEventListener( "ondoubleclick", OnItemDoubleClicked );
-
 			// Initial render based on parent's current view mode
 			UpdateViewMode( Parent.ViewMode );
+		}
+
+		public bool Draggable = true;
+
+		private bool _isDragging = false;
+		private bool _leftMouseDown = false;
+		private Vector2 _dragStartScreen;
+		private Vector2 _dragStartLocal;
+		// Invokable events
+		public Action<ItemDragEvent> OnDragStartEvent;
+		public Action<ItemDragEvent> OnDragEvent;
+		public Action<ItemDragEvent> OnDragEndEvent;
+
+		protected override void OnMouseDown( MousePanelEvent e )
+		{
+			base.OnMouseDown( e );
+			if ( e.MouseButton == MouseButtons.Left )
+			{
+				SelectSelf();
+				_leftMouseDown = true;
+			}
+			if ( e.MouseButton == MouseButtons.Left && Draggable )
+			{
+				_dragStartScreen = Mouse.Position;
+				_dragStartLocal = MousePosition;
+				_isDragging = false; // Will become true on move
+			}
+			//Log.Info( $"ListViewItem.OnMouseDown: {e.MouseButton} at {e.LocalPosition} (screen: {Mouse.Position})" );
+		}
+
+		protected override void OnMouseMove( MousePanelEvent e )
+		{
+			base.OnMouseMove( e );
+			if ( _leftMouseDown && Draggable )
+			{
+				if ( !_isDragging )
+				{
+					// Start drag if mouse moved enough (e.g., 3px threshold)
+					if ( (Mouse.Position - _dragStartScreen).Length > 3 )
+					{
+						_isDragging = true;
+						//Log.Info( $"ListViewItem.OnMouseMove: Starting drag at {e.LocalPosition} (screen: {Mouse.Position})" );
+						OnDragStartEvent?.Invoke( new ItemDragEvent
+						{
+							LocalGrabPosition = _dragStartLocal,
+							ScreenGrabPosition = _dragStartScreen,
+							LocalPosition = MousePosition,
+							ScreenPosition = Mouse.Position,
+							MouseDelta = Mouse.Position - _dragStartScreen
+						} );
+					}
+
+				}
+				else
+				{
+					// Continue drag
+					OnDragEvent?.Invoke( new ItemDragEvent
+					{
+						LocalGrabPosition = _dragStartLocal,
+						ScreenGrabPosition = _dragStartScreen,
+						LocalPosition = MousePosition,
+						ScreenPosition = Mouse.Position,
+						MouseDelta = Mouse.Position - _dragStartScreen
+					} );
+				}
+			}
+		}
+
+		protected override void OnMouseUp( MousePanelEvent e )
+		{
+			base.OnMouseUp( e );
+			if ( e.MouseButton == MouseButtons.Left )
+			{
+				_leftMouseDown = false;
+			}
+			if ( _isDragging && Draggable )
+			{
+				_isDragging = false;
+				OnDragEndEvent?.Invoke( new ItemDragEvent
+				{
+					LocalGrabPosition = _dragStartLocal,
+					ScreenGrabPosition = _dragStartScreen,
+					LocalPosition = MousePosition,
+					ScreenPosition = Mouse.Position,
+					MouseDelta = Mouse.Position - _dragStartScreen
+				} );
+			}
+		}
+
+
+		protected override void OnClick( MousePanelEvent e )
+		{
+			base.OnClick( e );
+			SelectSelf();
+		}
+
+		protected override void OnDoubleClick( MousePanelEvent e )
+		{
+			base.OnDoubleClick( e );
+			OnItemDoubleClicked();
 		}
 
 		public void UpdateViewMode( ListViewMode viewMode )
@@ -115,7 +212,7 @@ public class ListView : Panel
 			SetSelected( IsSelected );
 		}
 
-		private void OnItemClicked()
+		private void SelectSelf()
 		{
 			Parent.SelectItem( this );
 		}
@@ -168,9 +265,36 @@ public class ListView : Panel
 
 			onRenameComplete?.Invoke( newName );
 		}
+		public class ItemDragEvent
+		{
+			/// <summary>
+			/// For ondrag event - the delta of the mouse movement
+			/// </summary>
+			public Vector2 MouseDelta;
+
+			/// <summary>
+			/// The position on the Target panel where the drag started
+			/// </summary>
+			public Vector2 LocalGrabPosition;
+
+			/// <summary>
+			/// The position relative to the screen where the drag started
+			/// </summary>
+			public Vector2 ScreenGrabPosition;
+
+			/// <summary>
+			/// The current mouse position relative to target
+			/// </summary>
+			public Vector2 LocalPosition;
+
+			/// <summary>
+			/// The current position relative to the screen
+			/// </summary>
+			public Vector2 ScreenPosition;
+		}
 	}
 
-	private Panel ItemContainer { get; set; }
+	public Panel ItemContainer { get; set; }
 
 	public List<ListViewColumn> Columns { get; } = new();
 	public List<ListViewItem> Items { get; } = new();

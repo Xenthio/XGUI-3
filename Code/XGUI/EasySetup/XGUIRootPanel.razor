@@ -30,7 +30,7 @@
 		return FindPanelAt(this, position);
 	}
 
-	private Panel FindPanelAt(Panel parent, Vector2 position)
+	public Panel FindPanelAt(Panel parent, Vector2 position)
 	{
 		// Check if position is within parent bounds
 		if (!parent.Box.Rect.IsInside(position))

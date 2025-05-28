@@ -112,4 +112,39 @@
 	.CloseButton {
 		margin-left: 3px;
 	}
+
+
+	.Resizer {
+		width: 13px;
+		height: 13px;
+		font-family: Marlett;
+		margin-top: 0px;
+		z-index: 1000;
+		content: "";
+		font-size: 16px;
+		border-right: 4px solid $button-face;
+		border-bottom: 4px solid $button-face;
+		right:0px;
+		bottom:0px;
+
+		.rs-a {
+			width: 13px;
+			height: 13px;
+			position: absolute;
+			color: $button-highlight;
+			content: "o";
+			bottom: 0px;
+			right: 0px;
+		}
+
+		.rs-b {
+			width: 13px;
+			height: 13px;
+			position: absolute;
+			color: $button-shadow;
+			content: "p";
+			bottom: 0px;
+			right: 0px;
+		}
+	}
 }

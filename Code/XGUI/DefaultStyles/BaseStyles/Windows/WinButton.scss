@@ -40,6 +40,14 @@
 		&:focus, &.focus {
 		}
 	}
+
+	&.disabled {
+		pointer-events: none; 
+
+		> label {
+			color: $grey-text;
+		}
+	}
 }
 
 .self-layout {

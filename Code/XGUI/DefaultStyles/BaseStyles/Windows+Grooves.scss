@@ -61,6 +61,12 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 			border-right: 1px solid $button-light;
 		}
 	}
+
+	&.disabled {
+		> label {
+			filter-drop-shadow: 1px 1px 0px $button-highlight;
+		}
+	}
 }
 
 .toolbar {
@@ -332,6 +338,16 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		}
 	}
 }
+
+.toolbar-button {
+	&.disabled {
+
+		.xgui-icon-panel {
+			filter-drop-shadow: 1px 1px 0px $button-highlight;
+		}
+	}
+}
+
 .selectlist {
 	margin: 1px;
 	box-shadow: $outer-boxshadow-inset;
@@ -339,18 +355,39 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 
 .listview {
 	padding: 1px;
+	
+	&:not(.ghost-listview) {
+		&::before {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			border-top: 1px solid $button-dark-shadow;
+			border-left: 1px solid $button-dark-shadow;
+			border-bottom: 1px solid $button-light;
+			border-right: 1px solid $button-light;
+			pointer-events: none;
+		}
+	}
+}
 
-	&::before {
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0px;
-		border-top: 1px solid $button-dark-shadow;
-		border-left: 1px solid $button-dark-shadow;
-		border-bottom: 1px solid $button-light;
-		border-right: 1px solid $button-light;
-		pointer-events: none;
+.treeview {
+	padding: 1px;
+
+	&:not(.ghost-treeview) {
+		&::before {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			border-top: 1px solid $button-dark-shadow;
+			border-left: 1px solid $button-dark-shadow;
+			border-bottom: 1px solid $button-light;
+			border-right: 1px solid $button-light;
+			pointer-events: none;
+		}
 	}
 }
 
@@ -388,4 +425,13 @@ Seperator {
 	height: 2px;
 	border-top: 1px solid $button-shadow;
 	background-color: $button-highlight;
+}
+
+* {
+	&.disabled {
+
+		> label {
+			filter-drop-shadow: 1px 1px 0px $button-highlight;
+		}
+	}
 }

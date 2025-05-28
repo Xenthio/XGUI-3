@@ -1,4 +1,5 @@
 ﻿using Sandbox.UI;
+using Sandbox.UI.Construct;
 namespace XGUI;
 public class Resizer : Panel
 {
@@ -6,6 +7,8 @@ public class Resizer : Panel
 	{
 
 		AddClass( "Resizer" );
+		Add.Label( "", "rs-a" );
+		Add.Label( "", "rs-b" );
 	}
 
 	protected override void OnMouseDown( MousePanelEvent e )

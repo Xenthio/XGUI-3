@@ -24,7 +24,7 @@ public class FileBrowserView : Panel
 	public BaseFileSystem CurrentFileSystem;
 	public string CurrentPath;
 	public List<FileItem> FileItems = new();
-	protected ListView ListView;
+	public ListView ListView;
 
 	// View mode properties
 	private FileBrowserViewMode _viewMode = FileBrowserViewMode.Icons;

@@ -1,8 +1,29 @@
-listview {
+.listview {
 	flex-direction: column;
 
 	.listview-item {
 		flex-shrink: 0;
+	}
+
+	.listview-icon-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 80px;
+		height: 80px;
+		padding: 4px 0px;
+		margin: 1px;
+
+		.listview-icon {
+			margin-bottom: 5px;
+			flex-shrink: 0;
+		}
+
+		> .label {
+			text-align: center;
+			max-width: 100%;
+			text-overflow: ellipsis;
+		}
 	}
 
 	.listview-header {
@@ -18,6 +39,8 @@ listview {
 	.listview-container {
 		flex-direction: column;
 		overflow: scroll;
+		flex-shrink: 0;
+		flex-grow: 1;
 	}
 
 	.listview-icon-container {
@@ -25,29 +48,7 @@ listview {
 		display: flex;
 		flex-wrap: wrap;
 		align-content: flex-start;
-		padding: 4px;
-		gap: 6px;
 		flex-shrink: 0;
-
-		.listview-icon-item {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			width: 80px;
-			height: 80px;
-			padding: 4px 0px;
-			margin: 2px;
-
-			.listview-icon {
-				margin-bottom: 5px;
-				flex-shrink: 0;
-			}
-
-			> .label {
-				text-align: center;
-				max-width: 100%;
-				text-overflow: ellipsis;
-			}
-		}
+		flex-grow: 1;
 	}
 }

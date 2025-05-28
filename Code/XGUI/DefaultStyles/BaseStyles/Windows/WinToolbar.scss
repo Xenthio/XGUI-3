@@ -52,7 +52,9 @@
 		}
 	}
 
-
+	.toolbar-throbber {
+		border-left: 1px solid $button-shadow;
+	}
 
 	.menu-item {
 		flex-shrink: 0;
@@ -63,7 +65,6 @@
 		padding-right: 7px;
 		background-color: transparent;
 		border: 1px solid transparent;
-		cursor: pointer;
 
 		&:hover {
 			border-top: 1px solid $button-light;
@@ -85,7 +86,6 @@
 		min-width: 54px;
 		background-color: transparent;
 		border: 1px solid transparent;
-		cursor: pointer;
 		flex-direction: column;
 		margin: 0px;
 		padding-left: 0px;
@@ -111,8 +111,50 @@
 			margin-bottom: 1px;
 		}
 
+		&.disabled {
+			.xgui-icon-panel {
+				.icon-image {
+					filter: contrast(0) tint($button-shadow);
+				}
+			}
+		}
+
 		.label {
 			bottom: 1px;
+		}
+	}
+
+	.toolbar-split-button {
+		flex-shrink: 0;
+
+		&:hover {
+			.toolbar-button {
+				border-top: 1px solid $button-highlight;
+				border-left: 1px solid $button-highlight;
+				border-bottom: 1px solid $button-shadow;
+				border-right: 1px solid $button-shadow;
+			}
+		}
+
+		.toolbar-button {
+			&:active {
+				border-top: 1px solid $button-shadow;
+				border-left: 1px solid $button-shadow;
+				border-bottom: 1px solid $button-highlight;
+				border-right: 1px solid $button-highlight;
+			}
+		}
+
+
+		.toolbar-split-dropdown {
+			flex-shrink: 0;
+			width: 13px;
+			min-width: 13px;
+
+			> .toolbar-split-arrow-icon {
+				content: "6";
+				font-family: Marlett;
+			}
 		}
 	}
 

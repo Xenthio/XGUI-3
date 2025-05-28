@@ -25,7 +25,7 @@ $window-frame: #000000;
 
 $scrollbar: #C0C0C0;
 
-$menu: #C0C0C0;
+$menu: #FFFFFF;
 $menu-text: #000000;
 
 $app-workspace: #808080;
@@ -152,6 +152,11 @@ xguirootpanel {
 				}
 			}
 
+			.TitleIcon{
+				margin-left:8px;
+				margin-top:1px;
+			}
+
 			.CloseButton {
 				margin-left: 0px;
 				margin-right: 0px;
@@ -208,6 +213,13 @@ xguirootpanel {
 	}
 
 	&:active {
+		background-color: $control-colour-active;
+		border: 1px solid $control-border-colour-active;
+		border-bottom: 1px solid $control-border-colour-bottom-active;
+		transition: all 0.2s linear;
+	}
+
+	&.forceinset {
 		background-color: $control-colour-active;
 		border: 1px solid $control-border-colour-active;
 		border-bottom: 1px solid $control-border-colour-bottom-active;
@@ -352,6 +364,7 @@ xguirootpanel {
 			&.active {
 				background-color: $style-background;
 				border-right: 1px solid $style-border;
+				margin-right: -3px;
 			}
 			// Last child should always have right border
 			&:last-child {
@@ -513,9 +526,11 @@ xguirootpanel {
 		height: 21px;
 		border-radius: 3px;
 
+		/*
 		.ItemText {
 			top: 1px;
 		}
+		*/
 
 		&:hover {
 			background-color: $button-face;
@@ -531,7 +546,11 @@ xguirootpanel {
 
 
 .toolbar {
-	background-color: white;
+	background-color: $menu;
+
+	&.menu-toolbar {
+		background-color: $menu;
+	}
 
 	.menu-item {
 		margin: 0px;

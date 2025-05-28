@@ -42,11 +42,7 @@ public class RadioButton : Panel
 	/// <summary>
 	/// Returns true if this checkbox is checked
 	/// </summary>
-	public bool Value
-	{
-		get => Selected;
-		set => Selected = value;
-	}
+	public string Value;
 
 	public Label Label { get; protected set; }
 
