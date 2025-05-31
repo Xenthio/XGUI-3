@@ -42,8 +42,20 @@
 			}
 
 			.label {
+				text-overflow: ellipsis;
+				overflow: hidden;
 				margin-left: 1px;
 				padding: 2px;
+			}
+		}
+
+		.listview-cell {
+			flex-grow: 1;
+
+			.label {
+				white-space:nowrap;
+				word-break:break-all;
+				text-overflow: ellipsis;
 			}
 		}
 
