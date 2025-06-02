@@ -1,13 +1,14 @@
 .treeview {
 	flex-direction: column;
-	overflow: auto; // Allow scrolling for the whole tree if it overflows
 	position: relative; // For potential absolute positioned elements later
 
 	.treeview-item-container {
 		flex-direction: column;
+		overflow: scroll;
 	}
 
 	.treeview-node {
+		flex-shrink: 0; // Prevent nodes from shrinking
 		flex-direction: column; // Each node contains its header and children container vertically
 		width: 100%;
 

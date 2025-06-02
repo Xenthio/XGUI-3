@@ -396,7 +396,8 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 }
 
 LayoutBoxInset {
-	&::before {
+	padding:1px;
+	&::after {
 		position: absolute;
 		top: 0px;
 		left: 0px;
@@ -405,7 +406,7 @@ LayoutBoxInset {
 		border-top: 1px solid $button-dark-shadow;
 		border-left: 1px solid $button-dark-shadow;
 		border-bottom: 1px solid $button-light;
-		border-right: 1px solid $button-light;
+		border-right: 1px solid $button-light; 
 		pointer-events: none;
 	}
 }
@@ -431,11 +432,61 @@ Seperator {
 	background-color: $button-highlight;
 }
 
-* {
-	&.disabled {
+.scrollpanel {
 
-		> label {
-			filter-drop-shadow: 1px 1px 0px $button-highlight;
+	.scrollbar_button_up {
+		&::before {
+			border-top: 1px solid $button-highlight;
+			border-left: 1px solid $button-highlight;
+			border-bottom: 1px solid $button-shadow;
+			border-right: 1px solid $button-shadow;
+		}
+
+		&:active {
+			&::before {
+				border: none;
+			}
+		}
+	}
+
+	.scrollbar_button_down {
+		&::before {
+			border-top: 1px solid $button-highlight;
+			border-left: 1px solid $button-highlight;
+			border-bottom: 1px solid $button-shadow;
+			border-right: 1px solid $button-shadow;
+		}
+
+		&:active {
+			&::before {
+				border: none;
+			}
+		}
+	}
+
+	.scrollbar_thumb {
+
+		&::before {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			border-top: 1px solid $button-highlight;
+			border-left: 1px solid $button-highlight;
+			border-bottom: 1px solid $button-shadow;
+			border-right: 1px solid $button-shadow;
+			pointer-events: none;
 		}
 	}
 }
+
+
+	* {
+		&.disabled {
+
+			> label {
+				filter-drop-shadow: 1px 1px 0px $button-highlight;
+			}
+		}
+	}

@@ -21,6 +21,7 @@
 
 		.listview-text {
 			padding: 1px;
+
 			> .label {
 				text-align: center;
 				max-width: 100%;
@@ -42,12 +43,13 @@
 	.listview-container {
 		flex-direction: column;
 		overflow: scroll;
-		flex-shrink: 0;
+		align-content: flex-start;
 		flex-grow: 1;
 	}
 
 	.listview-icon-container {
 		flex-direction: row;
+		overflow: scroll;
 		display: flex;
 		flex-wrap: wrap;
 		align-content: flex-start;

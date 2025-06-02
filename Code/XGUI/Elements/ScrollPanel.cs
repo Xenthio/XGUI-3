@@ -6,7 +6,7 @@ namespace XGUI;
 
 public class ScrollPanel : Panel
 {
-	public Panel Canvas { get; private set; }
+	//public Panel Canvas { get; private set; }
 	public Panel VerticalScrollbar { get; private set; } // This is the scrollbar track
 	public Button UpButton { get; private set; }
 	public Panel ScrollArea { get; private set; }
@@ -25,18 +25,18 @@ public class ScrollPanel : Panel
 	public float PageScrollStepMultiplier { get; set; } = 0.9f; // For track clicks (multiplies canvas height)
 
 	private Vector2 _lastCanvasScrollOffset; // To track scroll changes
+	private Vector2 _lastSize; // To track scroll changes
 
 	public ScrollPanel()
 	{
 		_isInitializing = true;
 
 		// The ScrollPanel itself is a row containing the Canvas and the VerticalScrollbar
-		Style.FlexDirection = FlexDirection.Row;
 		AddClass( "scrollpanel" );
 
 		// Canvas where user content goes. It handles the actual scrolling.
 		// Its default scrollbars should be hidden via SCSS.
-		Canvas = Add.Panel( "scrollpanel_canvas" );
+		//Canvas = Add.Panel( "scrollpanel_canvas" );
 		// Canvas.OnScroll += UpdateScrollbarVisuals; // This event is not available
 
 		// VerticalScrollbar (the track)
@@ -45,7 +45,7 @@ public class ScrollPanel : Panel
 
 
 		// Up Button
-		UpButton = VerticalScrollbar.Add.Button( "▲", OnUpButtonClick ); // Text can be replaced by icon class
+		UpButton = VerticalScrollbar.Add.Button( "U", OnUpButtonClick ); // Text can be replaced by icon class
 		UpButton.AddClass( "scrollbar_button_up" );
 		UpButton.AddClass( "scrollbar_button" ); // Common class for styling
 
@@ -62,7 +62,7 @@ public class ScrollPanel : Panel
 
 
 		// Down Button
-		DownButton = VerticalScrollbar.Add.Button( "▼", OnDownButtonClick ); // Text can be replaced by icon class
+		DownButton = VerticalScrollbar.Add.Button( "D", OnDownButtonClick ); // Text can be replaced by icon class
 		DownButton.AddClass( "scrollbar_button_down" );
 		DownButton.AddClass( "scrollbar_button" ); // Common class for styling
 
@@ -70,12 +70,21 @@ public class ScrollPanel : Panel
 
 		// Initial update and store initial scroll offset
 		UpdateScrollbarVisuals();
-		_lastCanvasScrollOffset = Canvas.ScrollOffset;
+		_lastCanvasScrollOffset = ScrollOffset;
+		_lastCanvasScrollOffset = ScrollOffset;
 	}
+
+	// Disable the built-in scroll bounce effect on the scroll area
+	public bool DisableScrollBounce = true;
 
 	private void OnTrackMouseDown( PanelEvent e )
 	{
 		if ( e.Target == ScrollThumb || e.Target == UpButton || e.Target == DownButton )
+		{
+			// Let their specific handlers take over
+			return;
+		}
+		if ( ScrollThumb.HasHovered || UpButton.HasHovered || DownButton.HasHovered )
 		{
 			// Let their specific handlers take over
 			return;
@@ -90,15 +99,15 @@ public class ScrollPanel : Panel
 		// Calculate thumb's position relative to the start of the scrollable area of the track
 		float thumbTopRelativeToTrackButtons = (ScrollThumb.Style.Top?.Value ?? 0f);
 
-		float pageScrollAmount = Canvas.Box.Rect.Height * PageScrollStepMultiplier;
+		float pageScrollAmount = Box.Rect.Height * PageScrollStepMultiplier;
 
 		if ( clickY < thumbTopRelativeToTrackButtons )
 		{
-			Canvas.ScrollOffset = new Vector2( Canvas.ScrollOffset.x, Canvas.ScrollOffset.y - pageScrollAmount );
+			ScrollOffset = new Vector2( ScrollOffset.x, ScrollOffset.y - pageScrollAmount );
 		}
 		else if ( clickY > thumbTopRelativeToTrackButtons + (ScrollThumb.Style.Height?.Value ?? 0f) )
 		{
-			Canvas.ScrollOffset = new Vector2( Canvas.ScrollOffset.x, Canvas.ScrollOffset.y + pageScrollAmount );
+			ScrollOffset = new Vector2( ScrollOffset.x, ScrollOffset.y + pageScrollAmount );
 		}
 		// Visual update will be handled by Tick or OnAfterTreeRender
 		e.StopPropagation();
@@ -107,13 +116,13 @@ public class ScrollPanel : Panel
 
 	private void OnUpButtonClick()
 	{
-		Canvas.ScrollOffset = new Vector2( Canvas.ScrollOffset.x, Canvas.ScrollOffset.y - ScrollStep );
+		ScrollOffset = new Vector2( ScrollOffset.x, ScrollOffset.y - ScrollStep );
 		// Visual update will be handled by Tick or OnAfterTreeRender
 	}
 
 	private void OnDownButtonClick()
 	{
-		Canvas.ScrollOffset = new Vector2( Canvas.ScrollOffset.x, Canvas.ScrollOffset.y + ScrollStep );
+		ScrollOffset = new Vector2( ScrollOffset.x, ScrollOffset.y + ScrollStep );
 		// Visual update will be handled by Tick or OnAfterTreeRender
 	}
 
@@ -128,6 +137,9 @@ public class ScrollPanel : Panel
 										  // Add a global mouse move listener, or listen on a parent that covers the screen
 										  // For now, we rely on Tick and mouse being over the panel.
 										  // Consider adding listeners to Scene.Document or similar for robust off-panel dragging.
+
+		ScrollVelocity = Vector2.Zero; // Reset scroll velocity when starting drag
+
 		e.StopPropagation();
 	}
 
@@ -136,13 +148,15 @@ public class ScrollPanel : Panel
 		if ( !_isDraggingThumb ) return;
 		_isDraggingThumb = false;
 		ScrollThumb.RemoveClass( "active" );
+		ScrollVelocity = Vector2.Zero; // Reset scroll velocity when dragging stops
+
 		// Remove global mouse move listener if one was added in StartThumbDrag
 	}
 
 	public override void Tick()
 	{
 		base.Tick();
-
+		VerticalScrollbar.Style.Display = HasScrollY ? DisplayMode.Flex : DisplayMode.None; // Show scrollbar only if needed
 		if ( _isDraggingThumb )
 		{
 			// This part handles dragging the thumb
@@ -161,9 +175,9 @@ public class ScrollPanel : Panel
 			else
 			{
 				float newThumbTop = _dragThumbStartY + mouseDeltaY;
-				newThumbTop = Math.Clamp( newThumbTop, 0, maxThumbTop );
+				newThumbTop = Math.Clamp( newThumbTop, -0.05f, maxThumbTop );
 
-				float contentMaxScroll = Canvas.ScrollSize.y - Canvas.Box.Rect.Height;
+				float contentMaxScroll = ScrollSize.y;
 				if ( contentMaxScroll <= 0 )
 				{
 					// No content to scroll
@@ -175,27 +189,79 @@ public class ScrollPanel : Panel
 					{
 						thumbTopPercent = newThumbTop / maxThumbTop;
 					}
-					Canvas.ScrollOffset = new Vector2( Canvas.ScrollOffset.x, thumbTopPercent * contentMaxScroll );
+					//ScrollOffset = new Vector2( ScrollOffset.x, MathF.Round( thumbTopPercent * contentMaxScroll ) );
+					ScrollVelocity = new Vector2( ScrollVelocity.x, thumbTopPercent * contentMaxScroll - _lastCanvasScrollOffset.y );
 				}
 			}
 		}
 
 		// Check if canvas scroll offset has changed by any means (drag, buttons, wheel, etc.)
-		if ( Canvas != null && Canvas.ScrollOffset != _lastCanvasScrollOffset )
+		if ( ScrollOffset != _lastCanvasScrollOffset )
 		{
 			UpdateScrollbarVisuals();
-			_lastCanvasScrollOffset = Canvas.ScrollOffset;
+			RePositionScrollbar();
+			_lastCanvasScrollOffset = ScrollOffset;
 		}
+		if ( Box.Rect.Size != _lastSize )
+		{
+			UpdateScrollbarVisuals();
+			RePositionScrollbar();
+			_lastSize = Box.Rect.Size;
+		}
+
+		if ( DisableScrollBounce )
+		{
+			// stop the scroll bounce effect
+			if ( ScrollOffset.y < 0 || ScrollOffset.y > ScrollSize.y - Box.Rect.Height )
+			{
+				ScrollOffset = new Vector2( ScrollOffset.x, Math.Clamp( ScrollOffset.y, 0, ScrollSize.y ) );
+			}
+		}
+		UpdatePadding();
+
+	}
+
+	void RePositionScrollbar()
+	{
+		if ( VerticalScrollbar != null && Box.Rect.Size != Vector2.Zero )
+		{
+			var scrollbarHeight = VerticalScrollbar.Box.Rect.Height;
+			var panelHeight = Box.Rect.Height;
+			var scrollOffset = ScrollOffset.y;
+			// clamp inbounds so it doesn't go out of bounds and we can scroll infinitely
+			scrollOffset = Math.Clamp( scrollOffset, 0, Math.Max( ScrollSize.y - panelHeight + scrollbarHeight, 0 ) );
+
+			VerticalScrollbar.Style.Top = MathF.Round( scrollOffset );
+
+		}
+	}
+
+	void UpdatePadding()
+	{
+		if ( !HasScrollY ) // If no vertical scrolling is needed, no padding is required
+		{
+			Style.PaddingRight = Length.Pixels( 0f );
+			return;
+		}
+		if ( VerticalScrollbar == null || Box.Rect.Size == Vector2.Zero )
+			return;
+		float scrollbarWidth = VerticalScrollbar.Box.Rect.Width;
+		float paddingRight = scrollbarWidth > 0 ? scrollbarWidth : 0f;
+		Style.PaddingRight = Length.Pixels( paddingRight );
+	}
+
+	public override void FinalLayout( Vector2 offset )
+	{
+		base.FinalLayout( offset );// Update scrollbar position to mimic sticky behavior (stays in view, other wise it scrolls with the content)
+		RePositionScrollbar();
 	}
 
 	protected override void OnAfterTreeRender( bool firstTime )
 	{
 		base.OnAfterTreeRender( firstTime );
 		UpdateScrollbarVisuals();
-		if ( Canvas != null ) // Ensure canvas is not null
-		{
-			_lastCanvasScrollOffset = Canvas.ScrollOffset;
-		}
+		_lastCanvasScrollOffset = ScrollOffset;
+
 	}
 
 
@@ -206,7 +272,7 @@ public class ScrollPanel : Panel
 		float downButtonHeight = DownButton?.Box.Rect.Height ?? 0f;
 
 		// Ensure VerticalScrollbar is valid and has rendered
-		float scrollbarHeight = VerticalScrollbar?.Box.Rect.Height ?? 0f;
+		float scrollbarHeight = VerticalScrollbar?.Box.RectInner.Height ?? 0f;
 
 		// This is the height of the area where the thumb can actually move
 		return scrollbarHeight - upButtonHeight - downButtonHeight;
@@ -214,18 +280,19 @@ public class ScrollPanel : Panel
 
 	private void UpdateScrollbarVisuals()
 	{
-		if ( Canvas == null || VerticalScrollbar == null || ScrollThumb == null || UpButton == null || DownButton == null )
+		if ( VerticalScrollbar == null || ScrollThumb == null || UpButton == null || DownButton == null )
 			return;
 
 		// Ensure elements have computed geometry. This might be an issue if called too early.
-		if ( Canvas.Box.Rect.Size == Vector2.Zero || VerticalScrollbar.Box.Rect.Size == Vector2.Zero )
+		if ( Box.Rect.Size == Vector2.Zero || VerticalScrollbar.Box.Rect.Size == Vector2.Zero )
 		{
 			// Postpone update if geometry is not ready, or rely on OnAfterTreeRender
 			return;
 		}
 
-		float canvasVisibleHeight = Canvas.Box.Rect.Height;
-		float canvasTotalContentHeight = Canvas.ScrollSize.y;
+		float canvasVisibleHeight = Box.Rect.Height;
+		float canvasTotalContentHeight = Box.Rect.Height + ScrollSize.y;
+		// Log.Info( $"Canvas Visible Height: {canvasVisibleHeight}, Total Content Height: {canvasTotalContentHeight}" );
 
 		if ( canvasTotalContentHeight <= canvasVisibleHeight )
 		{
@@ -236,7 +303,7 @@ public class ScrollPanel : Panel
 		VerticalScrollbar.SetClass( "hidden", false );
 
 		float scrollableTrackHeight = GetScrollableTrackHeight();
-		float thumbMinHeight = 20f;
+		float thumbMinHeight = 8f;
 
 		if ( scrollableTrackHeight <= thumbMinHeight )
 		{
@@ -259,7 +326,7 @@ public class ScrollPanel : Panel
 		float currentScrollRatio = 0f;
 		if ( scrollableContentRange > 0 )
 		{
-			currentScrollRatio = Canvas.ScrollOffset.y / scrollableContentRange;
+			currentScrollRatio = ScrollOffset.y / scrollableContentRange;
 		}
 		currentScrollRatio = Math.Clamp( currentScrollRatio, 0f, 1f );
 
@@ -270,23 +337,5 @@ public class ScrollPanel : Panel
 
 		ScrollThumb.Style.Top = Length.Pixels( thumbTopOffset );
 		ScrollThumb.Style.Dirty();
-	}
-
-	protected override void OnChildAdded( Panel child )
-	{
-		if ( _isInitializing )
-		{
-			base.OnChildAdded( child );
-			return;
-		}
-
-		if ( child != Canvas && child != VerticalScrollbar && child.Parent != Canvas )
-		{
-			Canvas.AddChild( child );
-		}
-		else
-		{
-			base.OnChildAdded( child );
-		}
 	}
 }

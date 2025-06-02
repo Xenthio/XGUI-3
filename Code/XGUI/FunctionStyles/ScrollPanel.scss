@@ -1,5 +1,11 @@
 .scrollpanel {
 	flex-direction: column;
+	overflow: scroll;
+	flex-grow: 1;
+
+	> * {
+		flex-shrink: 0;
+	}
 
 	.scrollpanel_canvas {
 		flex-grow: 1;
@@ -11,33 +17,37 @@
 		}
 	}
 
+
+	.scrollbar_thumb {
+		background-color: #444444;
+		width: 16px;
+		height: 16px;
+	}
+
+	.scrollbar_track {
+		flex-direction: column;
+		flex-grow: 1;
+	}
+
 	.scrollbar_vertical {
+		position: absolute;
 		height: 100%;
 		width: 16px;
 		flex-direction: column;
-		position: relative;
+		right: 0;
 
 		.scrollbar_button_up {
 			width: 16px;
 			height: 16px;
-			align-self: flex-start;
-		}
-
-		.scrollbar_thumb {
-			background-color: #444444;
-			width: 16px;
-			height: 16px;
-		}
-
-		.scrollbar_track {
-			flex-direction: column;
-			flex-grow: 1;
+			align-items: center;
+			justify-content: center;
 		}
 
 		.scrollbar_button_down {
 			width: 16px;
 			height: 16px;
-			align-self: flex-end;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 }

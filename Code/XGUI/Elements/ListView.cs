@@ -323,7 +323,7 @@ public class ListView : Panel
 
 	public ListView()
 	{
-		ItemContainer = new Panel();
+		ItemContainer = new ScrollPanel();
 		ItemContainer.AddClass( "listview-container" );
 		AddClass( "listview" );
 		InitializeHeader();
@@ -525,7 +525,7 @@ public class ListView : Panel
 		// Special handling for Icons view - use a container for grid layout
 		if ( ViewMode == ListViewMode.Icons )
 		{
-			ItemContainer = new Panel();
+			ItemContainer = new ScrollPanel();
 			ItemContainer.AddClass( "listview-container" );
 			ItemContainer.AddClass( "listview-icon-container" );
 			AddChild( ItemContainer );
@@ -539,7 +539,7 @@ public class ListView : Panel
 		}
 		else
 		{
-			ItemContainer = new Panel();
+			ItemContainer = new ScrollPanel();
 			ItemContainer.AddClass( "listview-container" );
 			AddChild( ItemContainer );
 			// For other views, add items directly to the ListView
