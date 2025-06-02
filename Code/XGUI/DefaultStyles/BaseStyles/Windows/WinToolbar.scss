@@ -16,8 +16,9 @@
 
 .toolbar-drag-handle {
 	width: 3px;
-	height: 85%;
 	position: absolute;
+	top:2px;
+	bottom:2px;
 	left: 2px;
 	align-items: center;
 	justify-content: center;
@@ -48,7 +49,7 @@
 		}
 
 		.menu-item {
-			height: 20px;
+			height: 19px;
 		}
 	}
 
@@ -67,8 +68,8 @@
 		border: 1px solid transparent;
 
 		&:hover {
-			border-top: 1px solid $button-light;
-			border-left: 1px solid $button-light;
+			border-top: 1px solid $button-highlight;
+			border-left: 1px solid $button-highlight;
 			border-bottom: 1px solid $button-shadow;
 			border-right: 1px solid $button-shadow;
 		}
@@ -76,8 +77,8 @@
 		&:active {
 			border-top: 1px solid $button-shadow;
 			border-left: 1px solid $button-shadow;
-			border-bottom: 1px solid $button-light;
-			border-right: 1px solid $button-light;
+			border-bottom: 1px solid $button-highlight;
+			border-right: 1px solid $button-highlight;
 		}
 	}
 
@@ -161,7 +162,7 @@
 	.toolbar-separator {
 		flex-shrink: 0;
 		width: 1px;
-		height: 88%;
+		align-self: stretch;
 		background-color: $button-shadow;
 		margin: 2px 2px;
 	}

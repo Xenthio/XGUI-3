@@ -435,13 +435,18 @@ xguirootpanel {
 
 	.listview-icon-container {
 		& .listview-icon-item {
-			justify-content: center;
 			align-items: center;
 			width: 74px;
-			height: 70px;
+			min-height: 74px;
+			height: auto;
 
 			.listview-icon {
-				margin-bottom: 6px;
+				margin-bottom: 5px;
+			}
+
+			.label {
+				word-break: normal;
+				align-self: stretch;
 			}
 		}
 	}
@@ -481,7 +486,11 @@ xguirootpanel {
 					}
 				}
 
-				.label {
+				.listview-text {
+					&:before {
+						border:none;
+					}
+
 					background-color: transparent;
 					color: $button-text;
 				}

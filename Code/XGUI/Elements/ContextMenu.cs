@@ -77,6 +77,63 @@ namespace XGUI
 
 			return item;
 		}
+		public Panel AddCheckItem( string text, Func<bool> isChecked, Action onClick, string iconurl = "" )
+		{
+			var item = Add.Panel( "MenuItem" );
+			// Add checkmark or empty space in ItemIcon
+			var icon = item.Add.Label( "", "CheckIcon" );
+
+			// Set checkmark state
+			void UpdateCheck()
+			{
+				icon.SetClass( "checked", isChecked() );
+			}
+			UpdateCheck();
+
+			item.Add.Label( text, "ItemText" );
+
+			item.AddEventListener( "onclick", () =>
+			{
+				onClick?.Invoke();
+				UpdateCheck();
+				Success();
+			} );
+			item.AddEventListener( "onmouseover", () =>
+			{
+				if ( !_openingSubmenu )
+					CloseActiveSubmenu();
+			} );
+
+			return item;
+		}
+
+		public Panel AddRadioItem( string text, Func<bool> isSelected, Action onClick, string iconurl = "" )
+		{
+			var item = Add.Panel( "MenuItem" );
+			var icon = item.Add.Label( "", "RadioIcon" );
+
+			void UpdateRadio()
+			{
+				icon.SetClass( "selected", isSelected() );
+			}
+			UpdateRadio();
+
+			item.Add.Label( text, "ItemText" );
+
+			item.AddEventListener( "onclick", () =>
+			{
+				onClick?.Invoke();
+				UpdateRadio();
+				Success();
+			} );
+			item.AddEventListener( "onmouseover", () =>
+			{
+				if ( !_openingSubmenu )
+					CloseActiveSubmenu();
+			} );
+
+			return item;
+		}
 
 		/// <summary>
 		/// Add a submenu item that expands when hovered

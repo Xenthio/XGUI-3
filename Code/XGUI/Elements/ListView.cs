@@ -193,7 +193,8 @@ public class ListView : Panel
 					cell.Style.Width = Parent.Columns[i].Width;
 
 					string text = (SubItems != null && i < SubItems.Count) ? SubItems[i] : "";
-					cell.AddChild( new Label { Text = text } );
+					var itemtext = cell.AddChild<Panel>( "listview-text" );
+					itemtext.AddChild( new Label { Text = text } );
 
 					Cells.Add( cell );
 					AddChild( cell );
@@ -204,7 +205,8 @@ public class ListView : Panel
 				// Just show the first column
 				AddChild( IconPanel );
 				string text = (SubItems != null && SubItems.Count > 0) ? SubItems[0] : "";
-				AddChild( new Label { Text = text } );
+				var itemtext = AddChild<Panel>( "listview-text" );
+				itemtext.AddChild( new Label { Text = text } );
 			}
 
 

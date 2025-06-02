@@ -279,6 +279,10 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		background-color: $button-highlight;
 		border-left: 1px solid $button-shadow;
 	}
+
+	.toolbar-drag-handle {
+		bottom: 3px;
+	}
 }
 
 .toolbar-throbber {

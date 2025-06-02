@@ -29,6 +29,32 @@
 			height: 16px;
 		}
 
+		.CheckIcon {
+			margin-left: 2px;
+			margin-right: 3px;
+			width: 16px;
+			height: 16px;
+
+			&.checked {
+				font-family: Marlett;
+				font-size: 16px;
+				content: "a";
+			}
+		}
+
+		.RadioIcon {
+			margin-left: 2px;
+			margin-right: 3px;
+			width: 16px;
+			height: 16px;
+
+			&.selected {
+				font-family: Marlett;
+				font-size: 16px;
+				content: "i";
+			}
+		}
+
 		&.open {
 			background-color: $highlight;
 			color: $highlight-text;
@@ -41,10 +67,11 @@
 	}
 
 	.Menu-Separator {
-		background-color: $button-light;
+		background-color: $button-highlight;
 		height: 2px;
-		align-self: center;
-		width: 100%;
+		align-self: stretch;
+		margin-left: 1px;
+		margin-right: 1px;
 		border-top: 1px solid $button-shadow;
 		margin-top: 3px;
 		margin-bottom: 4px;

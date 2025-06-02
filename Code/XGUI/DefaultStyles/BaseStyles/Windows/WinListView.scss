@@ -36,6 +36,20 @@
 
 	.listview-item {
 
+
+		&.shortcut {
+			.listview-icon {
+				&::after {
+					position: absolute;
+					background-image: url("XGUI/Resources/shortcut.png");
+					width: 11px;
+					height: 11px;
+					bottom: 0px;
+					left: 0px;
+				}
+			}
+		}
+
 		&.listview-row {
 			.listview-icon {
 				margin-left: 1px;
@@ -50,15 +64,13 @@
 		}
 
 		.listview-cell {
-			flex-grow: 1;
 
 			.label {
-				white-space:nowrap;
-				word-break:break-all;
+				white-space: nowrap;
+				word-break: break-all;
 				text-overflow: ellipsis;
 			}
 		}
-
 
 		&.selected {
 			.listview-icon {
@@ -69,16 +81,40 @@
 			// Likely the name of the item
 			:first-child {
 				&:not(.TextEntry) {
-					.label {
+					> .listview-text {
 						background-color: $highlight;
 						color: $highlight-text;
+
+						&::before {
+							position: absolute;
+							top: 0px;
+							left: 0px;
+							bottom: 0px;
+							right: 0px;
+							border: 1px solid $highlight;
+							mask-image: url("XGUI/Resources/checker1x1.png");
+							// No clue why saturate is needed, but it is. invert is stupid on borders for some reason.
+							filter: invert(1) saturate(3.65);
+						}
 					}
 				}
 			}
 
-			> .label {
+			> .listview-text {
 				background-color: $highlight;
 				color: $highlight-text;
+
+				&::before {
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					bottom: 0px;
+					right: 0px;
+					border: 1px solid $highlight;
+					// No clue why this is needed, but it is. invert is stupid on borders for some reason.
+					filter: invert(1) saturate(3.65);
+					mask-image: url("XGUI/Resources/checker1x1.png");
+				}
 			}
 
 			.TextEntry {

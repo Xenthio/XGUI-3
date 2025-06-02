@@ -11,7 +11,7 @@
 		align-items: center;
 		width: 80px;
 		height: 80px;
-		padding: 4px 0px;
+		padding: 4px 2px;
 		margin: 1px;
 
 		.listview-icon {
@@ -19,10 +19,13 @@
 			flex-shrink: 0;
 		}
 
-		> .label {
-			text-align: center;
-			max-width: 100%;
-			text-overflow: ellipsis;
+		.listview-text {
+			padding: 1px;
+			> .label {
+				text-align: center;
+				max-width: 100%;
+				text-overflow: ellipsis;
+			}
 		}
 	}
 

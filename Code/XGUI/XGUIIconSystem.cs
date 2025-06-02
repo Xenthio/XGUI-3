@@ -175,6 +175,18 @@ public static class XGUIIconSystem
 		return iconPath;
 	}
 
+	private static string GetDefaultIconName( IconType iconType )
+	{
+		return iconType switch
+		{
+			IconType.FileType => "file",
+			IconType.Folder => "folder",
+			IconType.UI => "default",
+			IconType.Misc => "default",
+			_ => "default"
+		};
+	}
+
 	/// <summary>
 	/// Get an icon for a specific file extension with optional variant
 	/// </summary>
@@ -260,8 +272,7 @@ public static class XGUIIconSystem
 			if ( iconType == IconType.FileType && !findingDefaultIconPreventRecursion )
 			{
 				findingDefaultIconPreventRecursion = true;
-				return FindIconInTheme( themeName, "file", iconType, size, variant ) ??
-					   FindIconInTheme( DefaultThemeName, "file", iconType, size, variant );
+				return null;
 			}
 			findingDefaultIconPreventRecursion = false;
 
