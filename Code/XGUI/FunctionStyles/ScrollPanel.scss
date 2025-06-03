@@ -29,25 +29,32 @@
 		flex-grow: 1;
 	}
 
+	.scrollbar_button {
+		width: 16px;
+		height: 16px;
+		align-items: center;
+		justify-content: center;
+	}
+
 	.scrollbar_vertical {
 		position: absolute;
-		height: 100%;
 		width: 16px;
 		flex-direction: column;
 		right: 0;
+		z-index: 1000;
+	}
 
-		.scrollbar_button_up {
-			width: 16px;
-			height: 16px;
-			align-items: center;
-			justify-content: center;
-		}
+	.scrollbar_horizontal {
+		position: absolute;
+		height: 16px;
+		flex-direction: row;
+		bottom: 0;
+		z-index: 1000;
+	}
 
-		.scrollbar_button_down {
-			width: 16px;
-			height: 16px;
-			align-items: center;
-			justify-content: center;
-		}
+	.scrollbar_corner {
+		position: absolute;
+		background-color: #444444;
+		z-index: 1000;
 	}
 }

@@ -1,6 +1,7 @@
 .scrollpanel {
-	.scrollbar_vertical {
-		.scrollbar_button_up {
+
+	.scrollbar {
+		.scrollbar_button {
 			flex-shrink: 0;
 			background-color: $button-face;
 			border-top: 1px solid $button-light;
@@ -15,6 +16,18 @@
 			.label {
 				font-family: Marlett;
 				font-size: 14px;
+			}
+		}
+	}
+
+	.scrollbar_corner {
+		background-color: $button-face;
+	}
+
+	.scrollbar_vertical {
+
+		.scrollbar_button_up {
+			.label {
 				left: -2px;
 				top: -0px;
 				content: "5";
@@ -22,23 +35,26 @@
 		}
 
 		.scrollbar_button_down {
-			flex-shrink: 0;
-			background-color: $button-face;
-			border-top: 1px solid $button-light;
-			border-left: 1px solid $button-light;
-			border-bottom: 1px solid $button-dark-shadow;
-			border-right: 1px solid $button-dark-shadow;
-
-			&:active {
-				border: 1px solid $button-shadow;
-			}
-
 			.label {
-				font-family: Marlett;
-				font-size: 14px;
 				left: -2px;
 				top: -2px;
 				content: "6";
+			}
+		}
+	}
+
+	.scrollbar_horizontal {
+		.scrollbar_button_left {
+			.label {
+				left: -2px;
+				content: "3";
+			}
+		}
+
+		.scrollbar_button_right {
+			.label {
+				left: -2px;
+				content: "4";
 			}
 		}
 	}
