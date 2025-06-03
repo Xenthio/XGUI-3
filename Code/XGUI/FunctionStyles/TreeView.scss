@@ -4,18 +4,18 @@
 
 	.treeview-item-container {
 		flex-direction: column;
-		overflow: scroll;
+		align-items: flex-start;
 	}
 
 	.treeview-node {
 		flex-shrink: 0; // Prevent nodes from shrinking
 		flex-direction: column; // Each node contains its header and children container vertically
-		width: 100%;
 
 		.treeview-node-header {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
+			flex-shrink: 0;
 		}
 
 		.treeview-expander {
@@ -26,7 +26,6 @@
 			align-items: center;
 			justify-content: center;
 			font-size: 10px; // For text expanders
-			flex-shrink: 0;
 
 			&.empty {
 				// Style for nodes with no children (e.g., make it invisible or a different icon)
@@ -48,11 +47,11 @@
 
 		.treeview-label {
 			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
+			flex-shrink: 0;
 		}
 
 		.treeview-children-container {
+			align-items: flex-start;
 			flex-direction: column;
 			display: flex; // Will be toggled to none/flex
 			.treeview-node {

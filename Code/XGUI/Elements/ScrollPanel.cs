@@ -337,6 +337,52 @@ public class ScrollPanel : Panel
 		UpdatePadding();
 		KeepScrollOffsetInBounds();
 	}
+	/// <summary>
+	/// Gets the size of the visible content area, excluding scrollbars.
+	/// </summary>
+	public Vector2 ViewportSize
+	{
+		get
+		{
+			float width = Box.RectInner.Width;
+			float height = Box.RectInner.Height;
+
+			// Subtract vertical scrollbar width if visible
+			if ( VerticalScrollbar != null && VerticalScrollbar.Style.Display != DisplayMode.None )
+				width -= VerticalScrollbar.Box.Rect.Width;
+
+			// Subtract horizontal scrollbar height if visible
+			if ( HorizontalScrollbar != null && HorizontalScrollbar.Style.Display != DisplayMode.None )
+				height -= HorizontalScrollbar.Box.Rect.Height;
+
+			// Clamp to non-negative values
+			return new Vector2( Math.Max( 0, width ), Math.Max( 0, height ) );
+		}
+	}
+	/// <summary>
+	/// Gets the total scrollable content size, excluding scrollbars themselves.
+	/// </summary>
+	public Vector2 ScrollContentSize
+	{
+		get
+		{
+			// If you have a dedicated content panel, use its size:
+			// return ContentPanel?.Box.Rect.Size ?? Vector2.Zero;
+
+			// Otherwise, measure all children except scrollbars and corner panel:
+			float maxRight = 0, maxBottom = 0;
+			foreach ( var child in Children )
+			{
+				if ( child == VerticalScrollbar || child == HorizontalScrollbar || child == CornerPanel )
+					continue;
+
+				var rect = child.Box.Rect;
+				maxRight = Math.Max( maxRight, rect.Right );
+				maxBottom = Math.Max( maxBottom, rect.Bottom );
+			}
+			return new Vector2( maxRight, maxBottom );
+		}
+	}
 
 	private void KeepScrollOffsetInBounds()
 	{

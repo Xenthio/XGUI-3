@@ -262,7 +262,10 @@ public partial class TreeView : Panel
 	public TreeView()
 	{
 		AddClass( "treeview" );
-		ItemContainer = Add.Panel( "treeview-item-container" );
+		//ItemContainer = Add.Panel( "treeview-item-container" );
+		ItemContainer = new ScrollPanel();
+		ItemContainer.AddClass( "treeview-item-container" );
+		AddChild( ItemContainer );
 	}
 
 	public TreeViewNode AddRootNode( string text, string iconName = null, object data = null )
