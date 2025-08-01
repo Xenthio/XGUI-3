@@ -520,7 +520,7 @@ public class XGUIIconPanel : Panel
 			_iconImage.Style.Display = DisplayMode.Flex;
 			_materialIconLabel.Style.Display = DisplayMode.None;
 
-			var tex = Texture.Load( FileSystem.Data, imagePath );
+			var tex = Texture.LoadFromFileSystem( imagePath, FileSystem.Data );
 
 			_iconImage.Style.SetBackgroundImage( tex );
 			_iconImage.Style.Width = Length.Pixels( _iconSize );
@@ -569,7 +569,7 @@ public class XGUIIconPanel : Panel
 			// Show image icon
 			_iconImage.Style.Display = DisplayMode.Flex;
 			_materialIconLabel.Style.Display = DisplayMode.None;
-			_iconImage.Style.BackgroundImage = Texture.Load( FileSystem.Mounted, iconPath );
+			_iconImage.Style.BackgroundImage = Texture.LoadFromFileSystem( iconPath, FileSystem.Mounted );
 			_iconImage.Style.Width = Length.Pixels( _iconSize );
 			_iconImage.Style.Height = Length.Pixels( _iconSize );
 		}

@@ -1,5 +1,4 @@
 ﻿using Editor;
-using Sandbox;
 using Sandbox.UI;
 using System;
 
@@ -15,13 +14,6 @@ namespace XGUI.XGUIEditor
 		public Panel SelectedPanel => View?.SelectedPanel;
 		public Action OverlayDraw { get; set; }
 
-
-		// Resize handle tracking
-		private bool _isDraggingHandle = false;
-		private int _activeHandle = -1; // -1 = none, 0-7 = handles clockwise from top-left
-		private Vector2 _dragStartPos;
-		private Rect _originalRect;
-
 		public XGUIOverlayWidget( Widget parent = null ) : base( parent )
 		{
 
@@ -33,7 +25,7 @@ namespace XGUI.XGUIEditor
 		}
 
 
-		bool IsWindow = false;
+		bool IsWindowMode = false;
 		/// <summary>
 		/// Connect this overlay to a view and start tracking selection changes
 		/// </summary>
@@ -44,9 +36,9 @@ namespace XGUI.XGUIEditor
 
 			Parent = view.Parent;
 			SetSizeMode( SizeMode.Expand, SizeMode.Expand );
-			IsWindow = aswindow;
+			IsWindowMode = aswindow;
 
-			if ( IsWindow )
+			if ( IsWindowMode )
 			{
 				//do overlay as transparent window
 				// popout as a window
@@ -76,7 +68,7 @@ namespace XGUI.XGUIEditor
 				return;
 			}
 			Size = View.Size;
-			if ( IsWindow )
+			if ( IsWindowMode )
 			{
 				// position over the view, get screen position
 				var screenPos = View.ScreenPosition;

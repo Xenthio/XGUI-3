@@ -1,5 +1,4 @@
 ﻿using Sandbox.UI;
-using Sandbox.UI.Construct;
 using System;
 using System.Globalization;
 namespace XGUI;
@@ -23,7 +22,6 @@ public class ColourPickerControl : Panel
 
 	public event Action<Color> ValueChanged;
 
-	private Panel _mainContainer;
 	private Panel _colorDisplayButton; // Clickable display
 	private TextEntry _rInput;
 	private TextEntry _gInput;
@@ -41,28 +39,28 @@ public class ColourPickerControl : Panel
 		var rgbContainer = Add.Panel( "rgb-container" );
 
 		// R Input
-		_rInput = Add.TextEntry( "" );
+		_rInput = AddChild<TextEntry>( "" );
 		_rInput.Numeric = true;
 		//_rInput.OnTextEdited += ( string s ) => OnRgbInputChanged( s, 0 );
 		_rInput.AddEventListener( "onblur", () => OnRgbInputChanged( _rInput.Text, 0 ) ); // Ensure update on losing focus
 		_rInput.SetClass( "floatinput", true );
 
 		// G Input
-		_gInput = Add.TextEntry( "" );
+		_gInput = AddChild<TextEntry>( "" );
 		_gInput.Numeric = true;
 		//_gInput.OnTextEdited += ( string s ) => OnRgbInputChanged( s, 1 );
 		_gInput.AddEventListener( "onblur", () => OnRgbInputChanged( _gInput.Text, 1 ) );
 		_gInput.SetClass( "floatinput", true );
 
 		// B Input
-		_bInput = Add.TextEntry( "" );
+		_bInput = AddChild<TextEntry>( "" );
 		_bInput.Numeric = true;
 		//_bInput.OnTextEdited += ( string s ) => OnRgbInputChanged( s, 2 );
 		_bInput.AddEventListener( "onblur", () => OnRgbInputChanged( _bInput.Text, 2 ) );
 		_bInput.SetClass( "floatinput", true );
 
 		// A Input (Optional)
-		_aInput = Add.TextEntry( "" );
+		_aInput = AddChild<TextEntry>( "" );
 		_aInput.Numeric = true;
 		//_aInput.OnTextEdited += ( string s ) => OnRgbInputChanged( s, 3 );
 		_aInput.AddEventListener( "onblur", () => OnRgbInputChanged( _aInput.Text, 3 ) );

@@ -7,7 +7,7 @@ public static class XGUIExtensions
 	/// <summary>
 	/// Find the owner XGUIPanel/Window of this panel
 	/// </summary>
-	public static XGUIPanel? GetOwnerXGUIPanel( this Panel panel )
+	public static XGUIPanel GetOwnerXGUIPanel( this Panel panel )
 	{
 		// loop through parents until we find a Window
 		var parent = panel.Parent;

@@ -73,11 +73,6 @@
 		}
 
 		&.selected {
-			.listview-icon {
-				.icon-image {
-					background-tint: $highlight-tint;
-				}
-			}
 			// Likely the name of the item
 			:first-child {
 				&:not(.TextEntry) {
@@ -91,7 +86,7 @@
 							left: 0px;
 							bottom: 0px;
 							right: 0px;
-							border: 1px solid $highlight;
+							border: 1px solid $window;
 							mask-image: url("XGUI/Resources/checker1x1.png");
 							// No clue why saturate is needed, but it is. invert is stupid on borders for some reason.
 							filter: invert(1) saturate(3.65);
@@ -101,16 +96,13 @@
 			}
 
 			> .listview-text {
-				background-color: $highlight;
-				color: $highlight-text;
-
 				&::before {
 					position: absolute;
 					top: 0px;
 					left: 0px;
 					bottom: 0px;
 					right: 0px;
-					border: 1px solid $highlight;
+					border: 1px solid $window;
 					// No clue why this is needed, but it is. invert is stupid on borders for some reason.
 					filter: invert(1) saturate(3.65);
 					mask-image: url("XGUI/Resources/checker1x1.png");
@@ -130,6 +122,28 @@
 
 				.label {
 					flex-grow: 0;
+				}
+			}
+		}
+	}
+}
+
+.Panel {
+	&:focus {
+		.listview-item.selected {
+			.listview-icon {
+				.icon-image {
+					background-tint: $highlight-tint;
+				}
+			}
+
+			> .listview-text {
+				background-color: $highlight;
+				color: $highlight-text;
+
+				&::before {
+					position: absolute;
+					border: 1px solid $highlight;
 				}
 			}
 		}

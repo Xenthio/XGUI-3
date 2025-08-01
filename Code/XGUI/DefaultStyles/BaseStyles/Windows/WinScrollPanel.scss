@@ -2,6 +2,8 @@
 
 	.scrollbar {
 		.scrollbar_button {
+			height:16px;
+			width:16px;
 			flex-shrink: 0;
 			background-color: $button-face;
 			border-top: 1px solid $button-light;

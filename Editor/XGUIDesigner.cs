@@ -32,7 +32,6 @@ namespace XGUI.XGUIEditor
 
 		// State
 		private string _currentFilePath;
-		private bool _isDirty;
 		private bool _isUpdatingUIFromCode = false; // Flag to prevent update loops
 		private bool _isUpdatingCodeFromUI = false;
 		private Menu _recentFilesMenu;
@@ -869,12 +868,10 @@ namespace XGUI.XGUIEditor
 			// Serialize tree back to markup and update code view/UI
 			UpdateCodeFromTree();
 			ParseAndUpdateUI( _codeTextEditor.PlainText );
-			_isDirty = true;
 		}
 
 
 
-		Editor.TreeView HierarchyTree;
 		/// <summary>
 		/// Updates the Hierarchy TreeView based on the _rootMarkupNodes.
 		/// </summary>
@@ -1011,7 +1008,6 @@ namespace XGUI.XGUIEditor
 			_fullRazorContentCache = template; // Prime the cache
 			ParseAndUpdateUI( template ); // Parse initial state
 			_currentFilePath = null;
-			_isDirty = false;
 			Title = "XGUI Razor Designer - Untitled";
 		}
 		void Open()
@@ -1036,7 +1032,6 @@ namespace XGUI.XGUIEditor
 				_fullRazorContentCache = content; // Update cache
 				ParseAndUpdateUI( content ); // Parse new file
 				_currentFilePath = path;
-				_isDirty = false;
 				Title = $"XGUI Razor Designer - {Path.GetFileName( path )}";
 				AddRecentFile( path );
 			}
@@ -1092,7 +1087,6 @@ namespace XGUI.XGUIEditor
 			{
 				File.WriteAllText( path, _codeTextEditor.PlainText );
 				_currentFilePath = path;
-				_isDirty = false;
 
 				Title = $"XGUI Razor Designer - {Path.GetFileName( path )}";
 
@@ -1177,43 +1171,6 @@ namespace XGUI.XGUIEditor
 
 		}
 
-
-		/// <summary>
-		/// Called when an item is selected in the Hierarchy TreeView.
-		/// </summary>
-		private void OnHierarchyNodeSelected( object item )
-		{
-			// Update the hierarchy tree if needed
-			HierarchyTree.UpdateIfDirty();
-
-			if ( item is MarkupNode node && node.Type == NodeType.Element )
-			{
-				// Check if this is the window-content node (root node in hierarchy)
-				bool isWindowContentNode = node.TagName.Equals( "div", StringComparison.OrdinalIgnoreCase ) &&
-										  node.Attributes.TryGetValue( "class", out var cls ) &&
-										  cls.Contains( "window-content" );
-
-				if ( isWindowContentNode )
-				{
-					// Select the parent root node (which contains window properties)
-					// This is the <root> node that wraps everything
-					var rootNode = GetOrCreateWindowNode();
-
-					// Use the window itself as the panel
-					SelectAndInspect( rootNode, _view.Window );
-					Log.Info( "Selected window root node" );
-					return;
-				}
-
-				// Normal element selection
-				_markupNodeToPanelMap.TryGetValue( node, out Panel correspondingPanel );
-				SelectAndInspect( node, correspondingPanel );
-			}
-			else
-			{
-				SelectAndInspect( null, null ); // Clear selection if text node or something else selected
-			}
-		}
 
 		//---------------------------------------------------------------------
 		// MarkupNode to Panel Creation Helpers (Refined from previous)

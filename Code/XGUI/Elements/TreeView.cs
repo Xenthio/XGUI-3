@@ -16,7 +16,7 @@ public partial class TreeView : Panel
 		public string Text { get; set; }
 		public string IconName { get; set; }
 
-		public List<TreeViewNode> Children { get; } = new();
+		public List<TreeViewNode> ChildNodes { get; } = new();
 		public bool IsExpanded { get; private set; }
 		public bool IsSelected { get; private set; }
 
@@ -102,7 +102,7 @@ public partial class TreeView : Panel
 		public TreeViewNode AddChild( string text, string iconName = null, object data = null )
 		{
 			var childNode = new TreeViewNode( ParentTreeView, this, text, iconName, data );
-			Children.Add( childNode );
+			ChildNodes.Add( childNode );
 			ChildrenContainer.AddChild( childNode );
 			UpdateExpanderIcon();
 			return childNode;
@@ -110,7 +110,7 @@ public partial class TreeView : Panel
 
 		public void RemoveChild( TreeViewNode childNode )
 		{
-			if ( Children.Remove( childNode ) )
+			if ( ChildNodes.Remove( childNode ) )
 			{
 				childNode.Delete();
 				UpdateExpanderIcon();
@@ -119,18 +119,18 @@ public partial class TreeView : Panel
 
 		public void ClearChildren()
 		{
-			foreach ( var child in Children.ToList() )
+			foreach ( var child in ChildNodes.ToList() )
 			{
 				child.Delete();
 			}
-			Children.Clear();
+			ChildNodes.Clear();
 			UpdateExpanderIcon();
 		}
 
 
 		public void ToggleExpand( PanelEvent e )
 		{
-			if ( !Children.Any() ) return;
+			if ( !ChildNodes.Any() ) return;
 
 			IsExpanded = !IsExpanded;
 			ChildrenContainer.Style.Display = IsExpanded ? DisplayMode.Flex : DisplayMode.None;
@@ -146,7 +146,7 @@ public partial class TreeView : Panel
 
 		public void Expand()
 		{
-			if ( IsExpanded || !Children.Any() ) return;
+			if ( IsExpanded || !ChildNodes.Any() ) return;
 			IsExpanded = true;
 			ChildrenContainer.Style.Display = DisplayMode.Flex;
 			UpdateExpanderIcon();
@@ -155,7 +155,7 @@ public partial class TreeView : Panel
 
 		public void Collapse()
 		{
-			if ( !IsExpanded || !Children.Any() ) return;
+			if ( !IsExpanded || !ChildNodes.Any() ) return;
 			IsExpanded = false;
 			ChildrenContainer.Style.Display = DisplayMode.None;
 			UpdateExpanderIcon();
@@ -165,7 +165,7 @@ public partial class TreeView : Panel
 		public void ExpandAll()
 		{
 			Expand();
-			foreach ( var child in Children )
+			foreach ( var child in ChildNodes )
 			{
 				child.ExpandAll();
 			}
@@ -174,7 +174,7 @@ public partial class TreeView : Panel
 		public void CollapseAll()
 		{
 			Collapse();
-			foreach ( var child in Children )
+			foreach ( var child in ChildNodes )
 			{
 				child.CollapseAll();
 			}
@@ -182,7 +182,7 @@ public partial class TreeView : Panel
 
 		private void UpdateExpanderIcon()
 		{
-			if ( !Children.Any() )
+			if ( !ChildNodes.Any() )
 			{
 				Expander.SetClass( "empty", true );
 				Expander.SetClass( "expanded", false );
@@ -333,7 +333,7 @@ public partial class TreeView : Panel
 		{
 			return currentNode;
 		}
-		foreach ( var child in currentNode.Children )
+		foreach ( var child in currentNode.ChildNodes )
 		{
 			var found = FindNodeRecursive( child, predicate );
 			if ( found != null ) return found;

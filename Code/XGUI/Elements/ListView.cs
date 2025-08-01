@@ -27,7 +27,7 @@ public class ListView : Panel
 
 	public class ListViewItem : Panel
 	{
-		private ListView Parent { get; }
+		private ListView ParentListView { get; }
 		public object Data { get; }
 		public List<string> SubItems { get; }
 		public bool IsSelected { get; private set; }
@@ -37,14 +37,14 @@ public class ListView : Panel
 
 		public ListViewItem( ListView parent, object data, List<string> subItems )
 		{
-			Parent = parent;
+			ParentListView = parent;
 			Data = data;
 			SubItems = subItems;
 
 			AddClass( "listview-item" );
 
 			// Initial render based on parent's current view mode
-			UpdateViewMode( Parent.ViewMode );
+			UpdateViewMode( ParentListView.ViewMode );
 		}
 
 		public bool Draggable = true;
@@ -182,7 +182,7 @@ public class ListView : Panel
 			if ( viewMode == ListViewMode.Details )
 			{
 				// Create a cell for each column
-				for ( int i = 0; i < Parent.Columns.Count; i++ )
+				for ( int i = 0; i < ParentListView.Columns.Count; i++ )
 				{
 					var cell = new Panel();
 					if ( i == 0 )
@@ -190,7 +190,7 @@ public class ListView : Panel
 						cell.AddChild( IconPanel );
 					}
 					cell.AddClass( "listview-cell" );
-					cell.Style.Width = Parent.Columns[i].Width;
+					cell.Style.Width = ParentListView.Columns[i].Width;
 
 					string text = (SubItems != null && i < SubItems.Count) ? SubItems[i] : "";
 					var itemtext = cell.AddChild<Panel>( "listview-text" );
@@ -216,12 +216,12 @@ public class ListView : Panel
 
 		private void SelectSelf()
 		{
-			Parent.SelectItem( this );
+			ParentListView.SelectItem( this );
 		}
 
 		private void OnItemDoubleClicked()
 		{
-			Parent.OnItemActivated?.Invoke( this );
+			ParentListView.OnItemActivated?.Invoke( this );
 		}
 
 		public void SetSelected( bool selected )
@@ -235,7 +235,7 @@ public class ListView : Panel
 			// Remove existing label(s)
 			foreach ( var child in Children.ToList() )
 			{
-				if ( child is Label )
+				if ( child.HasClass( "listview-text" ) )
 					child.Delete();
 			}
 
@@ -263,7 +263,8 @@ public class ListView : Panel
 
 			// Restore label
 			string text = newName;
-			AddChild( new Label { Text = text } );
+			var itemtext = AddChild<Panel>( "listview-text" );
+			itemtext.AddChild( new Label { Text = text } );
 
 			onRenameComplete?.Invoke( newName );
 		}
@@ -335,7 +336,7 @@ public class ListView : Panel
 		UpdateHeader();
 	}
 
-	public void AddItem( object data, List<string> subItems )
+	public ListViewItem AddItem( object data, List<string> subItems )
 	{
 		var item = new ListViewItem( this, data, subItems );
 		Items.Add( item );
@@ -358,6 +359,7 @@ public class ListView : Panel
 				ItemContainer.AddChild( item );
 			}
 		}
+		return item;
 	}
 
 	/// <summary>

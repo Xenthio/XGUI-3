@@ -13,11 +13,8 @@
 @code
 {
 
-	[Obsolete] public static XGUIRootPanel Current = null;
-
 	public XGUIRootPanel()
 	{
-		Current = this;
 		Style.Width = Length.Percent(100);
 		Style.Height = Length.Percent(100);
 		Style.PointerEvents = PointerEvents.All;
@@ -50,7 +47,6 @@
 
 	public override void Tick()
 	{
-		Current = this;
 		base.Tick();
 	}
 	protected override void OnMouseDown(MousePanelEvent e)

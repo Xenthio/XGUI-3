@@ -173,7 +173,7 @@ public class FileBrowserTree : Panel
 
 	private class TreeNode : Panel
 	{
-		public FileBrowserTree Parent;
+		public FileBrowserTree ParentTree;
 		public string NodeName;
 		public string FullPath;
 		public bool IsDirectory;
@@ -186,7 +186,7 @@ public class FileBrowserTree : Panel
 
 		public TreeNode( FileBrowserTree parent, string name, string path, bool isDirectory )
 		{
-			Parent = parent;
+			ParentTree = parent;
 			NodeName = name;
 			FullPath = path;
 			IsDirectory = isDirectory;
@@ -244,14 +244,14 @@ public class FileBrowserTree : Panel
 				if ( IsDirectory )
 				{
 					// Unselect all nodes first
-					Parent.UnselectAll();
+					ParentTree.UnselectAll();
 
 					// Select this node
 					SetSelected( true );
 
 					// Notify parent of directory selection
-					Parent.OnDirectorySelected?.Invoke( FullPath );
-					Parent.SelectedPath = FullPath;
+					ParentTree.OnDirectorySelected?.Invoke( FullPath );
+					ParentTree.SelectedPath = FullPath;
 				}
 			} );
 		}
@@ -299,13 +299,13 @@ public class FileBrowserTree : Panel
 			try
 			{
 				// Get directories
-				IEnumerable<string> directories = Parent.CurrentFileSystem.FindDirectory( FullPath );
+				IEnumerable<string> directories = ParentTree.CurrentFileSystem.FindDirectory( FullPath );
 
 				// Create a node for each subdirectory
 				foreach ( var dir in directories )
 				{
 					var dirName = System.IO.Path.GetFileName( dir );
-					var node = new TreeNode( Parent, dirName, dir, true );
+					var node = new TreeNode( ParentTree, dirName, dir, true );
 					ChildNodes.Add( node );
 					ChildrenPanel.AddChild( node );
 
@@ -327,7 +327,7 @@ public class FileBrowserTree : Panel
 		{
 			try
 			{
-				var directories = Parent.CurrentFileSystem.FindDirectory( path );
+				var directories = ParentTree.CurrentFileSystem.FindDirectory( path );
 				return directories.Any();
 			}
 			catch
