@@ -586,6 +586,11 @@ public partial class Window : XGUIPanel
 					IsDraggable = bool.Parse( value );
 					return;
 				}
+			case "autofocus":
+				{
+					AutoFocus = bool.Parse( value );
+					return;
+				}
 
 
 			case "width":
