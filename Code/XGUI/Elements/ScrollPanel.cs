@@ -52,7 +52,9 @@ public class ScrollPanel : Panel
 		VerticalScrollbar.AddEventListener( "onmousedown", OnTrackMouseDown );
 
 		// Up button
-		UpButton = VerticalScrollbar.Add.Button( "", OnUpButtonClick );
+		//UpButton = VerticalScrollbar.Add.Button( "", OnUpButtonClick ); Add.Button removed.
+		UpButton = VerticalScrollbar.AddChild<Button>( "" );
+		UpButton.AddEventListener( "onclick", OnUpButtonClick );
 		UpButton.AddClass( "scrollbar_button_up scrollbar_button" );
 		UpButton.Icon = "arrow_upward";
 
@@ -64,7 +66,9 @@ public class ScrollPanel : Panel
 		ScrollThumb.AddEventListener( "onmousedown", StartThumbDrag );
 
 		// Down button
-		DownButton = VerticalScrollbar.Add.Button( "", OnDownButtonClick );
+		//DownButton = VerticalScrollbar.Add.Button( "", OnDownButtonClick );
+		DownButton = VerticalScrollbar.AddChild<Button>( "" );
+		DownButton.AddEventListener( "onclick", OnDownButtonClick );
 		DownButton.AddClass( "scrollbar_button_down scrollbar_button" );
 		DownButton.Icon = "arrow_downward";
 
@@ -73,7 +77,9 @@ public class ScrollPanel : Panel
 		HorizontalScrollbar.AddEventListener( "onmousedown", OnHTrackMouseDown );
 
 		// Left button
-		LeftButton = HorizontalScrollbar.Add.Button( "", OnLeftButtonClick );
+		//LeftButton = HorizontalScrollbar.Add.Button( "", OnLeftButtonClick );
+		LeftButton = HorizontalScrollbar.AddChild<Button>( "" );
+		LeftButton.AddEventListener( "onclick", OnLeftButtonClick );
 		LeftButton.AddClass( "scrollbar_button_left scrollbar_button" );
 		LeftButton.Icon = "arrow_back";
 
@@ -85,7 +91,9 @@ public class ScrollPanel : Panel
 		HScrollThumb.AddEventListener( "onmousedown", StartHThumbDrag );
 
 		// Right button
-		RightButton = HorizontalScrollbar.Add.Button( "", OnRightButtonClick );
+		//RightButton = HorizontalScrollbar.Add.Button( "", OnRightButtonClick );
+		RightButton = HorizontalScrollbar.AddChild<Button>( "" );
+		RightButton.AddEventListener( "onclick", OnRightButtonClick );
 		RightButton.AddClass( "scrollbar_button_right scrollbar_button" );
 		RightButton.Icon = "arrow_forward";
 

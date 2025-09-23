@@ -220,10 +220,10 @@ public partial class XGUIPopup : XGUIPanel
 	/// </summary>
 	public Panel AddOption( string text, Action action = null )
 	{
-		return Add.Button( text, () =>
+		return AddChild( new Button( text, () =>
 		{
 			action?.Invoke();
-		} );
+		} ) );
 	}
 
 	/// <summary>
@@ -231,10 +231,7 @@ public partial class XGUIPopup : XGUIPanel
 	/// </summary>
 	public Panel AddOption( string text, string icon, Action action = null )
 	{
-		return Add.ButtonWithIcon( text, icon, null, () =>
-		{
-			action?.Invoke();
-		} );
+		return AddChild( new Button( text, icon, () => { action?.Invoke(); } ) );
 	}
 
 	/// <summary>
