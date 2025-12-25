@@ -64,7 +64,7 @@ public partial class XGUIView : SceneRenderingWidget
 		Panel.Delete();
 	}
 	int mouseIconHash = 0;
-	public override void PreFrame()
+	protected override void PreFrame()
 	{
 		base.PreFrame();
 

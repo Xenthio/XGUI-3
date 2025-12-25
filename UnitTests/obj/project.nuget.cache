@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/DOs7VuxLI0=",
+  "dgSpecHash": "pOo9xazP3dE=",
   "success": true,
   "projectFilePath": "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\UnitTests\\xgui-3.unittest.csproj",
   "expectedPackageFiles": [
@@ -12,8 +12,7 @@
     "C:\\Users\\thego\\.nuget\\packages\\mstest.testadapter\\3.1.1\\mstest.testadapter.3.1.1.nupkg.sha512",
     "C:\\Users\\thego\\.nuget\\packages\\mstest.testframework\\3.1.1\\mstest.testframework.3.1.1.nupkg.sha512",
     "C:\\Users\\thego\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
-    "C:\\Users\\thego\\.nuget\\packages\\nuget.frameworks\\6.5.0\\nuget.frameworks.6.5.0.nupkg.sha512",
-    "C:\\Users\\thego\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512"
+    "C:\\Users\\thego\\.nuget\\packages\\nuget.frameworks\\6.5.0\\nuget.frameworks.6.5.0.nupkg.sha512"
   ],
   "logs": []
 }
