@@ -196,7 +196,7 @@ public partial class Window : XGUIPanel
 
 		AddChild( TitleBar );
 		var bg = TitleBar.AddChild<Panel>( "TitleBackground" );
-		TitleBar.Style.ZIndex = 100;
+		//TitleBar.Style.ZIndex = 100; // Unsure why we had this, but now it causes issues, so remove it.
 
 		// The "0", "1" and "r" are for the marlett/webdings font
 		// Ideally i want these to be set from the theming CSS space
