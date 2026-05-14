@@ -32,6 +32,7 @@
 		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Reflection.dll"/> 
 		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Mounting.dll"/> 
 		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Microsoft.AspNetCore.Components.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.AppSystem.dll"/> 
 		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Tools.dll"/> 
 		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Compiling.dll"/> 
 		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Microsoft.CodeAnalysis.dll"/> 
@@ -43,8 +44,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="../../../../../SteamLibrary/steamapps/common/sbox/editor/ActionGraph/Code/actiongraph.csproj" />
+		<ProjectReference Include="../../../../../SteamLibrary/steamapps/common/sbox/editor/DooEditor/Code/dooeditor.csproj" />
 		<ProjectReference Include="../../../../../SteamLibrary/steamapps/common/sbox/editor/Hammer/Code/hammer.csproj" />
 		<ProjectReference Include="../../../../../SteamLibrary/steamapps/common/sbox/addons/tools/Code/Base Editor Library.csproj" />
+		<ProjectReference Include="../../../../../SteamLibrary/steamapps/common/sbox/editor/MovieMaker/Code/moviemaker.csproj" />
 		<ProjectReference Include="../../../../../SteamLibrary/steamapps/common/sbox/editor/ShaderGraph/Code/shadergraph.csproj" />
 		<ProjectReference Include="../Code/xgui-3.csproj" />
 	</ItemGroup>
