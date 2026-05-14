@@ -12,8 +12,8 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<DefineConstants>SANDBOX;ADDON;DEBUG</DefineConstants>
 		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-		<OutputPath>E:\steamlibrary\steamapps\common\sbox/.vs/output/</OutputPath>
-		<DocumentationFile>E:\steamlibrary\steamapps\common\sbox/.vs/output/xgui-3.unittest.xml</DocumentationFile>
+		<OutputPath>../../../../../SteamLibrary/steamapps/common/sbox/.vs/output/</OutputPath>
+		<DocumentationFile>../../../../../SteamLibrary/steamapps/common/sbox/.vs/output/xgui-3.unittest.xml</DocumentationFile>
 		<RootNamespace>XGUI</RootNamespace>
 		<Nullable>disable</Nullable>
 		<IsTestProject>true</IsTestProject>
@@ -32,25 +32,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Analyzer Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.CodeUpgrader.dll"/> 
-		<Analyzer Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Generator.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.System.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Engine.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Filesystem.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Reflection.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Mounting.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Microsoft.AspNetCore.Components.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Tools.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Compiling.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Microsoft.CodeAnalysis.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Microsoft.CodeAnalysis.CSharp.dll"/> 
-		<Reference Include="E:\steamlibrary\steamapps\common\sbox\bin\managed\Sandbox.Bind.dll"/> 
+		<Analyzer Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.CodeUpgrader.dll"/> 
+		<Analyzer Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Generator.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.System.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Engine.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Filesystem.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Reflection.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Mounting.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Microsoft.AspNetCore.Components.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Tools.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Compiling.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Microsoft.CodeAnalysis.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Microsoft.CodeAnalysis.CSharp.dll"/> 
+		<Reference Include="../../../../../SteamLibrary/steamapps/common/sbox/bin/managed/Sandbox.Bind.dll"/> 
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="E:\SteamLibrary\steamapps\common\sbox\addons\tools\Code\Base Editor Library.csproj" />
-		<ProjectReference Include="E:\S&amp;box Addons\xgui-3_test\Libraries\XGUI-3\Code\xgui-3.csproj" />
-		<ProjectReference Include="E:\S&amp;box Addons\xgui-3_test\Libraries\XGUI-3\Editor\xgui-3.editor.csproj" />
+		<ProjectReference Include="../../../../../SteamLibrary/steamapps/common/sbox/addons/tools/Code/Base Editor Library.csproj" />
+		<ProjectReference Include="../Code/xgui-3.csproj" />
+		<ProjectReference Include="../Editor/xgui-3.editor.csproj" />
 	</ItemGroup>
 
 </Project>
