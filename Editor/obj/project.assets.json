@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {
       "actiongraph/1.0.0": {
@@ -35,6 +35,19 @@
           "bin/placeholder/Base Library.dll": {}
         }
       },
+      "dooeditor/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Base Editor Library": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/dooeditor.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/dooeditor.dll": {}
+        }
+      },
       "hammer/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -46,6 +59,19 @@
         },
         "runtime": {
           "bin/placeholder/hammer.dll": {}
+        }
+      },
+      "moviemaker/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Base Editor Library": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/moviemaker.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/moviemaker.dll": {}
         }
       },
       "shadergraph/1.0.0": {
@@ -89,13 +115,23 @@
     },
     "Base Library/1.0.0": {
       "type": "project",
-      "path": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/Code/Base Library.csproj",
-      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/Code/Base Library.csproj"
+      "path": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/code/Base Library.csproj",
+      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/code/Base Library.csproj"
+    },
+    "dooeditor/1.0.0": {
+      "type": "project",
+      "path": "../../../../../SteamLibrary/steamapps/common/sbox/editor/DooEditor/Code/dooeditor.csproj",
+      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/editor/DooEditor/Code/dooeditor.csproj"
     },
     "hammer/1.0.0": {
       "type": "project",
       "path": "../../../../../SteamLibrary/steamapps/common/sbox/editor/Hammer/Code/hammer.csproj",
       "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/editor/Hammer/Code/hammer.csproj"
+    },
+    "moviemaker/1.0.0": {
+      "type": "project",
+      "path": "../../../../../SteamLibrary/steamapps/common/sbox/editor/MovieMaker/Code/moviemaker.csproj",
+      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/editor/MovieMaker/Code/moviemaker.csproj"
     },
     "shadergraph/1.0.0": {
       "type": "project",
@@ -112,7 +148,9 @@
     "net10.0": [
       "Base Editor Library >= 1.0.0",
       "actiongraph >= 1.0.0",
+      "dooeditor >= 1.0.0",
       "hammer >= 1.0.0",
+      "moviemaker >= 1.0.0",
       "shadergraph >= 1.0.0",
       "xgui-3 >= 1.0.0"
     ]
@@ -148,6 +186,7 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
             "E:\\S&box Addons\\xgui-3_test\\Libraries\\XGUI-3\\Code\\xgui-3.csproj": {
@@ -159,8 +198,14 @@
             "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj": {
               "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ActionGraph\\Code\\actiongraph.csproj"
             },
+            "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\DooEditor\\Code\\dooeditor.csproj": {
+              "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\DooEditor\\Code\\dooeditor.csproj"
+            },
             "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj": {
               "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\Hammer\\Code\\hammer.csproj"
+            },
+            "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\MovieMaker\\Code\\moviemaker.csproj": {
+              "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\MovieMaker\\Code\\moviemaker.csproj"
             },
             "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj": {
               "projectPath": "E:\\SteamLibrary\\steamapps\\common\\sbox\\editor\\ShaderGraph\\Code\\shadergraph.csproj"
@@ -173,10 +218,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "imports": [
           "net461",
@@ -194,7 +240,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
