@@ -71,39 +71,45 @@ namespace XGUI.XGUIEditor
 
 			_codeView = new Widget( null );
 			_codeView.SetSizeMode( SizeMode.Expand, SizeMode.Expand );
+			_codeView.MinimumHeight = 180;
 			CreateCodeViewInternal(); // Creates _codeTextEditor
 
 			// --- Panels ---
 			_hierarchy = new XGUIHierarchyWidget( this, this );
+			_hierarchy.MaximumWidth = 220;
+			_hierarchy.MinimumWidth = 120;
 			_inspector = new PanelInspector() { OnPropertyChanged = OnInspectorPropertyChanged, OwnerDesigner = this }; // Hook up delegate
+			_inspector.MaximumWidth = 280;
+			_inspector.MinimumWidth = 180;
 			_componentPalette = new Widget( null ) { Layout = Layout.Column() };
+			_componentPalette.SetSizeMode( SizeMode.Expand, SizeMode.Default );
+			_componentPalette.FixedHeight = 34;
 			CreateComponentPaletteInternal();
 
 
 			// --- Docking ---
-			_view.WindowTitle = "Design View";
-			_view.SetWindowIcon( "visibility" );
-			DockManager.AddDock( null, _view );
+			var viewDock = DockManager.CreateDockWidget( "Design View", "visibility", _view );
+			DockManager.AddDock( viewDock, DockArea.Center );
 
 			// Create and add the overlay widget
 			OverlayWidget = new XGUIOverlayWidget( _view.Parent );
-			OverlayWidget.ConnectToView( _view );
+			OverlayWidget.ConnectToView( _view, aswindow: false );
 
-			_hierarchy.WindowTitle = "Hierarchy";
-			_hierarchy.SetWindowIcon( "view_list" );
-			DockManager.AddDock( null, _hierarchy, dockArea: DockArea.Left, split: 0.10f );
+			var codeDock = DockManager.CreateDockWidget( "Code View", "code", _codeView );
+			DockManager.AddDock( codeDock, DockArea.Bottom, viewDock );
 
-			_inspector.WindowTitle = "Inspector";
-			_inspector.SetWindowIcon( "info" );
-			DockManager.AddDock( null, _inspector, dockArea: DockArea.Right, split: 0.10f );
+			var hierarchyDock = DockManager.CreateDockWidget( "Hierarchy", "view_list", _hierarchy );
+			DockManager.AddDock( hierarchyDock, DockArea.Left, viewDock );
+			hierarchyDock.FixedWidth = 220;
 
-			_componentPalette.WindowTitle = "Component Palette";
-			_componentPalette.SetWindowIcon( "view_module" );
-			_codeView.WindowTitle = "Code View";
-			_codeView.SetWindowIcon( "code" );
+			var inspectorDock = DockManager.CreateDockWidget( "Inspector", "info", _inspector );
+			DockManager.AddDock( inspectorDock, DockArea.Right, viewDock );
+			inspectorDock.FixedWidth = 280;
 
-			DockManager.AddDock( null, _componentPalette, DockArea.TopOuter, split: 0.05f );
-			DockManager.AddDock( null, _codeView, dockArea: DockArea.Bottom, split: 0.30f );
+			var paletteDock = DockManager.CreateDockWidget( "Component Palette", "view_module", _componentPalette );
+			DockManager.AddDock( paletteDock, DockArea.Top );
+			paletteDock.MinimumSizeFromContent = true;
+			paletteDock.FixedHeight = 68;
 
 			_view.Setup();
 		}
@@ -123,6 +129,8 @@ namespace XGUI.XGUIEditor
 		{
 			_codeView.Layout = Layout.Column();
 			_codeTextEditor = _codeView.Layout.Add( new XGUIRazorTextEdit( null ), 1 );
+			_codeTextEditor.SetSizeMode( SizeMode.Expand, SizeMode.Expand );
+			_codeTextEditor.MinimumHeight = 180;
 			_codeTextEditor.TextChanged = OnCodeTextChanged;
 			// Configure TextEdit (e.g., font, line numbers) if needed
 		}
@@ -130,7 +138,8 @@ namespace XGUI.XGUIEditor
 		private void CreateComponentPaletteInternal()
 		{
 			var container = _componentPalette.Layout.Add( new Widget( null ) );
-			container.SetSizeMode( SizeMode.Expand, SizeMode.Expand );
+			container.SetSizeMode( SizeMode.Expand, SizeMode.Default );
+			container.FixedHeight = 28;
 			container.Layout = Layout.Row();
 			container.Layout.Spacing = 8;
 			var layoutsCategory = CreateComponentCategory( container.Layout, "Layouts:" );
