@@ -1,0 +1,83 @@
+//@import "/styles/base.scss";
+//@import "/styles/form.scss";
+@import "/XGUI/FunctionStyles/FunctionStyles.scss";
+
+.Panel {
+	font-size: $default-text-size;
+	font-family: $default-text-font; 
+}
+
+
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaWindow.scss";
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaLayout.scss";
+
+// ------------------
+// Control Elements
+// ------------------
+
+// Button
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaButton.scss";
+
+// TextEntry
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaTextBox.scss";
+
+// Tabs
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaTabs.scss";
+
+// Sidebar
+//@import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUISidebar.scss";
+
+// Toolbar
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinToolbar.scss";
+
+// Slider
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinSlider.scss";
+
+// Checkbox
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaCheckBox.scss";
+
+// RadioButton
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinRadioButton.scss";
+
+// Label Types
+//@import "/XGUI/DefaultStyles/BaseStyles/VGUI/VGUILabels.scss";
+
+// ComboBox/Selector/Dropdown
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaComboBox.scss";
+
+// GroupBox
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/CocoaGroupBox.scss";
+
+// ContextMenu
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinContextMenu.scss";
+
+// SelectList
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinSelectList.scss";
+
+// ListView
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinListView.scss";
+
+// TreeView
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinTreeView.scss";
+
+// ScrollPanel
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinScrollPanel.scss";
+
+/// ------------------
+/// Extra Elements
+/// ------------------
+
+// FileBrowserView
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/Extras/WinFileBrowserView.scss";
+
+// MessageBox
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/Extras/WinMessageBox.scss";
+
+/// ------------------
+/// Utils
+/// ------------------
+
+// Disabled
+
+//@import "/XGUI/DefaultStyles/BaseStyles/Cocoa/WinDisabled.scss";
+

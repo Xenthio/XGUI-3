@@ -117,12 +117,6 @@
     // I feel like everything about resizing sucks.
     Vector2 MousePos()
     {
-        if (FindRootPanel().IsWorldPanel && Game.ActiveScene.IsValid() && Game.ActiveScene.IsValid())
-        {
-            Ray ray = Game.ActiveScene.Camera.ScreenPixelToRay(Mouse.Position);
-            FindRootPanel().RayToLocalPosition(ray, out var pos, out var distance);
-            return pos;
-        }
         return FindRootPanel().MousePosition;
     }
 

@@ -11,6 +11,7 @@ public class XGUIRootComponent : PanelComponent
 
 	public XGUIRootPanel XGUIPanel { get; private set; }
 	public ScreenPanel ScreenPanel { get; private set; }
+	public Sandbox.WorldPanel WorldPanel { get; private set; }
 
 	public XGUIRootComponent()
 	{
@@ -18,8 +19,11 @@ public class XGUIRootComponent : PanelComponent
 	}
 	protected override void OnStart()
 	{
-		// check if there's a screenpanel here, create one if not.
-		if ( GameObject.Components.TryGet<ScreenPanel>( out var screenPanel ) )
+		if ( GameObject.Components.TryGet<Sandbox.WorldPanel>( out var worldPanel ) )
+		{
+			WorldPanel = worldPanel;
+		}
+		else if ( GameObject.Components.TryGet<ScreenPanel>( out var screenPanel ) )
 		{
 			ScreenPanel = screenPanel;
 		}
@@ -31,16 +35,17 @@ public class XGUIRootComponent : PanelComponent
 		base.OnStart();
 
 		XGUIPanel = new XGUIRootPanel();
+		Panel.Parent = WorldPanel?.GetPanel() ?? ScreenPanel?.GetPanel();
 		Panel.AddChild( XGUIPanel );
 
-		Scene.GetSystem<XGUISystem>().Component = this;
-		Scene.GetSystem<XGUISystem>().Panel = XGUIPanel;
+		Scene.GetSystem<XGUISystem>().RegisterRoot( this );
 	}
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
-		XGUIPanel.Style.PointerEvents = MouseUnlocked ? PointerEvents.All : PointerEvents.None;
-		if ( UseDesktopScale )
+		if ( XGUIPanel.IsValid() )
+			XGUIPanel.Style.PointerEvents = MouseUnlocked ? PointerEvents.All : PointerEvents.None;
+		if ( UseDesktopScale && ScreenPanel?.IsValid() == true )
 		{
 			ScreenPanel.Scale = Screen.DesktopScale;
 		}

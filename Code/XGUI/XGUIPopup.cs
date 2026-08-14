@@ -281,6 +281,10 @@ public partial class XGUIPopup : XGUIPanel
 		UpdateStyle();
 		Parent = FindRootPanel();
 
+
+		if ( PopupSource == null || Parent == null )
+			return;
+
 		var rect = PopupSource.Box.Rect;
 
 		var w = Parent.Box.Rect.Width * PopupSource.ScaleFromScreen;

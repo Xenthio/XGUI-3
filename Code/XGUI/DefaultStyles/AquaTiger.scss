@@ -1,0 +1,330 @@
+﻿@import "/XGUI/FunctionStyles/FunctionStyles.scss";
+
+////////////// 
+$default-text-size: 13px; // AppKit standard body text size  
+$default-text-font: "Lucida Grande", "Segoe UI", sans-serif;
+$default-text-smooth: always; // Early OS X famously forced heavy anti-aliasing everywhere
+$window-title-text-size: 14px; // Large, clear typography for centered titles 
+
+
+$small-text-size: 11px; 
+
+//////////////
+// Window Frame Mapping
+$active-title: #ededed; // Light milk-white face
+$title-text: #000000; // Crisp black contrast text
+$inactive-title: #f6f6f6; // Faded out white-grey
+$inactive-title-text: #555555; // Muted dark grey text
+$window-frame: #6d6d6d; // The razor-thin single pixel dark gray border
+$face: #ffffff; // Base white layer under gradients
+
+//////////////
+// controls
+$alternateSelectedControlColor: #3875D7;
+$alternateSelectedControlTextColor: #FFFFFF;
+$controlBackgroundColor: #FFFFFF;
+$controlColor: url("XGUI/Resources/aqua/window_background.png");
+$controlDarkShadowColor: #000000;
+$controlHighlightColor: #E8E8E8;
+$controlLightHighlightColor: #FFFFFF;
+$controlShadowColor: #939393;
+$controlTextColor: #000000;
+$disabledControlTextColor: #808080;
+$textColor: #000000;
+$textBackgroundColor: #FFFFFF;
+
+
+$aqua-button-image-top: -4px;
+$aqua-button-image-right: -6px;
+$aqua-button-image-bottom: -7px;
+$aqua-button-image-left: -6px;
+$aqua-button-default-frame-0: url("XGUI/Resources/aqua/push_button_default.png");
+$aqua-button-default-frame-1: url("XGUI/Resources/aqua/push_button_default_1.png");
+$aqua-button-default-frame-2: url("XGUI/Resources/aqua/push_button_default_2.png");
+$aqua-button-default-pulse: url("XGUI/Resources/aqua/push_button_default_animated.webp");
+
+// Multi-stop Glass Glare Gradient Stops (Liquid Blue Liquid Glow)
+$aqua-pulse-bright: #bfe3ff; // The peak glowing blue point
+$aqua-pulse-mid: #61a6ec; // Standard gel body
+$aqua-pulse-dark: #2f7fd6; // Base fluid depth
+
+//////////////
+// Interactive Elements
+$menu-face: #ffffff; // Popups are clean white surfaces in Puma
+$menu-text: #000000;
+$menu-separator: #e0e0e0;
+$highlight: #3875d7; // The distinct "Aqua Selection Blue"
+$highlight-text: #ffffff;
+$scrollbar-track: #f0f0f0;
+$scrollbar-thumb: #7ac1fb; // Early scrollbar thumbs were bright blue translucent gel capsules
+
+$background: #4a5c76; // Default classic solid Mac desktop tint
+
+@import "/XGUI/DefaultStyles/BaseStyles/Cocoa.scss";
+
+.Button {
+
+	&::before {
+		top: $aqua-button-image-top;
+		right: $aqua-button-image-right;
+		bottom: $aqua-button-image-bottom;
+		left: $aqua-button-image-left;
+		border-image: url("XGUI/Resources/aqua/push_button_normal.png");
+	}
+
+	&.autofocused,
+	&.primary {
+		&::before {
+			border-image: $aqua-button-default-pulse;
+		}
+	}
+
+	&:active {
+		&::before {
+			border-image: url("XGUI/Resources/aqua/push_button_pressed.png");
+		}
+	}
+}
+
+.Window {
+	> .window-content {
+	}
+
+	filter-border-width: 1px;
+	filter-border-color: rgba(0, 0, 0, 0.21313725);
+	filter-drop-shadow: 0px 5px 14px rgba(0, 0, 0, 1.5);
+
+	.TitleBar {
+		border-image: url("XGUI/Resources/aqua/titlebar_00.png");
+
+		.control {
+			image-rendering: point;
+			background-image: url("XGUI/Resources/aqua/metal_window_button_close_normal.png");
+			background-size: cover;
+			padding: 0px;
+			margin: 0px;
+			width: 14px;
+			height: 16px;
+			min-width: 14px;
+			min-height: 16px;
+			max-width: 14px;
+			max-height: 16px;
+
+			&::before {
+				border: none;
+			}
+		}
+
+		.closebutton {
+			background-image: url("XGUI/Resources/aqua/metal_window_button_close_normal.png");
+		}
+
+		.minimisebutton {
+			background-image: url("XGUI/Resources/aqua/metal_window_button_collapse_normal.png");
+		}
+
+		.maximisebutton {
+			background-image: url("XGUI/Resources/aqua/metal_window_button_zoom_normal.png");
+		}
+	}
+}
+
+
+.textentry {
+	&::before {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		border-image: url("XGUI/Resources/aqua/text_field.png");
+	}
+
+	&.disabled {
+		&::before {
+			border-image: url("XGUI/Resources/aqua/text_field_disabled.png");
+		}
+	}
+}
+
+
+.checkbox {
+	.checkpanel, iconpanel {
+		&::before {
+			position: absolute;
+			top: -2px;
+			left: -2px;
+			bottom: -2px;
+			right: -2px;
+			background-image: url("XGUI/Resources/aqua/checkbox.png");
+		}
+	}
+
+	&.checked {
+		.checkpanel, iconpanel {
+			&::before { 
+				background-image: url("XGUI/Resources/aqua/checkbox_selected.png");
+			}
+		}
+	}
+}
+
+.combobox,
+.selector {
+	padding: 0px;
+	height: 21px;
+
+	&::before {
+		position: absolute;
+		top: -2px;
+		right: 20px; // Should be 21 but theres sometimes a 1px gap and having the overlap is less noticable.
+		bottom: -3px;
+		left: -2px;
+		border-image: url("XGUI/Resources/aqua/popup_button.png");
+		image-rendering: point;
+		border-right: 0px;
+	}
+
+	&::after {
+		position: absolute;
+		top: -2px;
+		right: -3px;
+		height: 26px;
+		min-height: 26px;
+		max-height: 26px;
+		width: 24px;
+		min-width: 24px;
+		max-width: 24px;
+		background-image: url("XGUI/Resources/aqua/popup_button_end_right.png");
+	}
+
+	&.autofocused,
+	&.primary {
+		&::before {
+			border-image: url("XGUI/Resources/aqua/popup_button.png");
+			border-right: 0px;
+		}
+	}
+
+	&:active {
+		&::before {
+			border-image: url("XGUI/Resources/aqua/popup_button.png");
+			border-right: 0px;
+		}
+	}
+
+	> .button-right-column {
+		height: 21px;
+		flex-grow: 1;
+		align-items: center;
+
+		> .label {
+			margin-left: 12px;
+			margin-right: 12px;
+		}
+	}
+
+	.selector_indicator {
+		background-image: url("XGUI/Resources/aqua/little_arrows.png");
+		background-position: 7px 3px;
+		background-repeat: no-repeat;
+		width: 21px;
+		height: 21px;
+		image-rendering: point;
+		background-size: 6px 14px;
+		z-index: 1;
+	}
+}
+
+.group-box {
+	border: none;
+
+	&::before {
+		top: -2px;
+		right: -3px;
+		bottom: -3px;
+		left: -3px;
+		border-image: url("XGUI/Resources/aqua/group_box.png");
+	}
+}
+
+.TabContainer {
+
+	.tabs {
+		justify-content: center;
+
+		> .button {
+			z-index: 22;
+
+			&::before {
+				top: -2px;
+				bottom: -3px;
+				right: 0px;
+				left: 0px;
+				border: none;
+				background-image: url("XGUI/Resources/aqua/tab_fill.png");
+				background-position-y: center;
+			}
+
+			&:first-child {
+				padding-left: 2px;
+
+				&::after {
+					position: absolute;
+					width: 12px;
+					height: 24px;
+					top: -1px;
+					left: -12px;
+					background-image: url("XGUI/Resources/aqua/tab_left_cap.png");
+					background-position-y: center;
+					background-repeat: no-repeat;
+				}
+			}
+
+			&:last-child {
+				padding-right: 2px;
+
+				&::after {
+					position: absolute;
+					width: 12px;
+					height: 24px;
+					top: -1px;
+					right: -12px;
+					background-image: url("XGUI/Resources/aqua/tab_right_cap.png");
+					background-position-y: center;
+					background-repeat: no-repeat;
+				}
+			}
+
+			&.active {
+				&::before {
+					background-image: url("XGUI/Resources/aqua/tab_fill_selected.png");
+				}
+
+				&:first-child {
+					&::after {
+						background-image: url("XGUI/Resources/aqua/tab_left_cap_selected.png");
+					}
+				}
+
+				&:last-child {
+					&::after {
+						background-image: url("XGUI/Resources/aqua/tab_right_cap_selected.png");
+					}
+				}
+			}
+		}
+	}
+
+	.sheets {
+
+		&::before {
+			position: absolute;
+			top: -14px;
+			right: -3px;
+			bottom: -3px;
+			left: -3px;
+			border-image: url("XGUI/Resources/aqua/group_box.png");
+		}
+	}
+}

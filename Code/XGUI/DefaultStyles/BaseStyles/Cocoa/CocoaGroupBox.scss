@@ -1,0 +1,19 @@
+.group-box {
+	padding: 16px;
+	margin-top:18px;
+
+	&::before {
+		content: "";
+		position: absolute;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+
+	.group-box-title {
+		position: absolute;
+		top: -14px;
+		left: 8px;
+		font-size: $small-text-size;
+	}
+}

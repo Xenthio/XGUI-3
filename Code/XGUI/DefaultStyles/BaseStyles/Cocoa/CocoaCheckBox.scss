@@ -1,0 +1,20 @@
+
+.checkbox {
+
+
+	.checkpanel, iconpanel {
+		width: 14px;
+		height: 14px;
+
+		.checklabel {
+			content: "";
+		}
+	}
+
+	.label {
+		flex-grow: 1;
+		margin-top: -1px;
+		margin-bottom: -1px;
+		left: 4px;
+	}
+}

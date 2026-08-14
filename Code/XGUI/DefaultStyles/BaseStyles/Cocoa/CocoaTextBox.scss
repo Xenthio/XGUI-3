@@ -1,0 +1,17 @@
+.textentry { 
+	background-color: $textBackgroundColor;
+	padding: 0px 4px;
+	height: 22px;
+
+	&.is-multiline {
+		height: auto;
+		flex-grow: 1;
+	}
+
+}
+
+.self-layout {
+	> .textentry {
+		width: 100px;
+	}
+}

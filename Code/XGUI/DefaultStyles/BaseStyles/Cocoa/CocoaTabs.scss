@@ -1,0 +1,13 @@
+.TabContainer {
+	.tabs {
+		justify-content: center;
+
+		> .button {
+			padding: 0px 12px;
+		}
+	}
+
+	.sheets {
+		padding: 16px;
+	}
+}

@@ -10,6 +10,8 @@ public partial class Window : XGUIPanel
 	public TitleBar TitleBar { get; set; }
 
 
+
+
 	public Vector2 Position = new Vector2( 22, 22 );
 	public Vector2 Size;
 	public Vector2 MinSize = new Vector2();
@@ -52,6 +54,7 @@ public partial class Window : XGUIPanel
 	}
 
 	bool hasInitInnerSize = false;
+	public void ResetInnerSizeInit() { hasInitInnerSize = false; }
 	protected override void OnAfterTreeRender( bool firstTime )
 	{
 		base.OnAfterTreeRender( firstTime );
@@ -342,12 +345,6 @@ public partial class Window : XGUIPanel
 
 	Vector2 MousePos()
 	{
-		if ( FindRootPanel().IsWorldPanel && Game.ActiveScene.IsValid() && Game.ActiveScene.IsValid() )
-		{
-			Ray ray = Game.ActiveScene.Camera.ScreenPixelToRay( Mouse.Position );
-			FindRootPanel().RayToLocalPosition( ray, out var pos, out var distance );
-			return pos;
-		}
 		return FindRootPanel().MousePosition;
 	}
 

@@ -1,0 +1,98 @@
+﻿
+$default-margin: 6px;
+$default-padding: 6px;
+
+.self-layout {
+	&.self-layout-row {
+		flex-direction: row;
+		margin-bottom: $default-margin;
+	}
+	.button {
+		min-width: 68px;
+	}
+}
+.margin {
+	margin: $default-margin;
+}
+.padding {
+	padding: $default-padding;
+}
+.row {
+	flex-direction: row;
+}
+.column {
+	flex-direction: column;
+}
+
+.padding-top {
+	padding-top: $default-padding;
+}
+.padding-bottom {
+	padding-bottom: $default-padding;
+}
+.padding-left {
+	padding-left: $default-padding;
+}
+.padding-right {
+	padding-right: $default-padding;
+}
+
+.margin-bottom {
+	margin-bottom: $default-margin;
+}
+.margin-top {
+	margin-top: $default-margin;
+}
+.margin-left {
+	margin-left: $default-margin;
+}
+.margin-right {
+	margin-right: $default-margin;
+}
+
+.button {
+	&.margin-bottom {
+		margin-bottom: 12px;
+	}
+
+	&.margin-top {
+		margin-top: 12px;
+	}
+
+	&.margin-left {
+		margin-left: 12px;
+	}
+
+	&.margin-right {
+		margin-right: 12px;
+	}
+}
+
+.checkbox {
+	&.margin-bottom {
+		margin-bottom: 8px;
+	}
+
+	&.margin-top {
+		margin-top: 8px;
+	}
+
+	&.margin-left {
+		margin-left: 8px;
+	}
+
+	&.margin-right {
+		margin-right: 8px;
+	}
+}
+
+.window-content {
+	> .margin {
+		margin: 20px;
+	}
+
+	> .tabcontainer {
+		margin: 20px;
+	}
+} 
+ 
