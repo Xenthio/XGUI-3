@@ -1,3 +1,8 @@
+// Native scrollbar width is read from the scrolling owner and inherited by its children.
+.window, .treeview {
+	scrollbar-width: 16px;
+}
+
 .scrollpanel {
 
 	.scrollbar {
@@ -61,25 +66,40 @@
 		}
 	}
 
-	.scrollbar_track {
-		background-color: $window;
+}
 
-		&::before {
-			position: absolute;
-			top: 0px;
-			left: 0px;
-			right: 0px;
-			bottom: 0px;
-			mask-image: url("XGUI/Resources/checker1x1.png");
-			background-color: $button-face;
-		}
-	}
+.scrollpanel .scrollbar_track, scrollbar {
+	background-color: $window;
+	background-image: url("/XGUI/Resources/scrollbar-checker.svg");
+	background-size: 2px 2px;
+	background-repeat: repeat;
+	background-tint: $button-face;
+	image-rendering: pixelated;
+}
 
-	.scrollbar_thumb {
-		background-color: $button-face;
-		border-top: 1px solid $button-light;
-		border-left: 1px solid $button-light;
-		border-bottom: 1px solid $button-dark-shadow;
-		border-right: 1px solid $button-dark-shadow;
+.scrollpanel .scrollbar_thumb, scrollbar > .thumb {
+	background-color: $button-face;
+	border-top: 1px solid $button-light;
+	border-left: 1px solid $button-light;
+	border-bottom: 1px solid $button-dark-shadow;
+	border-right: 1px solid $button-dark-shadow;
+}
+
+// The engine owns native scrollbar placement, thumb sizing and input.
+scrollbar.vertical, scrollbar.horizontal {
+	opacity: 1;
+	transition: none;
+	border-radius: 0px;
+
+	> .thumb {
+		opacity: 1;
+		transition: none;
+		border-radius: 0px;
+		z-index: 1;
 	}
 }
+
+// At 16px the engine insets the thumb by round(16 * 0.15) = 2px.
+// Only widen it across the track; leave its travel axis and drag math untouched.
+scrollbar.vertical > .thumb { margin-left: -2px; margin-right: -2px; }
+scrollbar.horizontal > .thumb { margin-top: -2px; margin-bottom: -2px; }

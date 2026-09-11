@@ -1,4 +1,4 @@
-﻿// Additional optional feature for Windows based styles.
+// Additional optional feature for Windows based styles.
 
 
 $outer-boxshadow: 1px 0px 0px 0px $border-colour-right-outer, 1px 1px 0px 0px $border-colour-right-outer, 1px -1px 0px 0px $border-colour-right-outer, -1px 1px 0px 0px $border-colour-bottom-outer, -1px 0px 0px 0px $button-highlight-outer, 0px -1px 0px 0px $button-highlight-outer, -1px -1px 0px 0px $button-highlight-outer;
@@ -394,6 +394,24 @@ $outer-boxshadow-line: 1px 0px 0px 0px $border-colour-right-outer-inset, 1px 1px
 		}
 	}
 }
+.xgui-native-tree {
+	padding: 1px;
+
+	&:not(.ghost-treeview) {
+		&::before {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			border-top: 1px solid $button-dark-shadow;
+			border-left: 1px solid $button-dark-shadow;
+			border-bottom: 1px solid $button-light;
+			border-right: 1px solid $button-light;
+			pointer-events: none;
+		}
+	}
+}
 
 LayoutBoxInset {
 	padding:1px;
@@ -464,20 +482,21 @@ Seperator {
 		}
 	}
 
-	.scrollbar_thumb {
+}
 
-		&::before {
-			position: absolute;
-			top: 0px;
-			left: 0px;
-			right: 0px;
-			bottom: 0px;
-			border-top: 1px solid $button-highlight;
-			border-left: 1px solid $button-highlight;
-			border-bottom: 1px solid $button-shadow;
-			border-right: 1px solid $button-shadow;
-			pointer-events: none;
-		}
+.scrollpanel .scrollbar_thumb, scrollbar > .thumb {
+
+	&::before {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		border-top: 1px solid $button-highlight;
+		border-left: 1px solid $button-highlight;
+		border-bottom: 1px solid $button-shadow;
+		border-right: 1px solid $button-shadow;
+		pointer-events: none;
 	}
 }
 

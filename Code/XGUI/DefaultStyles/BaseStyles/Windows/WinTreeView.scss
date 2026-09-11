@@ -39,7 +39,7 @@
 
 			&.collapsed {
 				&::before {
-					bottom: 2px;
+					bottom: -4px;
 					content: '+';
 				}
 			}
@@ -47,7 +47,7 @@
 			&.expanded {
 				&::before {
 					content: '­­―';
-					bottom: -2px;
+					bottom: -8px;
 				}
 			}
 		}

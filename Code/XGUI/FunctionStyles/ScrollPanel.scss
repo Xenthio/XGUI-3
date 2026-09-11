@@ -2,6 +2,9 @@
 	flex-direction: column;
 	overflow: scroll;
 	flex-grow: 1;
+	// This control supplies its own bars; keep scrolling without engine-generated bars.
+	scrollbar-width: none;
+	scrollbar-gutter: auto;
 
 	> * {
 		flex-shrink: 0;
@@ -11,6 +14,8 @@
 		flex-grow: 1;
 		flex-direction: column;
 		overflow: scroll;
+		scrollbar-width: none;
+		scrollbar-gutter: auto;
 
 		> * {
 			flex-shrink: 0;
