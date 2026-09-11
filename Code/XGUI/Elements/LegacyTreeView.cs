@@ -1,4 +1,4 @@
-﻿using Sandbox.UI;
+using Sandbox.UI;
 using Sandbox.UI.Construct; // Make sure Add is available
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace XGUI;
 
-public partial class TreeView : Panel
+public partial class LegacyTreeView : Panel
 {
 	public class TreeViewNode : Panel
 	{
-		public TreeView ParentTreeView { get; }
+		public LegacyTreeView ParentTreeView { get; }
 		public TreeViewNode ParentNode { get; }
 		public object Data { get; set; }
 		public string Text { get; set; }
@@ -28,7 +28,7 @@ public partial class TreeView : Panel
 
 		private const float IndentSize = 16f; // Indentation per level
 
-		public TreeViewNode( TreeView parentTreeView, TreeViewNode parentNode, string text, string iconName = null, object data = null )
+		public TreeViewNode( LegacyTreeView parentTreeView, TreeViewNode parentNode, string text, string iconName = null, object data = null )
 		{
 			ParentTreeView = parentTreeView;
 			ParentNode = parentNode;
@@ -259,7 +259,7 @@ public partial class TreeView : Panel
 	public Action<TreeViewNode> OnNodeCollapsed { get; set; }
 	public Action<TreeViewNode, MousePanelEvent> OnNodeRightClick { get; set; }
 
-	public TreeView()
+	public LegacyTreeView()
 	{
 		AddClass( "treeview" );
 		//ItemContainer = Add.Panel( "treeview-item-container" );

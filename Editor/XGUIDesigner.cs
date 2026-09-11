@@ -34,7 +34,7 @@ namespace XGUI.XGUIEditor
 		private string _currentFilePath;
 		private bool _isUpdatingUIFromCode = false; // Flag to prevent update loops
 		private bool _isUpdatingCodeFromUI = false;
-		private Menu _recentFilesMenu;
+		private Editor.Menu _recentFilesMenu;
 		private readonly List<string> _recentFiles = new();
 
 		// Razor Content Cache

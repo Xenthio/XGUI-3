@@ -1,4 +1,4 @@
-﻿.treeview {
+.treeview {
 	border-top: 1px solid $button-shadow;
 	border-left: 1px solid $button-shadow;
 	border-bottom: 1px solid $button-highlight;
@@ -68,3 +68,24 @@
 		}
 	}
 }
+
+	.treeview.xgui-native-tree {
+		color: $window-text;
+
+		.tree-row {
+			background-color: transparent;
+
+			.tree-expander {
+				border: 1px solid $button-shadow;
+				color: $window-text;
+			}
+			.xgui-expander-horizontal, .xgui-expander-vertical {
+				background-color: $window-text;
+			}
+
+			&.selected > .tree-label {
+				background-color: $highlight;
+				color: $highlight-text;
+			}
+		}
+	}

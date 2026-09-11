@@ -29,7 +29,7 @@
 
 			&.empty {
 				// Style for nodes with no children (e.g., make it invisible or a different icon)
-				// For now, it will just be empty text. Could use visibility: hidden;
+				// For now, it will just be empty text. Could use opacity: 0; pointer-events: none;
 				// Or use a specific icon like a dot.
 				// color: transparent; // Makes text expander invisible
 			}
@@ -58,5 +58,50 @@
 				margin-left: 3px;
 			}
 		}
+	}
+}
+
+// Native virtualized rows: leave their position, size and indentation to the engine.
+.treeview.xgui-native-tree {
+	min-height: 0;
+	flex-shrink: 1;
+	.tree-row {
+		flex-direction: row;
+		align-items: center;
+		flex-shrink: 0;
+		.xgui-tree-expander {
+			flex-shrink: 0;
+			width: 9px;
+			height: 9px;
+			margin: 0px 6px;
+			.tree-expander {
+				position: absolute;
+				left: 0px; top: 0px;
+				width: 9px; height: 9px;
+				margin: 0px;
+				transform: rotate(0deg);
+				opacity: 1;
+			}
+			.xgui-expander-horizontal, .xgui-expander-vertical {
+				position: absolute;
+				pointer-events: none;
+			}
+			.xgui-expander-horizontal { left: 2px; top: 4px; width: 5px; height: 1px; }
+			.xgui-expander-vertical { left: 4px; top: 2px; width: 1px; height: 5px; }
+		}
+		&.open > .xgui-tree-expander > .xgui-expander-vertical { display: none; }
+		&:not(.has-children) > .xgui-tree-expander {
+			opacity: 0;
+			.tree-expander { pointer-events: none; }
+		}
+		.xgui-tree-icon {
+			width: 16px;
+			height: 16px;
+			margin-right: 6px;
+			flex-shrink: 0;
+			pointer-events: none;
+		}
+		.tree-label { white-space: nowrap; flex-shrink: 0; flex-grow: 0; }
+		.tree-content { flex-shrink: 0; }
 	}
 }

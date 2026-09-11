@@ -670,16 +670,6 @@
           "bin/placeholder/Base Editor Library.dll": {}
         }
       },
-      "Base Library/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "compile": {
-          "bin/placeholder/Base Library.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Base Library.dll": {}
-        }
-      },
       "dooeditor/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -735,9 +725,6 @@
       "xgui-3/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Base Library": "1.0.0"
-        },
         "compile": {
           "bin/placeholder/xgui-3.dll": {}
         },
@@ -1723,11 +1710,6 @@
       "path": "../../../../../SteamLibrary/steamapps/common/sbox/addons/tools/Code/Base Editor Library.csproj",
       "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/addons/tools/Code/Base Editor Library.csproj"
     },
-    "Base Library/1.0.0": {
-      "type": "project",
-      "path": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/code/Base Library.csproj",
-      "msbuildProject": "../../../../../SteamLibrary/steamapps/common/sbox/addons/base/code/Base Library.csproj"
-    },
     "dooeditor/1.0.0": {
       "type": "project",
       "path": "../../../../../SteamLibrary/steamapps/common/sbox/editor/DooEditor/Code/dooeditor.csproj",
@@ -1841,7 +1823,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.300"
+      "SdkAnalysisLevel": "10.0.400"
     },
     "frameworks": {
       "net10.0": {
@@ -1881,7 +1863,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
